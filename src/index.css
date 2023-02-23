@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+    font-family: 'title';
+    src: url('assets/fonts/title.otf') format('opentype');
+    font-display: swap;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'title';
+    src: url('assets/fonts/title-italic.otf') format('opentype');
+    font-display: swap;
+    font-style: italic;
+}
+
 html{
     background: none;
 }
