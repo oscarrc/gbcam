@@ -3,36 +3,36 @@
 @tailwind utilities;
 
 @font-face { 
-    font-family: 'title'; /* Gil Sans */
-    src: url('assets/fonts/title.ttf') format('truetype');
+    font-family: 'Gil Sans'; /* Gil Sans */
+    src: url('assets/fonts/GilSans.ttf') format('truetype');
     font-display: swap;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'title'; /* Gil Sans */
-    src: url('assets/fonts/title-italic.ttf') format('truetype');
+    font-family: 'Gil Sans';
+    src: url('assets/fonts/GilSansItalic.ttf') format('truetype');
     font-display: swap;
     font-style: italic;
 }
 
 @font-face {
-    font-family: 'button'; /* NES Controller MrShrike */
-    src: url('assets/fonts/button.ttf') format('truetype');
+    font-family: 'Nes Controller';
+    src: url('assets/fonts/NesController.ttf') format('truetype');
     font-display: swap;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'brand'; /* Pretendo */
-    src: url('assets/fonts/brand.ttf') format('truetype');
+    font-family: 'Pretendo';
+    src: url('assets/fonts/Pretendo.ttf') format('truetype');
     font-display: swap;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'text'; /* Univers */
-    src: url('assets/fonts/text.ttf') format('truetype');
+    font-family: 'Univers';
+    src: url('assets/fonts/Univers.ttf') format('truetype');
     font-display: swap;
     font-style: normal;
 }
