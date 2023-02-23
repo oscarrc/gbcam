@@ -2,30 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-    font-family: 'title';
+@font-face { 
+    font-family: 'title'; /* Gil Sans */
     src: url('assets/fonts/title.ttf') format('truetype');
     font-display: swap;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'title';
+    font-family: 'title'; /* Gil Sans */
     src: url('assets/fonts/title-italic.ttf') format('truetype');
     font-display: swap;
     font-style: italic;
 }
 
 @font-face {
-    font-family: 'button';
+    font-family: 'button'; /* NES Controller MrShrike */
     src: url('assets/fonts/button.ttf') format('truetype');
     font-display: swap;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'brand';
+    font-family: 'brand'; /* Pretendo */
     src: url('assets/fonts/brand.ttf') format('truetype');
+    font-display: swap;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'text'; /* Univers */
+    src: url('assets/fonts/text.ttf') format('truetype');
     font-display: swap;
     font-style: normal;
 }
