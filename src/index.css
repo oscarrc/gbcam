@@ -40,3 +40,12 @@
 html{
     background: none;
 }
+
+@layer components {
+    .nav-menu :where(li:not(.menu-title):not(:empty)) > :where(:not(ul).active), .nav-menu :where(li:not(.menu-title):not(:empty)) > :where(*:not(ul):active) {
+        --tw-bg-opacity: 1;
+        background-color: hsl(var(--b1) / var(--tw-bg-opacity));
+        --tw-text-opacity: 1;
+        color: hsl(var(--bc) / var(--tw-text-opacity));
+    }
+}
