@@ -1,8 +1,10 @@
 const Layout = ({ children }) => {
     return (
-        <main>
-            { children }
-        </main>
+        <div className="bg-neutral w-full min-h-dscreen">
+            <main>
+                { children }
+            </main>
+        </div>
     )
 }
 
