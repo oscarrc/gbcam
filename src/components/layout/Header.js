@@ -14,7 +14,7 @@ const Header = () => {
                         <li tabindex="0">
                             <label role="button" aria-label="Model" className="flex items-center gap-2 mx-4">Model<BsChevronDown className="inline h-3 w-3" /></label>
                             <div class="dropdown-content menu nav-menu shadow w-40 bg-neutral">
-                                <li><button className="normal-case">Classic DMG</button></li>
+                                <li><button className="normal-case">Classic</button></li>
                                 {
                                     MODELS.map(m => <li><button className="normal-case">{m}</button></li> )
                                 }
