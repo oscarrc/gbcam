@@ -1,4 +1,4 @@
-import { useRef, createContext, useContext, useState } from "react"
+import { useRef, createContext, useContext, useState, useCallback } from "react"
 
 const CameraContext = createContext();
 
@@ -19,13 +19,16 @@ const CameraProvider = ({ children }) => {
             video.current = document.createElement("video");
             video.current.srcObject = stream;
             video.current.play();
-
+                    
+            setCameraEnabled(true);
+            setCameraError(false);
           } catch(err) {
+            setCameraEnabled(false);
             setCameraError(true);
           }
     }
 
-    const initFeed = async () => {
+    const initFeed = useCallback(async () => {
         if(!video.current) await initVideo();
         
         const context = output.current.getContext("2d", { 
@@ -36,20 +39,20 @@ const CameraProvider = ({ children }) => {
             imageSmoothingEnabled: false
         });
 
-        clearInterval(drawInterval.current);        
-        setCameraEnabled(true);
+        clearInterval(drawInterval.current);
 
         drawInterval.current = setInterval(() => {
             if(!video.current) return;
             const min = Math.min(video.current.videoWidth, video.current.videoHeight);
-            const sx=(video.current.videoWidth-min)/2;
-            const sy=(video.current.videoHeight-min)/2;
+            const sx = ( video.current.videoWidth - min ) / 2;
+            const sy = ( video.current.videoHeight - min ) / 2;
             context.drawImage(video.current, sx, sy, min, min, 0, 0, 128, 128);
-            context.drawImage(output.current, 0, 0, output.current.width, output.current.width);
+            context.drawImage(output.current, 0, 0, output.current.width, output.current.height);
+            
             // context.drawImage(output.current,sx,sy,min,min,0,0,output.current.width,output.current.height);
             applyPalette(context)
-        },100)
-    }   
+        },200)
+    }, [output])
 
     const applyPalette = (context) => {
         const palette = ["#0f380f", "#306230", "#8bac0f", "#9bbc0f"];
