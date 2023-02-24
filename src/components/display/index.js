@@ -1,20 +1,25 @@
 import { AiFillHeart } from "react-icons/ai";
 import { useRef, useEffect } from "react";
+import { useCamera } from "../../hooks/useCamera";
 
 const Display = ({ className }) => {
     const canvasRef = useRef(null);
+    const { initFeed } = useCamera();
 
     useEffect(() => {
         const canvas = canvasRef.current;
-        const setCanvasHeight = () => {
-            canvas.height = canvas.width
-        };
-
+        const setCanvasHeight = () => canvas.height = canvas.width;
+        
         setCanvasHeight();
         window.addEventListener("resize", setCanvasHeight)
 
         return () => window.removeEventListener("resize", setCanvasHeight)
     }, [canvasRef])
+
+    useEffect(()=> {
+        if(!canvasRef.current) return;
+        initFeed(canvasRef.current)
+    },[initFeed, canvasRef])
 
     return (
         <div className={`aspect-4/3 ${className} bg-base-100 rounded-lg rounded-br-[2rem] flex flex-col gap-2 py-2`}>
