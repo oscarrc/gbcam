@@ -7,8 +7,14 @@ module.exports = {
       minHeight:{
         "dscreen": "100dvh"
       },
+      maxWidth:{
+        "display": "calc(100% - 8rem)"
+      },
       aspectRatio: {
         '4/3': '4 / 3',
+      },
+      rotate:{
+        '20':  '20deg'
       },
       fontFamily:{
         "title": ["Gil Sans"],
@@ -34,7 +40,6 @@ module.exports = {
       themes: [
         {
           classic:{
-            ...require("daisyui/src/colors/themes")["[data-theme=black]"],
             "primary": "#070C0B", // D-Pad
             "secondary": "#777F87", // Start - Select
             "accent": "#7B2358", // A / B
@@ -43,7 +48,6 @@ module.exports = {
             "base-100": "#626A7B" // Screen frame
           },
           yellow:{
-            ...require("daisyui/src/colors/themes")["[data-theme=black]"],
             "primary": "#232129",
             "secondary": "#232129",
             "accent": "#232129",
@@ -52,7 +56,6 @@ module.exports = {
             "base-100": "#212121"  
           },
           red:{
-            ...require("daisyui/src/colors/themes")["[data-theme=black]"],
             "primary": "#232129",
             "secondary": "#232129",
             "accent": "#232129",
@@ -61,7 +64,6 @@ module.exports = {
             "base-100": "#212121"
           },
           black:{
-            ...require("daisyui/src/colors/themes")["[data-theme=black]"],
             "primary": "#525457",
             "secondary": "#525457",
             "accent": "#525457",
@@ -70,7 +72,6 @@ module.exports = {
             "base-100": "#626A7B"
           },
           white:{
-            ...require("daisyui/src/colors/themes")["[data-theme=black]"],
             "primary": "#000000",
             "secondary": "#161A1A",
             "accent": "#000000",
@@ -79,7 +80,6 @@ module.exports = {
             "base-100": "#000000"  
           },
           blue:{
-            ...require("daisyui/src/colors/themes")["[data-theme=black]"],
             "primary": "#232129",
             "secondary": "#232129",
             "accent": "#232129",
@@ -88,7 +88,6 @@ module.exports = {
             "base-100": "#212121"
           },
           green:{
-            ...require("daisyui/src/colors/themes")["[data-theme=black]"],
             "primary": "#232129",
             "secondary": "#232129",
             "accent": "#232129",
@@ -97,7 +96,6 @@ module.exports = {
             "base-100": "#212121"
           },
           transparent:{
-            ...require("daisyui/src/colors/themes")["[data-theme=black]"],
             "primary": "#232129",
             "secondary": "#232129",
             "accent": "#232129",

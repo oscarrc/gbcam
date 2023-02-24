@@ -1,0 +1,5 @@
+const useCamera = () => {
+
+}
+
+export { useCamera }
