@@ -14,7 +14,8 @@ module.exports = {
         '4/3': '4 / 3',
       },
       rotate:{
-        '20':  '20deg'
+        '20':  '20deg',
+        '35':  '35deg'
       },
       fontFamily:{
         "title": ["Gil Sans"],

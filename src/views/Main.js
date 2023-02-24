@@ -1,21 +1,20 @@
-import { Brand, Download, Mode, Share, Snap } from "../components/partials";
+import { Actions, Brand, Controls, Snap } from "../components/partials";
 
 import Display from "../components/display";
 
 const Main = () => {
     return (
-        <section className="flex flex-col flex-1 items-center justify-center gap-8">
+        <section className="flex flex-col flex-1 items-center justify-center gap-2">
             <div className="max-w-[90%] md:max-w-display mt-24">
                 <Display />
                 <Brand />
             </div>
             <div className="max-w-[90%] md:max-w-display flex flex-col flex-1 justify-between items-center w-full">
-                <div className="grid grid-cols-3 place-content-around place-items-center w-full">
-                    <Download />
+                <div className="flex justify-between items-start w-full px-16">
+                    <Controls />
                     <Snap />
-                    <Share />
                 </div>
-                <Mode />
+                <Actions />
             </div>
         </section>
     )

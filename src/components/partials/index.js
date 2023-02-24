@@ -1,7 +1,6 @@
+import Actions from "./Actions";
 import Brand from "./Brand";
-import Download from "./Download";
-import Mode from "./Mode";
-import Share from "./Share";
+import Controls from "./Controls";
 import Snap from "./Snap";
 
-export { Brand, Download, Mode, Share, Snap }
+export { Actions, Brand, Controls, Snap }
