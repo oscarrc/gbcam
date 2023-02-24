@@ -1,25 +1,24 @@
 import { AiFillHeart } from "react-icons/ai";
-import { useRef, useEffect } from "react";
+import { useEffect } from "react";
 import { useCamera } from "../../hooks/useCamera";
 
 const Display = ({ className }) => {
-    const canvasRef = useRef(null);
-    const { initFeed } = useCamera();
+    const { output, initFeed, cameraEnabled } = useCamera();
 
     useEffect(() => {
-        const canvas = canvasRef.current;
+        const canvas = output.current;
         const setCanvasHeight = () => canvas.height = canvas.width;
         
         setCanvasHeight();
         window.addEventListener("resize", setCanvasHeight)
 
         return () => window.removeEventListener("resize", setCanvasHeight)
-    }, [canvasRef])
+    }, [output])
 
     useEffect(()=> {
-        if(!canvasRef.current) return;
-        initFeed(canvasRef.current)
-    },[initFeed, canvasRef])
+        if(!output.current) return;
+        initFeed()
+    },[initFeed, output])
 
     return (
         <div className={`aspect-4/3 ${className} bg-base-100 rounded-lg rounded-br-[2rem] flex flex-col gap-2 py-2`}>
@@ -30,12 +29,10 @@ const Display = ({ className }) => {
             </div>
             <div className="flex flex-row items-start justify-center pb-10 pr-20">
                 <div className="flex flex-col items-center justify-center gap-2 w-20 mt-[25%]">
-                    <span className="h-2 w-2 bg-red rounded-full bg-opacity-20"></span>
+                    <span className={`h-2 w-2 bg-red rounded-full ${cameraEnabled ? 'glow' : 'bg-opacity-20'}`}></span>
                     <span className="text-white text-xs relative -bottom-px">Camera</span>
                 </div>
-                <canvas ref={canvasRef} className="bg-display w-full">
-
-                </canvas>
+                <canvas ref={output} className="bg-display w-full aspect-10/9" />
             </div>
         </div>
     )

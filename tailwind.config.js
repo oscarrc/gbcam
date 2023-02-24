@@ -12,6 +12,7 @@ module.exports = {
       },
       aspectRatio: {
         '4/3': '4 / 3',
+        '10/9': '10 / 9',
       },
       rotate:{
         '20':  '20deg',
