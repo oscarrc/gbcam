@@ -37,8 +37,10 @@
     font-style: normal;
 }
 
-html{
-    background: none;
+@base{ 
+    html{
+        background: none;
+    }
 }
 
 @layer components {
@@ -47,5 +49,21 @@ html{
         background-color: hsl(var(--b1) / var(--tw-bg-opacity));
         --tw-text-opacity: 1;
         color: hsl(var(--bc) / var(--tw-text-opacity));
+    }
+
+    .navbar:before, .navbar:after{
+        content: "";
+        position: absolute;
+        width: 2px;
+        height: 100%;
+        background: hsl(var(--p) / var(--tw-border-opacity));
+    }
+
+    .navbar:before{
+        left: 4rem;
+    }
+
+    .navbar:after{
+        right: 4rem;
     }
 }

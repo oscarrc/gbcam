@@ -7,6 +7,9 @@ module.exports = {
       minHeight:{
         "dscreen": "100dvh"
       },
+      aspectRatio: {
+        '4/3': '4 / 3',
+      },
       fontFamily:{
         "title": ["Gil Sans"],
         "button": ["Nes Controller"],
@@ -21,7 +24,7 @@ module.exports = {
         "white": "#ffffff",
         "blue": "#154D9A",
         "green": "#00B67D",
-        "transparent": "#0f380f",
+        "display": "#0f380f",
         "line-1": "#7B2358",
         "line-2": "#3D3E73"
       }
