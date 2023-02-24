@@ -10,7 +10,7 @@ const Main = () => {
                 <Brand />
             </div>
             <div className="max-w-[90%] md:max-w-display flex flex-col flex-1 justify-between items-center w-full">
-                <div className="flex justify-between items-start w-full px-16">
+                <div className="flex justify-between items-center w-full px-16">
                     <Controls />
                     <Snap />
                 </div>
