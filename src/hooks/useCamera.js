@@ -1,4 +1,4 @@
-import { useRef, createContext, useContext, useState, useCallback } from "react"
+import { createContext, useCallback, useContext, useRef, useState } from "react"
 
 const CameraContext = createContext();
 
@@ -43,16 +43,17 @@ const CameraProvider = ({ children }) => {
 
         drawInterval.current = setInterval(() => {
             if(!video.current) return;
-            const min = Math.min(video.current.videoWidth, video.current.videoHeight);
-            const sx = ( video.current.videoWidth - min ) / 2;
-            const sy = ( video.current.videoHeight - min ) / 2;
-            context.drawImage(video.current, sx, sy, min, min, 0, 0, 128, 128);
-            context.drawImage(output.current, 0, 0, output.current.width, output.current.height);
-            
-            // context.drawImage(output.current,sx,sy,min,min,0,0,output.current.width,output.current.height);
+            const sMin = Math.min(video.current.videoWidth, video.current.videoHeight);
+            const dMin = Math.min(output.current.width, output.current.height);
+            const sx = ( video.current.videoWidth - sMin ) / 2;
+            const sy = ( video.current.videoHeight - sMin ) / 2;
+            context.drawImage(video.current, sx, sy, sMin, sMin, 0, 0, 128, 128);
             applyPalette(context)
-        },200)
-    }, [output])
+            context.drawImage(output.current, 0, 0, 128, 128, 0,0, dMin, dMin);
+            
+            // context.drawImage(output.current,sx,sy,min,min,0,0,output.current.width,output.current.height);            
+        },17)
+    }, [video])
 
     const applyPalette = (context) => {
         const palette = ["#0f380f", "#306230", "#8bac0f", "#9bbc0f"];
