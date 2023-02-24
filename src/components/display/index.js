@@ -1,6 +1,21 @@
 import { AiFillHeart } from "react-icons/ai";
+import { useRef, useEffect } from "react";
 
 const Display = ({ className }) => {
+    const canvasRef = useRef(null);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        const setCanvasHeight = () => {
+            canvas.height = canvas.width
+        };
+
+        setCanvasHeight();
+        window.addEventListener("resize", setCanvasHeight)
+
+        return () => window.removeEventListener("resize", setCanvasHeight)
+    }, [canvasRef])
+
     return (
         <div className={`aspect-4/3 ${className} bg-base-100 rounded-lg rounded-br-[2rem] flex flex-col gap-2 py-2`}>
             <div className="flex flex-row items-center gap-4 px-4">
@@ -11,9 +26,9 @@ const Display = ({ className }) => {
             <div className="flex flex-row items-start justify-center pb-10 pr-20">
                 <div className="flex flex-col items-center justify-center gap-2 w-20 mt-[25%]">
                     <span className="h-2 w-2 bg-red rounded-full bg-opacity-20"></span>
-                    <span className="text-white text-xs">Camera</span>
+                    <span className="text-white text-xs relative -bottom-px">Camera</span>
                 </div>
-                <canvas className="aspect-square bg-display max-h-[calc(100% - 10rem)]">
+                <canvas ref={canvasRef} className="bg-display w-full max-w-[calc(100% - 10rem)]">
 
                 </canvas>
             </div>
