@@ -1,16 +1,17 @@
-import { useRef, createContext, useContext } from "react"
+import { useRef, createContext, useContext, useState } from "react"
 
 const CameraContext = createContext();
 
 const CameraProvider = ({ children }) => {
     const video = useRef(null);
+    const drawInterval = useRef(null);
 
     const initCamera = async () => {
         const feed = await navigator.mediaDevices.getUserMedia({video:true});
         if(!feed) return; // No camera or no permission given        
         video.current = document.createElement("video");
         video.current.srcObject = feed;
-        console.log(video.current)
+        console.log(video.current.srcObject)
     }
 
     const initFeed = async (canvas) => {
@@ -20,13 +21,15 @@ const CameraProvider = ({ children }) => {
 
         await initCamera(canvas);
 
-        setInterval(() => {
+        clearInterval(drawInterval.current);
+
+        drawInterval.current = setInterval(() => {
             if(!video.current) return;
             const min = Math.min(video.current.videoWidth, video.current.videoHeight);
             const sx=(video.current.videoWidth-min)/2;
             const sy=(video.current.videoHeight-min)/2;
             context.drawImage(video.current,sx,sy,min,min,0,0,canvas.width,canvas.height);
-        },100); 
+        },100)
     }   
 
     return (
