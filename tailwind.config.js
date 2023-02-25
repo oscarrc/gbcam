@@ -24,6 +24,9 @@ module.exports = {
         "brand": ["Pretendo"],
         "text": ["Univers"]
       },
+      fontSize:{
+        "2xs": "0.5rem"
+      },
       colors:{
         "dmg": "#BABCC1",
         "yellow": "#F1B32F",

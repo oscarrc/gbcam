@@ -20,7 +20,7 @@ const Header = () => {
 
     return (
         <header>
-            <div className="navbar w-full fixed top-0 left-0 bg-neutral text-neutral-content rounded-t-2xl border-b-2 border-primary border-opacity-20 px-16">
+            <div className="navbar w-full fixed top-0 left-0 bg-neutral text-neutral-content rounded-t-2xl border-b-2 border-primary border-opacity-20 min-h-12 py-0 px-12 z-20">
                 <div className="flex-1">
                     <a href="/" className="btn btn-ghost normal-case text-4xl font-title italic">GBCam</a>
                 </div>

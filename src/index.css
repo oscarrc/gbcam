@@ -60,11 +60,11 @@
     }
 
     .navbar:before{
-        left: 4rem;
+        left: 3rem;
     }
 
     .navbar:after{
-        right: 4rem;
+        right: 3rem;
     }
 }
 
