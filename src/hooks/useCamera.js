@@ -15,7 +15,7 @@ const CameraProvider = ({ children }) => {
     const initVideo = async () => {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({video: true });
-            
+
             video.current = document.createElement("video");
             video.current.srcObject = stream;
             video.current.play();
@@ -50,6 +50,8 @@ const CameraProvider = ({ children }) => {
             const sy = ( video.current.videoHeight - sMin ) / 2;
 
             context.drawImage(video.current, sx, sy, sMin, sMin, 0, 0, size, size);
+            applyContrast(context, 100);
+            applyBrightness(context, 100);
             applyPalette(context)
             context.drawImage(output.current, 0, 0, size, size, 0, 0, dMin, dMin);
             
@@ -82,6 +84,25 @@ const CameraProvider = ({ children }) => {
         }
 
         context.putImageData(imgData,0,0)
+    }
+
+    const applyContrast = (context, contrast) => {  //input range [-100..100]        
+        const imgData = context.getImageData(0,0,output.current.width,output.current.height);
+
+        contrast = (contrast/100) + 1;  //convert to decimal & shift range: [0..2]
+        let intercept = 128 * (1 - contrast);
+
+        for(let i = 0; i < imgData.length; i +=4 ){   //r,g,b,a
+            imgData[i] = imgData[i]*contrast + intercept;
+            imgData[i+1] = imgData[i+1]*contrast + intercept;
+            imgData[i+2] = imgData[i+2]*contrast + intercept;
+        }
+
+        context.putImageData(imgData,0,0)
+    }
+
+    const applyBrightness = (context, brightness) => {
+        
     }
 
     const takeSnapshot = () => {
