@@ -43,13 +43,15 @@ const CameraProvider = ({ children }) => {
 
         drawInterval.current = setInterval(() => {
             if(!video.current) return;
+            const size = 128
             const sMin = Math.min(video.current.videoWidth, video.current.videoHeight);
             const dMin = Math.min(output.current.width, output.current.height);
             const sx = ( video.current.videoWidth - sMin ) / 2;
             const sy = ( video.current.videoHeight - sMin ) / 2;
-            context.drawImage(video.current, sx, sy, sMin, sMin, 0, 0, 128, 128);
+
+            context.drawImage(video.current, sx, sy, sMin, sMin, 0, 0, size, size);
             applyPalette(context)
-            context.drawImage(output.current, 0, 0, 128, 128, 0,0, dMin, dMin);
+            context.drawImage(output.current, 0, 0, size, size, 0, 0, dMin, dMin);
             
             // context.drawImage(output.current,sx,sy,min,min,0,0,output.current.width,output.current.height);            
         },17)
