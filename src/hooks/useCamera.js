@@ -73,7 +73,7 @@ const CameraProvider = ({ children }) => {
             if(!video.current) return;
             const size = 128;
             const sMin = Math.min(video.current.videoWidth, video.current.videoHeight);
-            const dMin = Math.min(output.current.width, output.current.height);
+            const dMin = Math.min(output.current?.width, output.current?.height);
             const sx = ( video.current.videoWidth - sMin ) / 2;
             const sy = ( video.current.videoHeight - sMin ) / 2;
 
@@ -89,7 +89,7 @@ const CameraProvider = ({ children }) => {
 
     const drawSnapshot = useCallback((context) => {
         const size = 1024;
-        const dMin = Math.min(output.current.width, output.current.height);
+        const dMin = Math.min(output.current?.width, output.current?.height);
         const image = new Image();
         image.onload = () => context.drawImage(image, 0, 0, size, size, 0, 0, dMin, dMin); 
         image.src = snapshot;
