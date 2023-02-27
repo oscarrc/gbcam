@@ -4,7 +4,7 @@ import Display from "../components/display";
 
 const Main = () => {
     return (
-        <section className="flex flex-col flex-1 items-center justify-center gap-16 px-12 md:max-w-display mt-24 mx-auto">
+        <section className="flex flex-col flex-1 items-center justify-around px-12 md:max-w-display mt-24 mx-auto">
             <div className="">
                 <Display />
                 <Brand />
