@@ -1,9 +1,9 @@
 import { BsFillCameraFill, BsFillCameraVideoFill } from "react-icons/bs";
-
+import { RiArrowGoBackFill } from "react-icons/ri";
 import { useCamera } from "../../hooks/useCamera";
 
 const Snap = () => {
-    const { takeSnapshot } = useCamera();
+    const { takeSnapshot, clearSnapshot } = useCamera();
 
     return (
         <div className="grid grid-cols-2 grid-rows-2 rotate-35 text-button font-bold text-neutral-content text-xs">            
@@ -14,8 +14,8 @@ const Snap = () => {
                 <label className="block ml-8 -rotate-35">A</label>
             </div>
             <div className="text-center row-start-2 col-start-1 -rotate-35">
-                <button aria-label="Take video" className="btn btn-circle shadow-lg btn-accent">
-                    <BsFillCameraVideoFill/>
+                <button onClick={clearSnapshot} aria-label="Start over" className="btn btn-circle shadow-lg btn-accent">
+                    <RiArrowGoBackFill />
                 </button>
                 <label className="block ml-8 -rotate-35">B</label>
             </div>

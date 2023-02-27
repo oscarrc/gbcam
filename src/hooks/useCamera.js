@@ -68,19 +68,7 @@ const CameraProvider = ({ children }) => {
           }
     }
 
-    const initFeed = useCallback(async () => {
-        if(!video.current) await initVideo();
-        
-        const context = output.current.getContext("2d", { 
-            willReadFrequently: true,            
-            msImageSmoothingEnabled: false,
-            mozImageSmoothingEnabled: false,
-            webkitImageSmoothingEnabled: false,
-            imageSmoothingEnabled: false
-        });
-
-        clearInterval(drawInterval.current);
-
+    const drawVideoFeed = useCallback((context) => {
         drawInterval.current = setInterval(() => {
             if(!video.current) return;
             const size = 128;
@@ -97,7 +85,32 @@ const CameraProvider = ({ children }) => {
 
             context.drawImage(output.current, 0, 0, size, size, 0, 0, dMin, dMin);         
         },17)
-    }, [applyBrightness, applyContrast, video])
+    }, [applyBrightness, applyContrast])
+
+    const drawSnapshot = useCallback((context) => {
+        const size = 1024;
+        const dMin = Math.min(output.current.width, output.current.height);
+        const image = new Image();
+        image.onload = () => context.drawImage(image, 0, 0, size, size, 0, 0, dMin, dMin); 
+        image.src = snapshot;
+    }, [snapshot])
+
+    const initFeed = useCallback(async () => {
+        if(!video.current) await initVideo();
+        
+        const context = output.current.getContext("2d", { 
+            willReadFrequently: true,            
+            msImageSmoothingEnabled: false,
+            mozImageSmoothingEnabled: false,
+            webkitImageSmoothingEnabled: false,
+            imageSmoothingEnabled: false
+        });
+
+        clearInterval(drawInterval.current);
+
+        if(snapshot) drawSnapshot(context);
+        else drawVideoFeed(context);
+    }, [drawSnapshot, drawVideoFeed, snapshot])
 
     const takeSnapshot = () => {
         const c = document.createElement("canvas");
@@ -107,6 +120,8 @@ const CameraProvider = ({ children }) => {
         context.drawImage(output.current, 0, 0, output.current.width, output.current.height, 0, 0, 1024, 1024);
         setSnapshot(c.toDataURL());
     }
+
+    const clearSnapshot = () => setSnapshot(null);
 
     const save = () => {
         if(!snapshot) return;
@@ -119,6 +134,7 @@ const CameraProvider = ({ children }) => {
     return (
         <CameraContext.Provider 
             value={{ 
+                clearSnapshot,
                 initFeed, 
                 save,
                 setBrightness, 

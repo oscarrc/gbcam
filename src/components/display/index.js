@@ -53,7 +53,7 @@ const Display = ({ className }) => {
                         <input type="range" name="contrast" readOnly={true} min="0" max="100" value={ contrast * 100 } />
                         <BsCaretRightFill />
                     </div>
-                    <div className={`range-custom absolute py-1 px-4 -rotate-90 origin-top-right top-0 right-6 range-vertical text-primary  transition-all duration-200 ${!showControls && 'opacity-0'}`}>
+                    <div className={`range-custom range-vertical absolute py-1 px-4 -rotate-90 origin-top-right top-0 right-6 text-primary transition-all duration-200 ${!showControls && 'opacity-0'}`}>
                         <BsCaretLeft />
                         <label className="font-display" htmlFor="brightness">
                             <span className="px-1">brightness</span>

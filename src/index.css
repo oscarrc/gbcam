@@ -78,12 +78,12 @@
     }
 
     .range-custom input{
-        @apply range range-xs range-primary flex-1 relative;
+        @apply range range-xs range-primary flex-1 relative rounded-none;
         position: relative;
         --range-shdw: none;
     }
 
-    .range-vertical{
+    .range-custom.range-vertical{
         width: calc(100% - 3.25rem);
     }
 
