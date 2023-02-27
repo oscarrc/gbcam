@@ -36,7 +36,7 @@ module.exports = {
         "white": "#ffffff",
         "blue": "#154D9A",
         "green": "#00B67D",
-        "display": "#0f380f",
+        "display": "#224939",
         "line-1": "#7B2358",
         "line-2": "#3D3E73"
       }

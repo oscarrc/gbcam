@@ -109,6 +109,7 @@ const CameraProvider = ({ children }) => {
     }
 
     const save = () => {
+        if(!snapshot) return;
         let a = document.createElement("a");
         a.href = snapshot; 
         a.download = `${Date.now()}.jpg`;

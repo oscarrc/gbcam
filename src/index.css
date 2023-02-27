@@ -77,23 +77,34 @@
         --range-shdw: none;
     }
 
+    .range-vertical{
+        width: calc(100% - 3.25rem);
+    }
+
     .range-custom::-webkit-slider-thumb{
-        margin-top: -0.5rem;
-        width: 0.375rem;
+        margin-top: -14px;
+        width: 5px;
         border-radius: 0;
-        clip-path: polygon(100% 0, 100% 30%, 50% 100%, 0 30%, 0 0);
+        clip-path: polygon(100% 0, 100% 70%, 50% 100%, 0 70%, 0 0);
     }
 
     .range-custom::-moz-range-thumb{
+        margin-top: -0.5rem;
         width: 0.375rem;
         border-radius: 0;
         clip-path: polygon(100% 0, 100% 30%, 50% 100%, 0 30%, 0 0);
     }
     
     .range-custom::-ms-thumb{
+        margin-top: -0.5rem;
         width: 0.375rem;
         border-radius: 0;
         clip-path: polygon(100% 0, 100% 30%, 50% 100%, 0 30%, 0 0);
+    }
+
+    .range-custom::-webkit-slider-runnable-track{
+        margin-top: 10px;
+        height: 2px;
     }
 }
 

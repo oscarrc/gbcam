@@ -1,11 +1,13 @@
-import { BsCaretDown, BsCaretLeft, BsCaretRightFill, BsCaretUpFill } from "react-icons/bs"
+import { BsCaretLeft, BsCaretRightFill } from "react-icons/bs"
 
 import { AiFillHeart } from "react-icons/ai";
 import { useCamera } from "../../hooks/useCamera";
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 
 const Display = ({ className }) => {
-    const { output, initFeed, cameraEnabled } = useCamera();
+    const { output, initFeed, cameraEnabled, brightness, contrast} = useCamera();
+    const [showControls, setShowControls] = useState(true);
+    const controlsTimeout = useRef(null);
 
     useEffect(() => {
         const canvas = output.current;
@@ -22,6 +24,14 @@ const Display = ({ className }) => {
         initFeed()
     },[initFeed, output])
 
+    useEffect(() => {
+        let timeout = controlsTimeout.current;
+        setShowControls(true);
+        timeout = setTimeout(() => setShowControls(false), 2000);
+
+        return () => clearTimeout(timeout)
+    }, [ brightness, contrast ])
+
     return (
         <div className={`aspect-4/3 ${className} bg-base-100 rounded-lg rounded-br-[2rem] flex flex-col gap-2 py-2`}>
             <div className="flex flex-row items-center gap-4 px-4">
@@ -35,10 +45,20 @@ const Display = ({ className }) => {
                     <span className="text-white text-2xs sm:text-xs relative -bottom-px">Camera</span>
                 </div>
                 <div className="relative">      
-                    <div className="flex gap-1 absolute py-1 pl-1 pr-8 bottom-0 left-0 w-full text-primary">
+                    <div className={`flex gap-1 absolute py-1 px-8 bottom-0 left-0 w-full text-primary transition-all transition-200 ${!showControls && 'opacity-0'}`}>
                         <BsCaretLeft />
-                        <input type="range" name="contrast" readOnly={true} min="0" max="100" value="40" className="range range-xs range-custom flex-1" />
-                        <label className="absolute text-2xs left-0 bottom-0 pl-1 pr-8 text-center font-display w-full" htmlFor="contrast">contrast</label>
+                        <label className="absolute text-xs left-0 bottom-0 text-center font-display w-full overflow-hidden" htmlFor="contrast">
+                            <span className="px-1">contrast</span>
+                        </label>                        
+                        <input type="range" name="contrast" readOnly={true} min="0" max="100" value={ contrast * 100 } className="range range-xs range-custom flex-1" />
+                        <BsCaretRightFill />
+                    </div>
+                    <div className={`flex gap-1 absolute py-1 px-4 -rotate-90 origin-top-right top-0 right-6 range-vertical text-primary transition-all transition-200 ${!showControls && 'opacity-0'}`}>
+                        <BsCaretLeft />
+                        <label className="absolute text-xs left-0 bottom-0 text-center font-display w-full overflow-hidden" htmlFor="brightness">
+                            <span className="px-1">brightness</span>
+                        </label>
+                        <input type="range" name="brightness" readOnly={true} min="0" max="100" value={ brightness * 100 } className="range range-xs range-custom flex-1" />
                         <BsCaretRightFill />
                     </div>
                     <canvas ref={output} className="bg-display w-full aspect-10/9" />
