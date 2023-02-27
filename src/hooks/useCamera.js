@@ -83,7 +83,7 @@ const CameraProvider = ({ children }) => {
 
         drawInterval.current = setInterval(() => {
             if(!video.current) return;
-            const size = 128
+            const size = 128;
             const sMin = Math.min(video.current.videoWidth, video.current.videoHeight);
             const dMin = Math.min(output.current.width, output.current.height);
             const sx = ( video.current.videoWidth - sMin ) / 2;

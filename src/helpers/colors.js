@@ -1,6 +1,5 @@
 /**
- * Based on pixelit pixelit - convert an image to Pixel Art, with/out grayscale and based on a color palette.
- * A work made by:
+ * Based on pixelit
  * @author José Moreira @ <https://github.com/giventofly/pixelit>
  **/
 
