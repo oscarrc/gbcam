@@ -105,14 +105,21 @@ const CameraProvider = ({ children }) => {
         c.width = 1024;
         c.height = 1024;
         context.drawImage(output.current, 0, 0, output.current.width, output.current.height, 0, 0, 1024, 1024);
-        console.log(c.toDataURL());
         setSnapshot(c.toDataURL());
+    }
+
+    const save = () => {
+        let a = document.createElement("a");
+        a.href = snapshot; 
+        a.download = `${Date.now()}.jpg`;
+        a.click();
     }
 
     return (
         <CameraContext.Provider 
             value={{ 
                 initFeed, 
+                save,
                 setBrightness, 
                 setContrast,
                 takeSnapshot,

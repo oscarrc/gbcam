@@ -11,13 +11,13 @@ const Snap = () => {
                 <button onClick={takeSnapshot} aria-label="Take photo" className="btn btn-circle shadow-lg btn-accent">
                     <BsFillCameraFill/>
                 </button>
-                <label className="block ml-8 -rotate-35">P</label>
+                <label className="block ml-8 -rotate-35">A</label>
             </div>
             <div className="text-center row-start-2 col-start-1 -rotate-35">
                 <button aria-label="Take video" className="btn btn-circle shadow-lg btn-accent">
                     <BsFillCameraVideoFill/>
                 </button>
-                <label className="block ml-8 -rotate-35">V</label>
+                <label className="block ml-8 -rotate-35">B</label>
             </div>
         </div>
     )
