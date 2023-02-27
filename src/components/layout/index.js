@@ -12,7 +12,7 @@ const Layout = () => {
                     <Outlet />
                 </CameraProvider>
             </main>
-            <div className="flex gap-2 -rotate-35 absolute bottom-8 right-4 sm:right-8 z-0">
+            <div className="flex gap-2 -rotate-35 fixed bottom-8 right-4 sm:right-8 z-0">
                 {[0,1,2,3,4,5].map( v => <span key={v} className="h-16 sm:h-24 w-3 bg-primary opacity-20 rounded-lg"></span>)}
             </div>
             <Footer />
