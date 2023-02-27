@@ -8,27 +8,27 @@ const CameraProvider = ({ children }) => {
     const drawInterval = useRef(null);
     const [ cameraError, setCameraError ] = useState(false);
     const [ cameraEnabled, setCameraEnabled ] = useState(false);
-    const [ contrastOffset, setContrastOffset] = useState(0.5);
-    const [ brightnessOffset, setBrightnessOffset] = useState(0.5);
+    const [ contrast, setContrast] = useState(0);
+    const [ brightness, setBrightness] = useState(0);
     const [ snapshot, setSnapshot ] = useState(null);    
 
     const applyBrightness = useCallback((context) => {
         context.globalCompositeOperation = "lighten";
-        context.globalAlpha = brightnessOffset; // 0-1
+        context.globalAlpha = brightness; // 0-1
         context.fillStyle = "white";
         context.fillRect(0,0,context.canvas.width,context.canvas.height);            
-        context.globalCompositeOperation = "source-over";
+        context.globalCompositeOperation = "copy";
         context.globalAlpha = 1; 
-    }, [brightnessOffset]);
+    }, [brightness]);
 
     const applyContrast = useCallback((context) => {
+        const imgData = context.getImageData(0,0,output.current.width,output.current.height);
         context.globalCompositeOperation = "darken";
-        context.globalAlpha = contrastOffset; // 0-1
-        context.fillStyle = "black";
-        context.fillRect(0,0,context.canvas.width,context.canvas.height);            
-        context.globalCompositeOperation = "source-over";
+        context.globalAlpha = contrast; // 0-1
+        context.putImageData(imgData,0,0)       
+        context.globalCompositeOperation = "copy";
         context.globalAlpha = 1; 
-    }, [contrastOffset]);
+    }, [contrast]);
 
     const applyPalette = (context) => {
         const palette = ["#0f380f", "#306230", "#8bac0f", "#9bbc0f"];
@@ -95,14 +95,12 @@ const CameraProvider = ({ children }) => {
             const sy = ( video.current.videoHeight - sMin ) / 2;
 
             context.drawImage(video.current, sx, sy, sMin, sMin, 0, 0, size, size);
-
-            applyBrightness(context);
+            
             applyContrast(context);
+            applyBrightness(context);
             applyPalette(context);
 
-            context.drawImage(output.current, 0, 0, size, size, 0, 0, dMin, dMin);
-            
-            // context.drawImage(output.current,sx,sy,min,min,0,0,output.current.width,output.current.height);            
+            context.drawImage(output.current, 0, 0, size, size, 0, 0, dMin, dMin);         
         },17)
     }, [applyBrightness, applyContrast, video])
 
@@ -114,8 +112,8 @@ const CameraProvider = ({ children }) => {
         <CameraContext.Provider 
             value={{ 
                 initFeed, 
-                setBrightnessOffset, 
-                setContrastOffset,
+                setBrightness, 
+                setContrast,
                 takeSnapshot,
                 cameraEnabled,
                 cameraError,
