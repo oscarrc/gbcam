@@ -24,9 +24,9 @@ const CameraProvider = ({ children }) => {
     }, [brightness]);
 
     const applyContrast = useCallback((context) => {
-        context.globalCompositeOperation = "darken";
+        context.globalCompositeOperation = "saturation";
         context.globalAlpha = contrast; // 0-1
-        context.fillStyle = "black";
+        context.fillStyle = "red";
         context.fillRect(0,0,context.canvas.width,context.canvas.height);
         context.globalCompositeOperation = "copy";
         context.globalAlpha = 1; 
@@ -123,8 +123,10 @@ const CameraProvider = ({ children }) => {
                 setBrightness, 
                 setContrast,
                 takeSnapshot,
+                brightness,
                 cameraEnabled,
                 cameraError,
+                contrast,
                 output,
                 snapshot 
             }}

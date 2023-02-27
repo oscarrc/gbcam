@@ -6,7 +6,7 @@ import { useCamera } from "../../hooks/useCamera";
 const Controls = () => {
     const { brightness, contrast, setBrightness, setContrast } = useCamera();
 
-    const increaseBrightness = () => { if(brightness < 1) setBrightness( b => b + 0.01 ) }
+    const increaseBrightness = () => {  if(brightness < 1)  setBrightness( b => b + 0.01 ) }
     const decreaseBrightness = () => { if (brightness > 0) setBrightness( b => b - 0.01 ) }
     const increaseContrast = () => { if(contrast < 1) setContrast( c => c + 0.01 ) }
     const decreaseContrast = () => { if(contrast > 0) setContrast( c => c - 0.01 ) }
