@@ -45,20 +45,20 @@ const Display = ({ className }) => {
                     <span className="text-white text-2xs sm:text-xs relative -bottom-px">Camera</span>
                 </div>
                 <div className="relative">      
-                    <div className={`flex gap-1 absolute py-1 px-8 bottom-0 left-0 w-full text-primary transition-all transition-200 ${!showControls && 'opacity-0'}`}>
+                    <div className={`range-custom absolute py-1 px-8 bottom-0 left-0 w-full text-primary transition-all duration-200 ${!showControls && 'opacity-0'}`}>
                         <BsCaretLeft />
-                        <label className="absolute text-xs left-0 bottom-0 text-center font-display w-full overflow-hidden" htmlFor="contrast">
+                        <label className="font-display" htmlFor="contrast">
                             <span className="px-1">contrast</span>
                         </label>                        
-                        <input type="range" name="contrast" readOnly={true} min="0" max="100" value={ contrast * 100 } className="range range-xs range-custom flex-1" />
+                        <input type="range" name="contrast" readOnly={true} min="0" max="100" value={ contrast * 100 } />
                         <BsCaretRightFill />
                     </div>
-                    <div className={`flex gap-1 absolute py-1 px-4 -rotate-90 origin-top-right top-0 right-6 range-vertical text-primary transition-all transition-200 ${!showControls && 'opacity-0'}`}>
+                    <div className={`range-custom absolute py-1 px-4 -rotate-90 origin-top-right top-0 right-6 range-vertical text-primary  transition-all duration-200 ${!showControls && 'opacity-0'}`}>
                         <BsCaretLeft />
-                        <label className="absolute text-xs left-0 bottom-0 text-center font-display w-full overflow-hidden" htmlFor="brightness">
+                        <label className="font-display" htmlFor="brightness">
                             <span className="px-1">brightness</span>
                         </label>
-                        <input type="range" name="brightness" readOnly={true} min="0" max="100" value={ brightness * 100 } className="range range-xs range-custom flex-1" />
+                        <input type="range" name="brightness" readOnly={true} min="0" max="100" value={ brightness * 100 } />
                         <BsCaretRightFill />
                     </div>
                     <canvas ref={output} className="bg-display w-full aspect-10/9" />
