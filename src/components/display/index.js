@@ -1,3 +1,5 @@
+import { BsCaretDown, BsCaretLeft, BsCaretRightFill, BsCaretUpFill } from "react-icons/bs"
+
 import { AiFillHeart } from "react-icons/ai";
 import { useCamera } from "../../hooks/useCamera";
 import { useEffect } from "react";
@@ -32,7 +34,15 @@ const Display = ({ className }) => {
                     <span className={`h-2 w-2 bg-red rounded-full ${cameraEnabled ? 'glow' : 'bg-opacity-20'}`}></span>
                     <span className="text-white text-2xs sm:text-xs relative -bottom-px">Camera</span>
                 </div>
-                <canvas ref={output} className="bg-display w-full aspect-10/9" />
+                <div className="relative">      
+                    <div className="flex gap-1 absolute py-1 pl-1 pr-8 bottom-0 left-0 w-full text-primary">
+                        <BsCaretLeft />
+                        <input type="range" name="contrast" readOnly={true} min="0" max="100" value="40" className="range range-xs range-custom flex-1" />
+                        <label className="absolute text-2xs left-0 bottom-0 pl-1 pr-8 text-center font-display w-full" htmlFor="contrast">contrast</label>
+                        <BsCaretRightFill />
+                    </div>
+                    <canvas ref={output} className="bg-display w-full aspect-10/9" />
+                </div>
             </div>
         </div>
     )

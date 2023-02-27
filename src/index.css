@@ -37,6 +37,12 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'Rounded_5x5';
+    src: url('assets/fonts/Rounded_5x5.ttf') format('truetype');
+    font-display: swap;
+}
+
 @base{ 
     html{
         background: none;
@@ -65,6 +71,29 @@
 
     .navbar:after{
         right: 3rem;
+    }
+
+    .range-custom{
+        --range-shdw: none;
+    }
+
+    .range-custom::-webkit-slider-thumb{
+        margin-top: -0.5rem;
+        width: 0.375rem;
+        border-radius: 0;
+        clip-path: polygon(100% 0, 100% 30%, 50% 100%, 0 30%, 0 0);
+    }
+
+    .range-custom::-moz-range-thumb{
+        width: 0.375rem;
+        border-radius: 0;
+        clip-path: polygon(100% 0, 100% 30%, 50% 100%, 0 30%, 0 0);
+    }
+    
+    .range-custom::-ms-thumb{
+        width: 0.375rem;
+        border-radius: 0;
+        clip-path: polygon(100% 0, 100% 30%, 50% 100%, 0 30%, 0 0);
     }
 }
 

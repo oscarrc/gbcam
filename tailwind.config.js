@@ -22,7 +22,8 @@ module.exports = {
         "title": ["Gil Sans"],
         "button": ["Nes Controller"],
         "brand": ["Pretendo"],
-        "text": ["Univers"]
+        "text": ["Univers"],
+        "display": ["Rounded_5x5"]
       },
       fontSize:{
         "2xs": "0.5rem"
