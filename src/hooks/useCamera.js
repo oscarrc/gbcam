@@ -1,5 +1,7 @@
 import { createContext, useCallback, useContext, useRef, useState } from "react"
 
+import { similarColor } from "../helpers/colors";
+
 const CameraContext = createContext();
 
 const CameraProvider = ({ children }) => {
@@ -22,40 +24,32 @@ const CameraProvider = ({ children }) => {
     }, [brightness]);
 
     const applyContrast = useCallback((context) => {
-        const imgData = context.getImageData(0,0,output.current.width,output.current.height);
         context.globalCompositeOperation = "darken";
         context.globalAlpha = contrast; // 0-1
-        context.putImageData(imgData,0,0)       
+        context.fillStyle = "black";
+        context.fillRect(0,0,context.canvas.width,context.canvas.height);
         context.globalCompositeOperation = "copy";
         context.globalAlpha = 1; 
     }, [contrast]);
 
-    const applyPalette = (context) => {
-        const palette = ["#0f380f", "#306230", "#8bac0f", "#9bbc0f"];
-        const imgData = context.getImageData(0,0,output.current.width,output.current.height);
-
-        for (let i = 0; i < imgData.data.length; i += 4) {
-            // let avg = (imgData.data[i] + imgData.data[i + 1] + imgData.data[i + 2]) / 3; // Without Grayscale
-            let avg = (imgData.data[i] + imgData.data[i + 1] + imgData.data[i + 2]) / 3 * imgData.data[i + 3] / 255; // Grayscale
-            let closest = 0;
-
-            for (let j = 0; j < palette.length - 1; j++) {
-                if (avg >= (j * 255 / (palette.length - 1)) && avg <= ((j + 1) * 255 / (palette.length - 1))) {
-                    closest = j;
-                    break;
-                }
-            }
-
-            let color1 = palette[closest];
-            let color2 = palette[closest + 1];
-            let t = (avg - (closest * 255 / (palette.length - 1))) / (255 / (palette.length - 1));
-
-            imgData.data[i] = color1[0] + (color2[0] - color1[0]) * t;
-            imgData.data[i + 1] = color1[1] + (color2[1] - color1[1]) * t;
-            imgData.data[i + 2] = color1[2] + (color2[2] - color1[2]) * t;
+    const convertPalette = (context) => {
+        const palette = [[34, 73, 57], [54, 119, 74], [77, 163, 80], [132, 205, 110]];
+        const width = output.current.width;
+        const height = output.current.height;
+        const imgData = context.getImageData(0,0,width,height);
+        
+        for (let y = 0; y < imgData.height; y++) {
+          for (let x = 0; x < imgData.width; x++) {
+            let i = y * 4 * imgData.width + x * 4;
+            const color = similarColor([ imgData.data[i], imgData.data[i + 1], imgData.data[i + 2] ], palette);
+            
+            imgData.data[i] = color[0];
+            imgData.data[i + 1] = color[1];
+            imgData.data[i + 2] = color[2];
+          }
         }
 
-        context.putImageData(imgData,0,0)
+        context.putImageData(imgData, 0, 0);
     }
 
     const initVideo = async () => {
@@ -99,14 +93,20 @@ const CameraProvider = ({ children }) => {
             
             applyContrast(context);
             applyBrightness(context);
-            applyPalette(context);
+            convertPalette(context);
 
             context.drawImage(output.current, 0, 0, size, size, 0, 0, dMin, dMin);         
         },17)
     }, [applyBrightness, applyContrast, video])
 
     const takeSnapshot = () => {
-        setSnapshot(output.current.toDataURL());
+        const c = document.createElement("canvas");
+        const context = c.getContext("2d");
+        c.width = 1024;
+        c.height = 1024;
+        context.drawImage(output.current, 0, 0, output.current.width, output.current.height, 0, 0, 1024, 1024);
+        console.log(c.toDataURL());
+        setSnapshot(c.toDataURL());
     }
 
     return (
