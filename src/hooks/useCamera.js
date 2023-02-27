@@ -35,7 +35,8 @@ const CameraProvider = ({ children }) => {
         const imgData = context.getImageData(0,0,output.current.width,output.current.height);
 
         for (let i = 0; i < imgData.data.length; i += 4) {
-            let avg = (imgData.data[i] + imgData.data[i + 1] + imgData.data[i + 2]) / 3 * imgData.data[i + 3] / 255;
+            // let avg = (imgData.data[i] + imgData.data[i + 1] + imgData.data[i + 2]) / 3; // Without Grayscale
+            let avg = (imgData.data[i] + imgData.data[i + 1] + imgData.data[i + 2]) / 3 * imgData.data[i + 3] / 255; // Grayscale
             let closest = 0;
 
             for (let j = 0; j < palette.length - 1; j++) {
