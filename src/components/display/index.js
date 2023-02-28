@@ -53,7 +53,7 @@ const Display = ({ className }) => {
                                     <label className="font-display" htmlFor="contrast">
                                         <span className="px-1">contrast</span>
                                     </label>                        
-                                    <input type="range" name="contrast" readOnly={true} min="0" max="100" value={ contrast * 100 } />
+                                    <input type="range" aria-label="contrast" aria-readonly="true" id="contrast" readOnly={true} min="0" max="100" value={ contrast * 100 } />
                                     <BsCaretRightFill />
                                 </div>
                                 <div className={`range-custom range-vertical absolute py-1 px-4 -rotate-90 origin-top-right top-0 right-6 text-primary transition-all duration-200 ${!showControls && 'opacity-0'}`}>
@@ -61,7 +61,7 @@ const Display = ({ className }) => {
                                     <label className="font-display" htmlFor="brightness">
                                         <span className="px-1">brightness</span>
                                     </label>
-                                    <input type="range" name="brightness" readOnly={true} min="0" max="100" value={ brightness * 100 } />
+                                    <input type="range" aria-label="brightness" aria-readonly="true" id="brightness" readOnly={true} min="0" max="100" value={ brightness * 100 } />
                                     <BsCaretRightFill />
                                 </div>
                             </>
