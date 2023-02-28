@@ -117,6 +117,72 @@
         @apply absolute text-xs left-0 text-center w-full overflow-hidden;
         bottom: -1.5px
     }
+
+    #gbicon .dpad{ fill: #070C0B }
+    #gbicon .body{ fill: #BABCC1 }
+    #gbicon .start, #gbicon .select{ fill: #777F87 }
+    #gbicon .button{ fill: #7B2358 }
+    #gbicon .frame{ fill: #626A7B }
+    #gbicon .grill path{ fill: #070C0B; opacity: 0.2 }
+  
+    #gbicon.yellow .body{ fill: #F1B32F }
+    #gbicon.yellow .dpad,
+    #gbicon.yellow .start, 
+    #gbicon.yellow .select,
+    #gbicon.yellow .button { fill: #232129 }
+    #gbicon.yellow .frame{ fill: #212121 }
+    #gbicon.yellow .grill path{ fill: #232129; opacity: 0.2 }
+
+    #gbicon.red .body{ fill: #E22E32 }
+    #gbicon.red .dpad,
+    #gbicon.red .start, 
+    #gbicon.red .select,
+    #gbicon.red .button { fill: #232129 }
+    #gbicon.red .frame{ fill: #212121 }
+    #gbicon.red .grill path{ fill: #232129; opacity: 0.2 }
+
+    #gbicon.blue .body{ fill: #154D9A }
+    #gbicon.blue .dpad,
+    #gbicon.blue .start, 
+    #gbicon.blue .select,
+    #gbicon.blue .button { fill: #232129 }
+    #gbicon.blue .frame{ fill: #212121 }
+    #gbicon.blue .grill path{ fill: #232129; opacity: 0.2 }
+
+    #gbicon.green .body{ fill: #00B67D }
+    #gbicon.green .dpad,
+    #gbicon.green .start, 
+    #gbicon.green .select,
+    #gbicon.green .button { fill: #232129 }
+    #gbicon.green .frame{ fill: #212121 }
+    #gbicon.green .grill path{ fill: #232129; opacity: 0.2 }
+
+    #gbicon.white .body{ fill: #ffffff }
+    #gbicon.white .dpad{ fill: #000000 }
+    #gbicon.white .start, 
+    #gbicon.white .select,
+    #gbicon.white .button { fill: #161A1A }
+    #gbicon.white .frame{ fill: #000000 }
+    #gbicon.white .grill path{ fill: #000000; opacity: 0.2 }
+
+    #gbicon.black .body{ fill: #000000 }
+    #gbicon.black .dpad,
+    #gbicon.black .start, 
+    #gbicon.black .select,
+    #gbicon.black .button { fill: #525457 }
+    #gbicon.black .frame{ fill: #626A7B }
+    #gbicon.black .grill path{ fill: #525457; opacity: 0.2 }
+
+    #gbicon.transparent .body{ fill: #1D5A33 }
+    #gbicon.transparent .dpad,
+    #gbicon.transparent .start, 
+    #gbicon.transparent .select,
+    #gbicon.transparent .button { fill: #232129 }
+    #gbicon.transparent .frame{ fill: #212121 }
+    #gbicon.transparent .grill path{ fill: #232129; opacity: 0.2 }
+
+    .selected #gbicon .body{ stroke: #000000 }
+    .selected #gbicon.black .body{ stroke: #ffffff }
 }
 
 @layer utilities{

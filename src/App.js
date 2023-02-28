@@ -1,6 +1,6 @@
+import { CameraProvider } from "./hooks/useCamera";
 import Layout from './components/layout';
 import Main from './views/Main';
-import { CameraProvider } from "./hooks/useCamera";
 
 const App = () => {
   return (

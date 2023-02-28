@@ -1,17 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 
 import { BsChevronDown } from "react-icons/bs";
+import GBIcon from "../partials/GBicon";
 
-const MODELS = ["Yellow", "Red", "Black", "White", "Blue", "Green", "Transparent"];
+const MODELS = ["classic", "yellow", "red", "black", "white", "blue", "green", "transparent"];
 
 const Header = () => {
     const [ theme, setTheme ] = useState(localStorage.getItem("theme") || "classic");
     const themeRef = useRef(null);
 
     const toggleTheme = (theme) => {
-        localStorage.setItem("theme", theme.toLowerCase());
+        localStorage.setItem("theme", theme);
         themeRef.current.blur();
-        setTheme(theme.toLowerCase());
+        setTheme(theme);
     }
 
     useEffect(() => {
@@ -29,9 +30,15 @@ const Header = () => {
                         <li tabIndex="0">
                             <label ref={themeRef} role="button" aria-label="Model" className="flex items-center gap-2 mx-4">Model<BsChevronDown className="inline h-3 w-3" /></label>
                             <ul className="dropdown-content menu nav-menu shadow w-40 bg-neutral">
-                                <li><button onClick={() => toggleTheme("classic") } className="normal-case">Classic</button></li>
                                 {
-                                    MODELS.map(m => <li key={m}><button onClick={() => toggleTheme(m) } className="normal-case">{m}</button></li> )
+                                    MODELS.map(m => (
+                                        <li key={m}>
+                                            <button onClick={() => toggleTheme(m) } className={`capitalize ${ theme === m && 'active'} `}>
+                                                <GBIcon className={`inline h-6 w-6 ${m}`} />
+                                                {m}
+                                            </button>
+                                        </li>
+                                    ))
                                 }
                             </ul>
                         </li>
