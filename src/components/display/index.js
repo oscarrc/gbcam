@@ -1,11 +1,11 @@
 import { BsCaretLeft, BsCaretRightFill } from "react-icons/bs"
+import { useEffect, useRef, useState } from "react";
 
 import { AiFillHeart } from "react-icons/ai";
 import { useCamera } from "../../hooks/useCamera";
-import { useEffect, useState, useRef } from "react";
 
 const Display = ({ className }) => {
-    const { output, initFeed, cameraEnabled, brightness, contrast} = useCamera();
+    const { output, initCamera, cameraEnabled, brightness, contrast} = useCamera();
     const [showControls, setShowControls] = useState(true);
     const controlsTimeout = useRef(null);
 
@@ -21,8 +21,8 @@ const Display = ({ className }) => {
 
     useEffect(()=> {
         if(!output.current) return;
-        initFeed()
-    },[initFeed, output])
+        initCamera()
+    },[initCamera, output])
 
     useEffect(() => {
         let timeout = controlsTimeout.current;

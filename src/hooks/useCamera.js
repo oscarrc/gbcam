@@ -8,11 +8,14 @@ const CameraProvider = ({ children }) => {
     const video = useRef(null);
     const output = useRef(null);
     const drawInterval = useRef(null);
+    const recorder = useRef(null);
+    const player = useRef(null);
     const [ cameraError, setCameraError ] = useState(false);
     const [ cameraEnabled, setCameraEnabled ] = useState(false);
     const [ contrast, setContrast] = useState(0);
     const [ brightness, setBrightness] = useState(0);
-    const [ snapshot, setSnapshot ] = useState(null);    
+    const [ snapshot, setSnapshot ] = useState(null);  
+    const [ recording, setRecording ] = useState(null);
 
     const applyBrightness = useCallback((context) => {
         context.globalCompositeOperation = "lighten";
@@ -95,7 +98,22 @@ const CameraProvider = ({ children }) => {
         image.src = snapshot;
     }, [snapshot])
 
-    const initFeed = useCallback(async () => {
+    const drawRecording = useCallback((context) => {
+        const size = 1024;
+        const dMin = Math.min(output.current?.width, output.current?.height);
+
+        if(!player.current){
+            player.current = document.createElement( 'video' );
+            player.muted = true;
+            player.loop = true;
+            player.src = URL.createObjectURL( recording );
+            player.play();
+        }
+
+        context.drawImage(player.current, 0, 0, size, size, 0, 0, dMin, dMin); 
+    }, [player, recording])
+
+    const initCamera = useCallback(async () => {
         if(!video.current) await initVideo();
         
         const context = output.current.getContext("2d", { 
@@ -109,8 +127,9 @@ const CameraProvider = ({ children }) => {
         clearInterval(drawInterval.current);
 
         if(snapshot) drawSnapshot(context);
+        else if(recording) drawRecording(context);
         else drawVideoFeed(context);
-    }, [drawSnapshot, drawVideoFeed, snapshot])
+    }, [drawSnapshot, drawRecording, drawVideoFeed, recording, snapshot])
 
     const takeSnapshot = () => {
         const c = document.createElement("canvas");
@@ -121,9 +140,7 @@ const CameraProvider = ({ children }) => {
         setSnapshot(c.toDataURL());
     }
 
-    const clearSnapshot = () => setSnapshot(null);
-
-    const save = () => {
+    const saveSnapshot = () => {
         if(!snapshot) return;
         let a = document.createElement("a");
         a.href = snapshot; 
@@ -131,15 +148,60 @@ const CameraProvider = ({ children }) => {
         a.click();
     }
 
+    const clearSnapshot = () => setSnapshot(null);
+
+    const startRecording = () => {
+        const c = document.createElement("canvas");
+        const context = c.getContext("2d");
+        
+        c.width = 1024;
+        c.height = 1024;
+        context.drawImage(output.current, 0, 0, output.current.width, output.current.height, 0, 0, 1024, 1024);
+
+        let chunks = [];
+        const stream = c.captureStream(60);
+        
+        recorder.current = new MediaRecorder(stream);
+        recorder.current.ondataavailable = (e) => chunks.push(e.data);
+        recorder.current.onstop = () => {
+            let blob = new Blob(chunks, { 'type' : 'video/mp4' });
+            setRecording(blob);
+        }
+    }
+
+    const stopRecording = () => recorder.current.stop();
+
+    const saveRecording = () => {
+        if(!recording) return;
+        let a = document.createElement("a");
+        a.href = URL.createObjectURL(recording); 
+        a.download = `${Date.now()}.mp4`;
+        a.click();
+    }
+
+    const clearRecording = () => {
+        setRecording(null);
+        player.current.stop();
+        player.current = null;
+    }
+
+    const save = () => {
+        if(snapshot) saveSnapshot();
+        if(recording) saveRecording();
+    }
+
     return (
         <CameraContext.Provider 
             value={{ 
                 clearSnapshot,
-                initFeed, 
+                clearRecording,
+                initCamera, 
                 save,
                 setBrightness, 
                 setContrast,
                 takeSnapshot,
+                startRecording,
+                stopRecording,
                 brightness,
                 cameraEnabled,
                 cameraError,
