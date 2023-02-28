@@ -180,9 +180,6 @@
     #gbicon.transparent .button { fill: #232129 }
     #gbicon.transparent .frame{ fill: #212121 }
     #gbicon.transparent .grill path{ fill: #232129; opacity: 0.2 }
-
-    .selected #gbicon .body{ stroke: #000000 }
-    .selected #gbicon.black .body{ stroke: #ffffff }
 }
 
 @layer utilities{
