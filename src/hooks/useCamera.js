@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useRef, useState } from "react"
+import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react"
 
 import { similarColor } from "../helpers/colors";
 
@@ -10,6 +10,7 @@ const CameraProvider = ({ children }) => {
     const drawInterval = useRef(null);
     const recorder = useRef(null);
     const player = useRef(null);
+    const isRecording = useMemo(() => recorder.current !== null, [recorder])
     const [ cameraError, setCameraError ] = useState(false);
     const [ cameraEnabled, setCameraEnabled ] = useState(false);
     const [ contrast, setContrast] = useState(0);
@@ -21,7 +22,7 @@ const CameraProvider = ({ children }) => {
         context.globalCompositeOperation = "lighten";
         context.globalAlpha = brightness; // 0-1
         context.fillStyle = "white";
-        context.fillRect(0,0,context.canvas.width,context.canvas.height);            
+        context.fillRect(0,0,output.current.width,output.current.height);            
         context.globalCompositeOperation = "copy";
         context.globalAlpha = 1; 
     }, [brightness]);
@@ -30,7 +31,7 @@ const CameraProvider = ({ children }) => {
         context.globalCompositeOperation = "saturation";
         context.globalAlpha = contrast; // 0-1
         context.fillStyle = "red";
-        context.fillRect(0,0,context.canvas.width,context.canvas.height);
+        context.fillRect(0,0,output.current.width,output.current.height);
         context.globalCompositeOperation = "copy";
         context.globalAlpha = 1; 
     }, [contrast]);
@@ -74,8 +75,9 @@ const CameraProvider = ({ children }) => {
     const drawVideoFeed = useCallback((context) => {
         drawInterval.current = setInterval(() => {
             if(!video.current) return;
+            
             const size = 128;
-            const sMin = Math.min(video.current.videoWidth, video.current.videoHeight);
+            const sMin = Math.min(video.current?.videoWidth, video.current?.videoHeight);
             const dMin = Math.min(output.current?.width, output.current?.height);
             const sx = ( video.current.videoWidth - sMin ) / 2;
             const sy = ( video.current.videoHeight - sMin ) / 2;
@@ -104,19 +106,21 @@ const CameraProvider = ({ children }) => {
 
         if(!player.current){
             player.current = document.createElement( 'video' );
-            player.muted = true;
-            player.loop = true;
-            player.src = URL.createObjectURL( recording );
-            player.play();
+            player.current.muted = true;
+            player.current.loop = true;
+            player.current.src = URL.createObjectURL( recording );
+            player.current.play();
         }
-
-        context.drawImage(player.current, 0, 0, size, size, 0, 0, dMin, dMin); 
+        
+        drawInterval.current = setInterval(() => {
+            context.drawImage(player.current, 0, 0, size, size, 0, 0, dMin, dMin);
+        }, 17);        
     }, [player, recording])
 
     const initCamera = useCallback(async () => {
         if(!video.current) await initVideo();
         
-        const context = output.current.getContext("2d", { 
+        const context = output.current?.getContext("2d", { 
             willReadFrequently: true,            
             msImageSmoothingEnabled: false,
             mozImageSmoothingEnabled: false,
@@ -156,7 +160,11 @@ const CameraProvider = ({ children }) => {
         
         c.width = 1024;
         c.height = 1024;
-        context.drawImage(output.current, 0, 0, output.current.width, output.current.height, 0, 0, 1024, 1024);
+
+        let interval = setInterval(() => { 
+            console.log(1)           
+            context.drawImage(output.current, 0, 0, output.current.width, output.current.height, 0, 0, 1024, 1024);
+        }, 17);
 
         let chunks = [];
         const stream = c.captureStream(60);
@@ -165,11 +173,17 @@ const CameraProvider = ({ children }) => {
         recorder.current.ondataavailable = (e) => chunks.push(e.data);
         recorder.current.onstop = () => {
             let blob = new Blob(chunks, { 'type' : 'video/mp4' });
+            clearInterval(interval);
             setRecording(blob);
+            recorder.current = null;
         }
+
+        recorder.current.start();
     }
 
-    const stopRecording = () => recorder.current.stop();
+    const stopRecording = () => {
+        if(recorder.current) recorder.current.stop();
+    }
 
     const saveRecording = () => {
         if(!recording) return;
@@ -181,8 +195,8 @@ const CameraProvider = ({ children }) => {
 
     const clearRecording = () => {
         setRecording(null);
-        player.current.stop();
-        player.current = null;
+        if(player.current) player.current = null;
+        if(recorder.current) recorder.current = null;
     }
 
     const save = () => {
@@ -190,11 +204,15 @@ const CameraProvider = ({ children }) => {
         if(recording) saveRecording();
     }
 
+    const clear = () => {
+        if(snapshot) clearSnapshot();
+        if(recording) clearRecording();
+    }
+
     return (
         <CameraContext.Provider 
             value={{ 
-                clearSnapshot,
-                clearRecording,
+                clear,
                 initCamera, 
                 save,
                 setBrightness, 
@@ -202,6 +220,7 @@ const CameraProvider = ({ children }) => {
                 takeSnapshot,
                 startRecording,
                 stopRecording,
+                isRecording,
                 brightness,
                 cameraEnabled,
                 cameraError,
