@@ -4,7 +4,7 @@ const Mode = () => {
     const { save, recording, snapshot } = useCamera();
 
     const share = () => {
-        if(!(snapshot && recording)) return;
+        if(!snapshot && !recording) return;
         const media = snapshot ? snapshot : recording;
         const extension = snapshot ? "png" : "mp4";
         const file = new File([recording], `${Date.now()}.${extension}`, { type: media.type });
