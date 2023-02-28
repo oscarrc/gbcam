@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 
 const Layout = () => {
     return (
-        <div className="flex flex-col bg-neutral w-full min-h-dscreen rounded-2xl rounded-br-[6rem] z-10">
+        <div className="bg-gradient-gb flex flex-col bg-neutral w-full min-h-dscreen rounded-2xl rounded-br-[6rem] z-10">
             <Header />
             <main className="flex flex-col flex-1 z-10">
                 <CameraProvider>
