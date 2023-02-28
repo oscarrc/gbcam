@@ -6,13 +6,12 @@ const Mode = () => {
     const share = () => {
         const media = snapshot ? snapshot : recording;
         const extension = snapshot ? ".jpg" : ".mp4";
+        const file = new File([media], `${Date.now()}${extension}`);
 
         if(!media) return;
         navigator.share({
             url: "https://gbCam.oscarrc.me",
-            files: [
-                new File([media], `${Date.now()}${extension}`)
-            ]
+            files: [ file ]
         })
     }
 
