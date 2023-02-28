@@ -10,6 +10,8 @@ const CameraProvider = ({ children }) => {
     const drawInterval = useRef(null);
     const recorder = useRef(null);
     const player = useRef(null);
+    const oSize = 1024;
+    const rSize = 128;
     const isRecording = useMemo(() => recorder.current !== null, [recorder])
     const [ cameraError, setCameraError ] = useState(false);
     const [ cameraEnabled, setCameraEnabled ] = useState(false);
@@ -76,32 +78,29 @@ const CameraProvider = ({ children }) => {
         drawInterval.current = setInterval(() => {
             if(!video.current) return;
             
-            const size = 128;
             const sMin = Math.min(video.current?.videoWidth, video.current?.videoHeight);
             const dMin = Math.min(output.current?.width, output.current?.height);
             const sx = ( video.current.videoWidth - sMin ) / 2;
             const sy = ( video.current.videoHeight - sMin ) / 2;
 
-            context.drawImage(video.current, sx, sy, sMin, sMin, 0, 0, size, size);
+            context.drawImage(video.current, sx, sy, sMin, sMin, 0, 0, rSize, rSize);
             
             applyContrast(context);
             applyBrightness(context);
             convertPalette(context);
 
-            context.drawImage(output.current, 0, 0, size, size, 0, 0, dMin, dMin);         
+            context.drawImage(output.current, 0, 0, rSize, rSize, 0, 0, dMin, dMin);         
         },17)
     }, [applyBrightness, applyContrast])
 
     const drawSnapshot = useCallback((context) => {
-        const size = 1024;
         const dMin = Math.min(output.current?.width, output.current?.height);
         const image = new Image();
-        image.onload = () => context.drawImage(image, 0, 0, size, size, 0, 0, dMin, dMin); 
+        image.onload = () => context.drawImage(image, 0, 0, oSize, oSize, 0, 0, dMin, dMin); 
         image.src = snapshot;
     }, [snapshot])
 
     const drawRecording = useCallback((context) => {
-        const size = 1024;
         const dMin = Math.min(output.current?.width, output.current?.height);
 
         if(!player.current){
@@ -113,7 +112,7 @@ const CameraProvider = ({ children }) => {
         }
         
         drawInterval.current = setInterval(() => {
-            context.drawImage(player.current, 0, 0, size, size, 0, 0, dMin, dMin);
+            context.drawImage(player.current, 0, 0, oSize, oSize, 0, 0, dMin, dMin);
         }, 17);        
     }, [player, recording])
 
@@ -138,9 +137,9 @@ const CameraProvider = ({ children }) => {
     const takeSnapshot = () => {
         const c = document.createElement("canvas");
         const context = c.getContext("2d");
-        c.width = 1024;
-        c.height = 1024;
-        context.drawImage(output.current, 0, 0, output.current.width, output.current.height, 0, 0, 1024, 1024);
+        c.width = oSize;
+        c.height = oSize;
+        context.drawImage(output.current, 0, 0, output.current.width, output.current.height, 0, 0, oSize, oSize);
         setSnapshot(c.toDataURL());
     }
 
@@ -158,12 +157,11 @@ const CameraProvider = ({ children }) => {
         const c = document.createElement("canvas");
         const context = c.getContext("2d");
         
-        c.width = 1024;
-        c.height = 1024;
+        c.width = oSize;
+        c.height = oSize;
 
-        let interval = setInterval(() => { 
-            console.log(1)           
-            context.drawImage(output.current, 0, 0, output.current.width, output.current.height, 0, 0, 1024, 1024);
+        let interval = setInterval(() => {  
+            context.drawImage(output.current, 0, 0, output.current.width, output.current.height, 0, 0, oSize, oSize);
         }, 17);
 
         let chunks = [];
