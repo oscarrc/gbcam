@@ -97,7 +97,7 @@ const CameraProvider = ({ children }) => {
         const dMin = Math.min(output.current?.width, output.current?.height);
         const image = new Image();
         image.onload = () => context.drawImage(image, 0, 0, oSize, oSize, 0, 0, dMin, dMin); 
-        image.src = snapshot;
+        image.src = URL.createObjectURL(snapshot);
     }, [snapshot])
 
     const drawRecording = useCallback((context) => {
@@ -140,14 +140,14 @@ const CameraProvider = ({ children }) => {
         c.width = oSize;
         c.height = oSize;
         context.drawImage(output.current, 0, 0, output.current.width, output.current.height, 0, 0, oSize, oSize);
-        setSnapshot(c.toDataURL());
+        c.toBlob((b) => { setSnapshot(b) }, 'image/png');
     }
 
     const saveSnapshot = () => {
         if(!snapshot) return;
         let a = document.createElement("a");
         a.href = snapshot; 
-        a.download = `${Date.now()}.jpg`;
+        a.download = `${Date.now()}.png`;
         a.click();
     }
 
@@ -224,6 +224,7 @@ const CameraProvider = ({ children }) => {
                 cameraError,
                 contrast,
                 output,
+                recording,
                 snapshot 
             }}
         >
