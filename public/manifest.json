@@ -21,7 +21,7 @@
   "icons": [
       {
         "src": "favicon.ico",
-        "sizes": "48x48 32x32 16x16",
+        "sizes": "48x48",
         "type": "image/x-icon"
       },
       {
@@ -77,11 +77,6 @@
         "type": "image/svg+xml",
         "sizes": "any",
         "purpose": "monochrome"
-      },
-      {
-        "src": "icons/icon.png",
-        "type": "image/png",
-        "sizes": "1024x1024"
       },
       {
         "src": "icons/icon.svg",
