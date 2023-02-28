@@ -12,14 +12,14 @@ const CameraProvider = ({ children }) => {
     const player = useRef(null);
     const oSize = 1024;
     const rSize = 128;
-    const isRecording = useMemo(() => recorder.current !== null, [recorder])
+    const isRecording = useMemo(() => recorder.current !== null, [recorder]);
     const [ cameraError, setCameraError ] = useState(false);
     const [ cameraEnabled, setCameraEnabled ] = useState(false);
     const [ contrast, setContrast] = useState(0);
     const [ brightness, setBrightness] = useState(0);
     const [ snapshot, setSnapshot ] = useState(null);  
     const [ recording, setRecording ] = useState(null);
-
+    // TODO: Select between back and front camera if available
     const applyBrightness = useCallback((context) => {
         context.globalCompositeOperation = "lighten";
         context.globalAlpha = brightness; // 0-1
