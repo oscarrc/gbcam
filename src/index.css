@@ -72,7 +72,7 @@
     .navbar:after{
         right: 3rem;
     }
-
+    /* TODO: Range colors and responsiveness */
     .range-custom{
         @apply flex gap-1;
     }
@@ -115,7 +115,7 @@
 
     .range-custom label{
         @apply absolute text-xs left-0 text-center w-full overflow-hidden;
-        bottom: -2px
+        bottom: -1.5px
     }
 }
 

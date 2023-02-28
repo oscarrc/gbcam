@@ -5,17 +5,18 @@ import { useRef } from "react"
 
 const Snap = () => {
     const { clear, startRecording, stopRecording, takeSnapshot } = useCamera();
-    const down = useRef(0);
-    const downTimer = useRef(null);
+    const start = useRef(0);
+    const timer = useRef(null);
 
-    const handleMouseDown = () => {
-        down.current = Date.now();
-        downTimer.current = setTimeout(() => { startRecording() }, 500)
+    // TODO: touchscreen events
+    const handleStart = (e) => {
+        start.current = Date.now();
+        timer.current = setTimeout(() => { startRecording() }, 500)
     }
 
-    const handleMouseUp = () => {
-        if(Date.now() - down.current < 500 ){
-            clearTimeout(downTimer);
+    const handleStop = (e) => {
+        if(Date.now() - start.current < 500 ){
+            clearTimeout(timer.current);
             takeSnapshot();
         }else stopRecording();
     }
@@ -23,7 +24,7 @@ const Snap = () => {
     return (
         <div className="grid grid-cols-2 grid-rows-2 rotate-35 text-button font-bold text-neutral-content text-xs">            
             <div className="text-center col-start-2  -rotate-35">
-                <button onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} aria-label="Take photo" className="btn btn-circle shadow-lg btn-accent">
+                <button onMouseDown={handleStart} onMouseUp={handleStop} aria-label="Take photo or video" className="btn btn-circle shadow-lg btn-accent">
                     <BsFillCameraFill/>
                 </button>
                 <label className="block ml-8 -rotate-35">A</label>
