@@ -1,25 +1,103 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
-  "icons": [
+  "name": "Virtual GBCam",
+  "short_name": "GBCam",
+  "description": "A Lo-Fi camera designed for those nostalgic 90s kids. Take photos with a limited shades of green palette, with a pixelated look and share them.",    
+  "categories": ["Image", "Photography", "Camera"],
+  "dir": "ltr",
+  "lang": "en",
+  "theme_color": "#000000",
+  "background_color": "#1a1a1a",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "scope": "/",
+  "start_url": "/",
+  "screenshots": [
     {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
-    },
-    {
-      "src": "logo192.png",
+      "src": "img/feature.png",
       "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "logo512.png",
-      "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "1024x500"
     }
   ],
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "icons": [
+      {
+        "src": "favicon.ico",
+        "sizes": "48x48 32x32 16x16",
+        "type": "image/x-icon"
+      },
+      {
+          "src": "icons/maskable_icon_x48.png",
+          "type": "image/png",
+          "sizes": "48x48",
+          "purpose": "maskable"
+      },
+      {
+          "src": "icons/maskable_icon_x72.png",
+          "type": "image/png",
+          "sizes": "72x72",
+          "purpose": "maskable"
+      },
+      {
+          "src": "icons/maskable_icon_x96.png",
+          "type": "image/png",
+          "sizes": "96x96",
+          "purpose": "maskable"
+      },
+      {
+          "src": "icons/maskable_icon_x128.png",
+          "type": "image/png",
+          "sizes": "128x128",
+          "purpose": "maskable"
+      },
+      {
+          "src": "icons/maskable_icon_x384.png",
+          "type": "image/png",
+          "sizes": "384x384",
+          "purpose": "maskable"
+      },
+      {
+          "src": "icons/maskable_icon_x512.png",
+          "type": "image/png",
+          "sizes": "512x512",
+          "purpose": "maskable"
+      },
+      {
+          "src": "icons/maskable_icon.png",
+          "type": "image/png",
+          "sizes": "1024x1024",
+          "purpose": "maskable"
+      },
+      {
+          "src": "icons/monochrome_icon.png",
+          "type": "image/png",
+          "sizes": "1024x1024",
+          "purpose": "monochrome"
+      },
+      {
+        "src": "icons/monochrome_icon.svg",
+        "type": "image/svg+xml",
+        "sizes": "any",
+        "purpose": "monochrome"
+      },
+      {
+        "src": "icons/icon.png",
+        "type": "image/png",
+        "sizes": "1024x1024"
+      },
+      {
+        "src": "icons/icon.svg",
+        "type": "image/svg+xml",
+        "sizes": "any"
+      }
+  ],
+  "related_applications": [
+      {
+        "platform": "web",
+        "url": "https://gbcam.oscarrc.me"
+      }, 
+      {
+        "platform": "play",
+        "url": "https://play.google.com/store/apps/details?id=me.oscarrc.gbcam.twa",
+        "id": "me.oscarrc.gbcam.twa"
+      }
+    ]
 }
