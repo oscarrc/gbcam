@@ -26,7 +26,7 @@ const Main = () => {
     }
 
     return (
-        <section className={`flex flex-col flex-1 items-center justify-around px-12 mt-24 mx-auto ${landscape && "w-full"}`}>
+        <section className={`flex flex-col flex-1 items-center justify-around px-12 pt-8 x-auto ${landscape && "w-full"}`}>
             { !landscape && renderDisplay() }
             <div className="flex flex-col flex-1 justify-around items-center w-full">
                 <div className={`flex ${landscape ? 'justify-around' : 'justify-between'} items-center w-full px-4`}>

@@ -7,6 +7,9 @@ module.exports = {
       minHeight:{
         "dscreen": "100dvh"
       },
+      height:{
+        "dscreen": "100dvh"
+      },
       maxWidth:{
         "display": "calc(100% - 8rem)"
       },
