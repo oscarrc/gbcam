@@ -29,7 +29,7 @@ module.exports = {
         "2xs": "0.5rem"
       },
       colors:{
-        "dmg": "#BABCC1",
+        "classic": "#BABCC1",
         "yellow": "#F1B32F",
         "red": "#E22E32",
         "black": "#000000",
