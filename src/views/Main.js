@@ -16,26 +16,22 @@ const Main = () => {
         return () => window.removeEventListener("resize", checkOrientation);
     }, [])
 
+    const renderDisplay = () => {
+        return (
+            <div>
+                <Display />
+                <Brand />
+            </div>
+        )
+    }
+
     return (
         <section className="flex flex-col flex-1 items-center justify-around px-12 mt-24 mx-auto">
-            {
-                !landscape && 
-                <div className="">
-                    <Display />
-                    <Brand />
-                </div>
-            }
+            { !landscape && renderDisplay() }
             <div className="flex flex-col flex-1 justify-around items-center w-full">
                 <div className="flex justify-between items-center w-full px-4  gap-16">
                     <Controls />
-                    {
-                        landscape &&
-                        <div className="flex-1">
-                            <Display />
-                            <Brand />
-                            {landscape}
-                        </div>
-                    }
+                    { landscape && renderDisplay() }
                     <Snap />
                 </div>
                 <Actions />
