@@ -2,23 +2,26 @@ import { useEffect, useRef, useState } from "react";
 
 import { BsChevronDown } from "react-icons/bs";
 import GBIcon from "../partials/GBicon";
+import { useDynamicFavicon } from "../../hooks/useDynamicFavicon";
 
 const MODELS = ["classic", "yellow", "red", "black", "white", "blue", "green", "transparent"];
 
 const Header = () => {
     const [ theme, setTheme ] = useState(localStorage.getItem("theme") || "classic");
     const themeRef = useRef(null);
-
+    const { setFavicon } = useDynamicFavicon(theme);
+    
     const toggleTheme = (theme) => {
         localStorage.setItem("theme", theme);
         themeRef.current.blur();
+        setFavicon(theme);
         setTheme(theme);
     }
 
     useEffect(() => {
         document.body.dataset.theme = theme;
     }, [ theme ])
-
+    
     return (
         <header className="w-full fixed top-0 left-0 bg-base-100 z-20">
             <nav className="navbar bg-neutral bg-gradient-gb text-neutral-content rounded-t-2xl border-b-2 border-primary border-opacity-20 min-h-12 py-0 px-12">
