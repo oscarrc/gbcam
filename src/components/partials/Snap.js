@@ -4,17 +4,19 @@ import { useCamera } from "../../hooks/useCamera";
 import { useRef } from "react"
 
 const Snap = () => {
-    const { clear, startRecording, stopRecording, takeSnapshot } = useCamera();
+    const { clear, startRecording, stopRecording, takeSnapshot, snapshot, recording } = useCamera();
     const start = useRef(0);
     const timer = useRef(null);
 
     // TODO: touchscreen events
     const handleStart = (e) => {
+        if(snapshot || recording) return;
         start.current = Date.now();
         timer.current = setTimeout(() => { startRecording() }, 500)
     }
 
     const handleStop = (e) => {
+        if(snapshot || recording) return;
         if(Date.now() - start.current < 500 ){
             clearTimeout(timer.current);
             takeSnapshot();

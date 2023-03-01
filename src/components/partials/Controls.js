@@ -3,12 +3,12 @@ import { BsCaretDownFill, BsCaretLeftFill, BsCaretRightFill, BsCaretUpFill } fro
 import { useCamera } from "../../hooks/useCamera";
 
 const Controls = () => {
-    const { setBrightness, setContrast } = useCamera();
+    const { setBrightness, setContrast, snapshot, recording } = useCamera();
 
-    const increaseBrightness = () => { setBrightness( b => b + 0.01 > 1 ? 1 : b + 0.01 ) }
-    const decreaseBrightness = () => { setBrightness( b => b - 0.01 < 0 ? 0 : b - 0.01) }
-    const increaseContrast = () => { setContrast( c => c + 0.01 > 1 ? 1 : c + 0.01 ) }
-    const decreaseContrast = () => { setContrast( c => c - 0.01 < 0 ? 0 : c - 0.01 ) }
+    const increaseBrightness = () => { (!snapshot && !recording) && setBrightness( b => b + 0.01 > 1 ? 1 : b + 0.01 ) }
+    const decreaseBrightness = () => { (!snapshot && !recording) && setBrightness( b => b - 0.01 < 0 ? 0 : b - 0.01) }
+    const increaseContrast = () => { (!snapshot && !recording) && setContrast( c => c + 0.01 > 1 ? 1 : c + 0.01 ) }
+    const decreaseContrast = () => { (!snapshot && !recording) && setContrast( c => c - 0.01 < 0 ? 0 : c - 0.01 ) }
     
     return (
         <div className="grid grid-cols-3 grid-rows-3">
