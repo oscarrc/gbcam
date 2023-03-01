@@ -34,7 +34,7 @@ const Display = ({ className }) => {
 
     return (
         <div className={`aspect-4/3 ${className} bg-base-100 rounded-lg rounded-br-[2rem] flex flex-col gap-2 py-2`}>
-            <div className="flex flex-row items-center gap-4 px-4 py-1">
+            <div className="flex flex-row items-center gap-4 px-4 py-0 sm:py-1">
                 <span className="flex-1 h-2 border-y-2 border-t-line-1 border-b-line-2"></span>
                 <a href="https://oscarrc.me" target="_BLANK" rel="noreferrer noopener" className="text-white text-xs sm:text-sm">Made with <AiFillHeart className="inline h-3 w-3" /> by Oscar R.C.</a>               
                 <span className="h-2 min-w-[10%] border-y-2 border-t-line-1 border-b-line-2"></span>
