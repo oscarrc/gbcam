@@ -12,6 +12,7 @@ const CameraProvider = ({ children }) => {
     const player = useRef(null);
     const oSize = 1024;
     const rSize = 128;
+
     const isRecording = useMemo(() => recorder.current !== null, [recorder]);
     const [ cameraError, setCameraError ] = useState(false);
     const [ cameraEnabled, setCameraEnabled ] = useState(false);
@@ -19,7 +20,9 @@ const CameraProvider = ({ children }) => {
     const [ brightness, setBrightness] = useState(0);
     const [ snapshot, setSnapshot ] = useState(null);  
     const [ recording, setRecording ] = useState(null);
-    const [ selfie, setSelfie ] = useState(false);
+    const [ selfie, setSelfie ] = useState(true);
+    const [constraints] = useState(navigator.mediaDevices.getSupportedConstraints());
+
     // TODO: Select between back and front camera if available
     const applyBrightness = useCallback((context) => {
         context.globalCompositeOperation = "lighten";
@@ -59,9 +62,13 @@ const CameraProvider = ({ children }) => {
         context.putImageData(imgData, 0, 0);
     }
 
-    const initVideo = async () => {
+    const initVideo = useCallback(async () => {
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({video: true });
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: selfie ? 'user' : 'environment'
+                }
+            });
 
             video.current = document.createElement("video");
             video.current.srcObject = stream;
@@ -73,7 +80,7 @@ const CameraProvider = ({ children }) => {
             setCameraEnabled(false);
             setCameraError(true);
           }
-    }
+    }, [selfie])
 
     const drawVideoFeed = useCallback((context) => {
         drawInterval.current = setInterval(() => {
@@ -133,7 +140,7 @@ const CameraProvider = ({ children }) => {
         if(snapshot) drawSnapshot(context);
         else if(recording) drawRecording(context);
         else drawVideoFeed(context);
-    }, [drawSnapshot, drawRecording, drawVideoFeed, recording, snapshot])
+    }, [initVideo, drawSnapshot, drawRecording, drawVideoFeed, recording, snapshot])
 
     const takeSnapshot = () => {
         const c = document.createElement("canvas");
@@ -209,7 +216,7 @@ const CameraProvider = ({ children }) => {
     }
 
     const flipCamera = () => {
-        setSelfie(s => !s)
+        setSelfie(s => !s);
     }
 
     return (
@@ -228,6 +235,7 @@ const CameraProvider = ({ children }) => {
                 brightness,
                 cameraEnabled,
                 cameraError,
+                constraints,
                 contrast,
                 output,
                 recording,
