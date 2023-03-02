@@ -186,6 +186,10 @@
         stroke-width: 20px;
     }
     
+    #camicon {
+        transform: translateY(2px);
+    }
+
     #camicon .cam .lens .flare, #camicon .cam .inner .case, #camicon .front .text path {
         fill: #fff;
     }
@@ -210,6 +214,11 @@
     #camicon .cam .inner .grad, #camicon .cam .outter .grad {
         isolation: isolate;
         opacity: .5;
+    }
+
+    #camicon .cam .inner .triangle{
+        opacity:0.5;
+        fill:#808080;
     }
 
     #camicon .front .center {

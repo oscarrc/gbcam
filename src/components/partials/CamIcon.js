@@ -54,6 +54,7 @@ const camIcon = ({ className, selfie }) => {
                     <g className="inner">
                         <ellipse className="case" cx="511.5" cy="435.47" rx="211.5" ry="215.5"/>
                         <ellipse className="grad" cx="510.5" cy="434.47" rx="211.5" ry="215.5"/>
+                        <polygon className="triangle" points="399.5,462.1 354.5,442 399.5,422.1 "/>
                     </g>
                     <g className="lens">
                         <circle className="frame" cx="511" cy="440.64" r="83.5"/>

@@ -1,5 +1,4 @@
 import {CamIcon, GBIcon} from "../partials/";
-import { MdCameraFront, MdCameraRear } from "react-icons/md";
 import { useEffect, useRef, useState } from "react";
 
 import { BsChevronDown } from "react-icons/bs";
@@ -31,13 +30,13 @@ const Header = () => {
                 <div className="flex-1">
                     <a href="/" className="btn btn-ghost normal-case text-2xl sm:text-4xl font-title italic">GBCam</a>
                 </div>
-                <div className="flex-none font-text gap-4">
+                <div className="flex-none font-text mx-4 gap-2">
                     <button onClick={flipCamera} aria-label="flip camera">
                         <CamIcon className={`h-6 w-6 ${theme}`} selfie={ selfie }/>
                     </button>
                     <ul className="dropdown dropdown-end">
                         <li tabIndex="0">
-                            <button ref={themeRef} aria-label="Model" className="flex items-center gap-2 mx-4">
+                            <button ref={themeRef} aria-label="Model" className="flex items-center gap-2">
                                 <GBIcon className={`inline h-6 w-6 ${theme} selected`} /><BsChevronDown className="inline h-3 w-3" />
                             </button>
                             <ul className="dropdown-content menu nav-menu shadow w-40 bg-neutral">
