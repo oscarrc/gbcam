@@ -19,6 +19,7 @@ const CameraProvider = ({ children }) => {
     const [ brightness, setBrightness] = useState(0);
     const [ snapshot, setSnapshot ] = useState(null);  
     const [ recording, setRecording ] = useState(null);
+    const [ selfie, setSelfie ] = useState(false);
     // TODO: Select between back and front camera if available
     const applyBrightness = useCallback((context) => {
         context.globalCompositeOperation = "lighten";
@@ -207,11 +208,16 @@ const CameraProvider = ({ children }) => {
         if(recording) clearRecording();
     }
 
+    const flipCamera = () => {
+        setSelfie(s => !s)
+    }
+
     return (
         <CameraContext.Provider 
             value={{ 
                 clear,
                 initCamera, 
+                flipCamera,
                 save,
                 setBrightness, 
                 setContrast,
@@ -225,7 +231,8 @@ const CameraProvider = ({ children }) => {
                 contrast,
                 output,
                 recording,
-                snapshot 
+                selfie,
+                snapshot,
             }}
         >
             { children }

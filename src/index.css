@@ -185,6 +185,102 @@
         stroke: hsla(var(--p));
         stroke-width: 20px;
     }
+    
+    #camicon .cam .lens .flare, #camicon .cam .inner .case, #camicon .front .text path {
+        fill: #fff;
+    }
+
+    #camicon .cam .lens .frame {
+        fill: url(#Grad_6);
+    }
+
+    #camicon .front .label {
+        stroke: #1a1a1a;
+        stroke-width: 20px;
+    }
+
+    #camicon .front .label, #camicon .front .center, #camicon .front .right, #camicon .front .left, #camicon .cam .inner .case, #camicon .cam .outter .grad, #camicon .cam .outter .case, #camicon .front .text path {
+        stroke-miterlimit: 10;
+    }
+
+    #camicon .cam .inner .grad{
+        fill: url(#Grad_5);
+    }
+
+    #camicon .cam .inner .grad, #camicon .cam .outter .grad {
+        isolation: isolate;
+        opacity: .5;
+    }
+
+    #camicon .front .center {
+        fill: none;
+    }
+
+    #camicon .front .center, #camicon .front .right, #camicon .front .left, #camicon .cam .outter .grad, #camicon .cam .outter .case, #camicon .front .text path {
+        stroke: #000;
+    }
+
+    #camicon .front .center, #camicon .cam .outter .case {
+        stroke-width: 10px;
+    }
+
+     #camicon .back .right {
+        fill: url(#Grad_2);
+    }
+
+    #camicon .front .right {
+        fill: url(#Grad_9);
+    }
+
+    #camicon .front .right, #camicon .front .left, #camicon .cam .inner .case, #camicon .cam .outter .grad {
+        stroke-width: 12px;
+    }
+
+    #camicon .front .left {
+        fill: url(#Grad_8);
+    }
+
+    #camicon .cam .inner .case {
+        stroke: #fff;
+    }
+
+    #camicon .cam .outter .grad {
+        fill: url(#Grad_3);
+    }
+
+    #camicon .cam .lens .case {
+        fill: #1a1a1a;
+    }
+
+    #camicon .cam .outter .grad {
+        fill: url(#Grad_4);
+    }
+
+    #camicon.rotated .cam .outter .grad{
+        isolation: isolate;
+        opacity: .2;
+    }
+
+    #camicon .front .text path {
+        stroke-width: 5px;
+    }
+
+    #camicon .back .left {
+        fill: url(#Grad);
+    }
+
+    #camicon .front .label .background, #camicon.rotated .cam .outter .case { fill: #BABCC1; }
+    #camicon.yellow .front .label .background, #camicon.yellow.rotated .cam .outter .case { fill: #F1B32F; }
+    #camicon.red .front .label .background, #camicon.red.rotated .cam .outter .case { fill: #E22E32; }
+    #camicon.blue .front .label .background, #camicon.blue.rotated .cam .outter .case { fill: #154D9A; }
+    #camicon.green .front .label .background, #camicon.green.rotated .cam .outter .case { fill: #00B67D; }
+    #camicon.white .front .label .background, #camicon.white.rotated .cam .outter .case { fill: #ffffff; }
+    #camicon.black .front .label .background, #camicon.black.rotated .cam .outter .case { fill: #000000; }
+    #camicon.transparent .front .label .background, #camicon.transparent.rotated .cam .outter .case { fill: #1D5A33; }
+   
+    #camicon.rotated .cam .outter .grad, #camicon.rotated .cam .outter .case {
+        stroke-width: 10px
+    }
 }
 
 @layer utilities{

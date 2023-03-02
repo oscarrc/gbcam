@@ -1,7 +1,9 @@
+import {CamIcon, GBIcon} from "../partials/";
+import { MdCameraFront, MdCameraRear } from "react-icons/md";
 import { useEffect, useRef, useState } from "react";
 
 import { BsChevronDown } from "react-icons/bs";
-import GBIcon from "../partials/GBicon";
+import { useCamera } from "../../hooks/useCamera";
 import { useDynamicFavicon } from "../../hooks/useDynamicFavicon";
 
 const MODELS = ["classic", "yellow", "red", "black", "white", "blue", "green", "transparent"];
@@ -10,6 +12,7 @@ const Header = () => {
     const [ theme, setTheme ] = useState(localStorage.getItem("theme") || "classic");
     const themeRef = useRef(null);
     const { setFavicon } = useDynamicFavicon(theme);
+    const { flipCamera, selfie } = useCamera();
     
     const toggleTheme = (theme) => {
         localStorage.setItem("theme", theme);
@@ -28,7 +31,10 @@ const Header = () => {
                 <div className="flex-1">
                     <a href="/" className="btn btn-ghost normal-case text-2xl sm:text-4xl font-title italic">GBCam</a>
                 </div>
-                <div className="flex-none font-text">
+                <div className="flex-none font-text gap-4">
+                    <button onClick={flipCamera} aria-label="flip camera">
+                        <CamIcon className={`h-6 w-6 ${theme}`} selfie={ selfie }/>
+                    </button>
                     <ul className="dropdown dropdown-end">
                         <li tabIndex="0">
                             <button ref={themeRef} aria-label="Model" className="flex items-center gap-2 mx-4">
