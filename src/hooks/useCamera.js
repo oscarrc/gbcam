@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react"
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
 
 import { similarColor } from "../helpers/colors";
 
@@ -23,7 +23,6 @@ const CameraProvider = ({ children }) => {
     const [ selfie, setSelfie ] = useState(true);
     const [constraints] = useState(navigator.mediaDevices.getSupportedConstraints());
 
-    // TODO: Select between back and front camera if available
     const applyBrightness = useCallback((context) => {
         context.globalCompositeOperation = "lighten";
         context.globalAlpha = brightness; // 0-1
@@ -63,6 +62,7 @@ const CameraProvider = ({ children }) => {
     }
 
     const initVideo = useCallback(async () => {
+        console.log(selfie)
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: {
@@ -125,8 +125,6 @@ const CameraProvider = ({ children }) => {
     }, [player, recording])
 
     const initCamera = useCallback(async () => {
-        if(!video.current) await initVideo();
-        
         const context = output.current?.getContext("2d", { 
             willReadFrequently: true,            
             msImageSmoothingEnabled: false,
@@ -140,7 +138,7 @@ const CameraProvider = ({ children }) => {
         if(snapshot) drawSnapshot(context);
         else if(recording) drawRecording(context);
         else drawVideoFeed(context);
-    }, [initVideo, drawSnapshot, drawRecording, drawVideoFeed, recording, snapshot])
+    }, [drawSnapshot, drawRecording, drawVideoFeed, recording, snapshot])
 
     const takeSnapshot = () => {
         const c = document.createElement("canvas");
@@ -218,6 +216,8 @@ const CameraProvider = ({ children }) => {
     const flipCamera = () => {
         setSelfie(s => !s);
     }
+
+    useEffect(() => { initVideo() }, [initVideo])
 
     return (
         <CameraContext.Provider 
