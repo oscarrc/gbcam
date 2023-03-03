@@ -92,10 +92,10 @@ const CameraProvider = ({ children }) => {
     }, [selfie]);
 
     const drawControls = (context) => {
-        const cw = context.measureText("Contrast").width;
+        const cw = context.measureText("CONTRAST").width;
         const cx = ( output.current?.width - cw) / 2;
         const cy = ( output.current?.height - 5);
-        const bw = context.measureText("Brightness").width;
+        const bw = context.measureText("BRIGHTNESS").width;
         const bx = ( output.current?.width - 5);
         const by = ( output.current?.height - bw) / 2;
         const angle = (90 * Math.PI) / 180;
@@ -103,8 +103,8 @@ const CameraProvider = ({ children }) => {
         context.globalCompositeOperation = "source-over";
         context.fillStyle = "#84cd6e";
         context.strokeStyle = "#84cd6e";
-        context.lineWidth = 4;
-        context.font = "10px Rounded_5x5";
+        context.lineWidth = 2;
+        context.font = "12px monospace";
         
         context.beginPath();
         context.moveTo(offset, cy - 2)
@@ -117,11 +117,49 @@ const CameraProvider = ({ children }) => {
         context.lineTo(bx - 2 , output.current?.height - offset);
         context.stroke();
         
-        context.fillText("Contrast", cx, cy);
+        context.beginPath();
+        context.moveTo(offset*0.5, cy - 10);
+        context.lineTo(offset*0.75, cy - 2);
+        context.lineTo(offset - 5, cy - 2);
+        context.lineTo(offset - 5, cy - 18);        
+        context.lineTo(offset*0.75, cy - 18);
+        context.lineTo(offset*0.5, cy - 10);
+        context.stroke();
 
-        context.translate(bx - 4, by)
+        context.beginPath();
+        context.moveTo(output.current?.width - offset*0.5, cy - 10);
+        context.lineTo(output.current?.width - offset*0.75, cy - 2);
+        context.lineTo(output.current?.width - offset + 5, cy - 2);
+        context.lineTo(output.current?.width - offset + 5, cy - 18);        
+        context.lineTo(output.current?.width - offset*0.75, cy - 18);
+        context.lineTo(output.current?.width - offset*0.5, cy - 10);
+        context.fill();
+        context.stroke();
+
+        context.beginPath();
+        context.moveTo(bx - 10, offset*0.5);
+        context.lineTo(bx - 2, offset*0.75);
+        context.lineTo(bx - 2, offset - 5);
+        context.lineTo(bx - 18, offset - 5);        
+        context.lineTo(bx - 18, offset*0.75);
+        context.lineTo(bx - 10, offset*0.5);
+        context.stroke();
+
+        context.beginPath();
+        context.moveTo(bx - 10, output.current?.width - offset*0.5);
+        context.lineTo(bx - 2, output.current?.width - offset*0.75);
+        context.lineTo(bx - 2, output.current?.width - offset + 5);
+        context.lineTo(bx - 18, output.current?.width - offset + 5);
+        context.lineTo(bx - 18, output.current?.width - offset*0.75);
+        context.lineTo(bx - 10, output.current?.width - offset*0.5);
+        context.fill();
+        context.stroke();
+
+        context.fillText("CONTRAST", cx, cy);
+
+        context.translate(bx - 8, by)
         context.rotate(angle);
-        context.fillText("Brightness", angle, 0); 
+        context.fillText("BRIGHTNESS", angle, 0); 
         context.setTransform(1,0,0,1,0,0);
     }
 
