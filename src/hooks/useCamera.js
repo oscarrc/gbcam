@@ -145,13 +145,13 @@ const CameraProvider = ({ children }) => {
         c.width = oSize;
         c.height = oSize;
         context.drawImage(output.current, 0, 0, output.current.width, output.current.height, 0, 0, oSize, oSize);
-        c.toBlob((b) => { setSnapshot(b) }, 'image/png');
+        setSnapshot(c.toDataURL('image/png'))
     }
 
     const saveSnapshot = () => {
         if(!snapshot) return;
         let a = document.createElement("a");
-        a.href = URL.createObjectURL(snapshot); 
+        a.href = snapshot;
         a.download = `${Date.now()}.png`;
         a.click();
     }

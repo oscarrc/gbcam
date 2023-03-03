@@ -1,13 +1,13 @@
+import { dataToFile } from "../../helpers/file";
 import { useCamera } from "../../hooks/useCamera";
 
 const Mode = () => {
     const { save, recording, snapshot } = useCamera();
 
-    const share = () => {
+    const share = async () => {
         if(!snapshot && !recording) return;
         const media = snapshot ? snapshot : recording;
-        const extension = snapshot ? "png" : "mp4";
-        const file = new File([recording], `${Date.now()}.${extension}`, { type: media.type });
+        const file = await dataToFile(media);
 
         navigator.share({ files: [file] });
     }
