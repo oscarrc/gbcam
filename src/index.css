@@ -123,6 +123,7 @@
     #gbicon .start, #gbicon .select{ fill: #777F87 }
     #gbicon .button{ fill: #7B2358 }
     #gbicon .frame{ fill: #626A7B }
+    #gbicon .display{ fill: #224939 }
     #gbicon .grill path{ fill: #070C0B; opacity: 0.2 } 
     
     #gbicon.yellow .body{ fill: #F1B32F }
