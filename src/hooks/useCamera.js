@@ -151,7 +151,7 @@ const CameraProvider = ({ children }) => {
     const saveSnapshot = () => {
         if(!snapshot) return;
         let a = document.createElement("a");
-        a.href = snapshot; 
+        a.href = URL.createObjectURL(snapshot); 
         a.download = `${Date.now()}.png`;
         a.click();
     }
