@@ -62,7 +62,6 @@ const CameraProvider = ({ children }) => {
     }
 
     const initVideo = useCallback(async () => {
-        console.log(selfie)
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: {
