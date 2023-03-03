@@ -3,7 +3,7 @@ import { useCamera } from "../../hooks/useCamera";
 
 const Mode = () => {
     const { save, recording, snapshot } = useCamera();
-
+    //Implement share modal when navigator share is not working
     const share = async () => {
         if(!snapshot && !recording) return;
         const media = snapshot ? snapshot : recording;
