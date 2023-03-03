@@ -1,13 +1,9 @@
-import { BsCaretLeft, BsCaretRightFill } from "react-icons/bs"
-import { useEffect, useRef, useState } from "react";
-
 import { AiFillHeart } from "react-icons/ai";
 import { useCamera } from "../../hooks/useCamera";
+import { useEffect } from "react";
 
 const Display = ({ className }) => {
-    const { output, isRecording, initCamera, cameraEnabled, brightness, contrast} = useCamera();
-    const [showControls, setShowControls] = useState(true);
-    const controlsTimeout = useRef(null);
+    const { output, isRecording, initCamera, cameraEnabled } = useCamera();
 
     useEffect(() => {
         const canvas = output.current;
@@ -24,14 +20,6 @@ const Display = ({ className }) => {
         initCamera()
     },[initCamera, output])
 
-    useEffect(() => {
-        let timeout = controlsTimeout.current;
-        setShowControls(true);
-        timeout = setTimeout(() => setShowControls(false), 2000);
-
-        return () => clearTimeout(timeout)
-    }, [ brightness, contrast ])
-
     return (
         <div className={`aspect-4/3 ${className} bg-base-100 rounded-lg rounded-br-[2rem] flex flex-col gap-2 py-2`}>
             <div className="flex flex-row items-center gap-4 px-4 py-0 sm:py-1">
@@ -44,28 +32,7 @@ const Display = ({ className }) => {
                     <span className={`h-2 w-2 bg-red rounded-full ${cameraEnabled ? 'glow' : 'bg-opacity-20'}`}></span>
                     <span className="text-white text-2xs sm:text-xs relative -bottom-px">Camera</span>
                 </div>
-                <div className="relative">      
-                    {
-                        cameraEnabled &&
-                            <>
-                                <div className={`range-custom absolute py-1 px-8 bottom-0 left-0 w-full text-primary transition-all duration-200 ${!showControls && 'opacity-0'}`}>
-                                    <BsCaretLeft />
-                                    <label className="font-display" htmlFor="contrast">
-                                        <span className="px-1">contrast</span>
-                                    </label>                        
-                                    <input type="range" aria-label="contrast" aria-readonly="true" id="contrast" readOnly={true} min="0" max="100" value={ contrast * 100 } />
-                                    <BsCaretRightFill />
-                                </div>
-                                <div className={`range-custom range-vertical absolute py-1 px-4 -rotate-90 origin-top-right top-0 right-6 text-primary transition-all duration-200 ${!showControls && 'opacity-0'}`}>
-                                    <BsCaretLeft />
-                                    <label className="font-display" htmlFor="brightness">
-                                        <span className="px-1">brightness</span>
-                                    </label>
-                                    <input type="range" aria-label="brightness" aria-readonly="true" id="brightness" readOnly={true} min="0" max="100" value={ brightness * 100 } />
-                                    <BsCaretRightFill />
-                                </div>
-                            </>
-                    }
+                <div className="relative">
                     { isRecording && <span className="h-2 w-2 bg-base-100 absolute bottom-2 right-2 rounded-full animate-pulse"></span> }
                     <canvas ref={output} className="bg-display w-full aspect-10/9" />
                 </div>

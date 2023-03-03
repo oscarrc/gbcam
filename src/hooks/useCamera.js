@@ -70,14 +70,9 @@ const CameraProvider = ({ children }) => {
                     frameRate: { ideal: 60 },
                     resizeMode: 'crop-and-scale',
                     width: { exact: sSize },
-                    height: { exact: sSize },
-                    advanced: [{
-                        contrast: 100
-                    }]
+                    height: { exact: sSize }
                 }
             });
-
-            console.log(stream.getTracks()[0].getSettings())
 
             video.current = document.createElement("video");
             video.current.srcObject = stream;
@@ -91,98 +86,31 @@ const CameraProvider = ({ children }) => {
           }
     }, [selfie]);
 
-    const drawControls = (context) => {
-        const cw = context.measureText("CONTRAST").width;
-        const cx = ( output.current?.width - cw) / 2;
-        const cy = ( output.current?.height - 5);
-        const bw = context.measureText("BRIGHTNESS").width;
-        const bx = ( output.current?.width - 5);
-        const by = ( output.current?.height - bw) / 2;
-        const angle = (90 * Math.PI) / 180;
-
+    const drawFrame = (context, frame) => {         
+        const img = document.createElement("img");
+        img.src = frame;
         context.globalCompositeOperation = "source-over";
-        context.fillStyle = "#84cd6e";
-        context.strokeStyle = "#84cd6e";
-        context.lineWidth = 2;
-        context.font = "12px monospace";
-        
-        context.beginPath();
-        context.moveTo(offset, cy - 2)
-        context.lineTo(cx - 5 , cy - 2);
-        context.moveTo(cx + cw + 5, cy - 2);
-        context.lineTo(output.current?.width - offset , cy - 2);
-        context.moveTo(bx - 2, offset);
-        context.lineTo(bx - 2 , by - 5);
-        context.moveTo(bx - 2, by + bw + 5);
-        context.lineTo(bx - 2 , output.current?.height - offset);
-        context.stroke();
-        
-        context.beginPath();
-        context.moveTo(offset*0.5, cy - 10);
-        context.lineTo(offset*0.75, cy - 2);
-        context.lineTo(offset - 5, cy - 2);
-        context.lineTo(offset - 5, cy - 18);        
-        context.lineTo(offset*0.75, cy - 18);
-        context.lineTo(offset*0.5, cy - 10);
-        context.stroke();
-
-        context.beginPath();
-        context.moveTo(output.current?.width - offset*0.5, cy - 10);
-        context.lineTo(output.current?.width - offset*0.75, cy - 2);
-        context.lineTo(output.current?.width - offset + 5, cy - 2);
-        context.lineTo(output.current?.width - offset + 5, cy - 18);        
-        context.lineTo(output.current?.width - offset*0.75, cy - 18);
-        context.lineTo(output.current?.width - offset*0.5, cy - 10);
-        context.fill();
-        context.stroke();
-
-        context.beginPath();
-        context.moveTo(bx - 10, offset*0.5);
-        context.lineTo(bx - 2, offset*0.75);
-        context.lineTo(bx - 2, offset - 5);
-        context.lineTo(bx - 18, offset - 5);        
-        context.lineTo(bx - 18, offset*0.75);
-        context.lineTo(bx - 10, offset*0.5);
-        context.stroke();
-
-        context.beginPath();
-        context.moveTo(bx - 10, output.current?.width - offset*0.5);
-        context.lineTo(bx - 2, output.current?.width - offset*0.75);
-        context.lineTo(bx - 2, output.current?.width - offset + 5);
-        context.lineTo(bx - 18, output.current?.width - offset + 5);
-        context.lineTo(bx - 18, output.current?.width - offset*0.75);
-        context.lineTo(bx - 10, output.current?.width - offset*0.5);
-        context.fill();
-        context.stroke();
-
-        context.fillText("CONTRAST", cx, cy);
-
-        context.translate(bx - 8, by)
-        context.rotate(angle);
-        context.fillText("BRIGHTNESS", angle, 0); 
-        context.setTransform(1,0,0,1,0,0);
-    }
-
-    const drawFrame = (context) => {
-
+        context.drawImage(img, 0, 0, output.current?.width, output.current?.height);
     }
 
     const drawVideoFeed = useCallback((context) => {
         if(!video.current) return;
         
-        const d = Math.min(output.current?.width, output.current?.height) - offset;
-        const sx = ( output.current?.width - video.current?.videoWidth ) / 2;
-        const sy = ( output.current?.height - video.current?.videoHeight ) / 2;
-        const dx = ( output.current?.width - d ) / 2;
-        const dy = ( output.current?.height - d ) / 2;
+        drawInterval.current = setInterval(() => { 
+            const d = Math.min(output.current?.width, output.current?.height) - offset;
+            const sx = ( output.current?.width - video.current?.videoWidth ) / 2;
+            const sy = ( output.current?.height - video.current?.videoHeight ) / 2;
+            const dx = ( output.current?.width - d ) / 2;
+            const dy = ( output.current?.height - d ) / 2;
 
-        context.drawImage(video.current, sx, sy);
+            context.drawImage(video.current, sx, sy);
 
-        applyContrast(context);
-        applyBrightness(context);
-        convertPalette(context);
+            applyContrast(context);
+            applyBrightness(context);
+            convertPalette(context);
 
-        context.drawImage(output.current, sx, sy, sSize, sSize, dx, dy, d, d);
+            context.drawImage(output.current, sx, sy, sSize, sSize, dx, dy, d, d);
+        }, 17)
     }, [applyBrightness, applyContrast]);
 
     const drawSnapshot = useCallback((context) => {
@@ -203,7 +131,10 @@ const CameraProvider = ({ children }) => {
             player.current.play();
         }
         
-        context.drawImage(player.current, 0, 0, dSize, dSize, 0, 0, dMin, dMin);      
+        drawInterval.current = setInterval(() => { 
+            context.drawImage(player.current, 0, 0, dSize, dSize, 0, 0, dMin, dMin);
+        }, 17);
+              
     }, [player, recording])
 
     const initCamera = useCallback(async () => {
@@ -217,20 +148,9 @@ const CameraProvider = ({ children }) => {
 
         clearInterval(drawInterval.current);
 
-        if(snapshot){ 
-            drawSnapshot(context);
-            drawFrame(context)
-        }else if(recording) {
-            drawInterval.current = setInterval(() => { 
-                drawRecording(context);
-                drawFrame(context);
-            }, 17)
-        }else{
-            drawInterval.current = setInterval(() => { 
-                drawVideoFeed(context);
-                drawControls(context);
-            }, 17 )
-        }
+        if(snapshot) drawSnapshot(context);
+        else if(recording) drawRecording(context);
+        else drawVideoFeed(context);
     }, [drawSnapshot, drawRecording, drawVideoFeed, recording, snapshot])
 
     const takeSnapshot = () => {
