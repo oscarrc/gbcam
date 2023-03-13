@@ -4,7 +4,8 @@ import controls from "../assets/frames/controls.png";
 import { similarColor } from "../helpers/colors";
 
 const CameraContext = createContext();
-
+// https://github.com/NielsLeenheer/CanvasDither
+// Use canvas filters brightness, contrast and invert
 const CameraProvider = ({ children }) => {
     const video = useRef(null);
     const output = useRef(null);
@@ -108,9 +109,10 @@ const CameraProvider = ({ children }) => {
         const dy = ( h - d ) / 2;
 
         context.drawImage(video.current, sx, sy);
-        context.drawImage(output.current, sx, sy, sSize, sSize, dx, dy, d, d);          
+        context.drawImage(output.current, sx, sy, sSize, sSize, dx, dy, d, d); 
+                
         applyContrast(context);
-        applyBrightness(context);
+        applyBrightness(context); 
         drawFrame(context, controls, w, h, null);
     }, [applyBrightness, applyContrast]);
 

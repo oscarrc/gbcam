@@ -28,20 +28,4 @@ const similarColor = (color, palette) => {
   return similar;
 }
 
-const opositeColor = (color, palette) => {        
-  let similar = [];
-  let current = simGrade(color, palette[0]);
-  let next;
-
-  palette.forEach((c) => {
-    next = simGrade(color, c);
-    if (next >= current) {
-      similar = c;
-      current = next;
-    }
-  });
-  
-  return similar;
-}
-
-export { similarColor, opositeColor }
+export { similarColor }
