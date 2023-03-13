@@ -1,5 +1,6 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
+import { createContext, lazy, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
 
+import controls from "../assets/frames/controls.svg";
 import { similarColor } from "../helpers/colors";
 
 const CameraContext = createContext();
@@ -22,7 +23,8 @@ const CameraProvider = ({ children }) => {
     const [ snapshot, setSnapshot ] = useState(null);  
     const [ recording, setRecording ] = useState(null);
     const [ selfie, setSelfie ] = useState(true);
-    const [constraints] = useState(navigator.mediaDevices.getSupportedConstraints());
+    const [ frame, setFrame ] = useState(0);
+    const [ constraints ] = useState(navigator.mediaDevices.getSupportedConstraints());
     
     const applyBrightness = useCallback((context) => {
         context.globalCompositeOperation = "lighten";
@@ -69,8 +71,8 @@ const CameraProvider = ({ children }) => {
                     facingMode: selfie ? 'user' : 'environment',
                     frameRate: { ideal: 60 },
                     resizeMode: 'crop-and-scale',
-                    width: { exact: sSize },
-                    height: { exact: sSize }
+                    width: sSize,
+                    height: sSize
                 }
             });
 
@@ -86,11 +88,12 @@ const CameraProvider = ({ children }) => {
           }
     }, [selfie]);
 
-    const drawFrame = (context, frame) => {         
+    const drawFrame = async (context, frame, selection = null) => {         
         const img = document.createElement("img");
+        if(selection) frame = await lazy(() => import(`../assets/frames/frame-${selection}.svg`));
         img.src = frame;
         context.globalCompositeOperation = "source-over";
-        context.drawImage(img, 0, 0, output.current?.width, output.current?.height);
+        // context.drawImage(img, 0, 0, output.current?.width, output.current?.height);
     }
 
     const drawVideoFeed = useCallback((context) => {
@@ -104,9 +107,9 @@ const CameraProvider = ({ children }) => {
             const dy = ( output.current?.height - d ) / 2;
 
             context.drawImage(video.current, sx, sy);
-
             applyContrast(context);
             applyBrightness(context);
+            drawFrame(context, controls, null);
             convertPalette(context);
 
             context.drawImage(output.current, sx, sy, sSize, sSize, dx, dy, d, d);
@@ -118,6 +121,7 @@ const CameraProvider = ({ children }) => {
         const image = new Image();
         image.onload = () => context.drawImage(image, 0, 0, dSize, dSize, 0, 0, dMin, dMin); 
         image.src = URL.createObjectURL(snapshot);
+        //drawFrame(context, picture, frame)
     }, [snapshot])
 
     const drawRecording = useCallback((context) => {
@@ -133,6 +137,7 @@ const CameraProvider = ({ children }) => {
         
         drawInterval.current = setInterval(() => { 
             context.drawImage(player.current, 0, 0, dSize, dSize, 0, 0, dMin, dMin);
+            //drawFrame(context, picture, frame)
         }, 17);
               
     }, [player, recording])
@@ -228,6 +233,13 @@ const CameraProvider = ({ children }) => {
 
     const flipCamera = () => setSelfie(s => !s);
 
+    const selectFrame = (dir) => {
+        const limit = 10;
+        if( dir < 0 && frame + dir < 0 ) return
+        if( dir > 0 && frame + dir > limit ) return
+        setFrame(f => f + dir);
+    }
+
     useEffect(() => { initVideo() }, [initVideo])
 
     return (
@@ -237,6 +249,7 @@ const CameraProvider = ({ children }) => {
                 initCamera, 
                 flipCamera,
                 save,
+                selectFrame,
                 setBrightness, 
                 setContrast,
                 takeSnapshot,
