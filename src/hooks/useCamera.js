@@ -1,6 +1,6 @@
 import { createContext, lazy, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
 
-import controls from "../assets/frames/controls.svg";
+import controls from "../assets/frames/controls.png";
 import { similarColor } from "../helpers/colors";
 
 const CameraContext = createContext();
