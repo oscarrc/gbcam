@@ -31,7 +31,7 @@ const CameraProvider = ({ children }) => {
         context.globalAlpha = brightness; // 0-1
         context.fillStyle = "white";
         context.fillRect(0,0,output.current.width,output.current.height);            
-        context.globalCompositeOperation = "copy";
+        context.globalCompositeOperation = "source-over";
         context.globalAlpha = 1; 
     }, [brightness]);
 
@@ -40,7 +40,7 @@ const CameraProvider = ({ children }) => {
         context.globalAlpha = contrast; // 0-1
         context.fillStyle = "red";
         context.fillRect(0,0,output.current.width,output.current.height);
-        context.globalCompositeOperation = "copy";
+        context.globalCompositeOperation = "source-over";
         context.globalAlpha = 1; 
     }, [contrast]);
 
@@ -88,32 +88,30 @@ const CameraProvider = ({ children }) => {
           }
     }, [selfie]);
 
-    const drawFrame = async (context, frame, selection = null) => {         
+    const drawFrame = async (context, frame, width, height, selection = null) => {         
         const img = document.createElement("img");
         if(selection) frame = await lazy(() => import(`../assets/frames/frame-${selection}.svg`));
         img.src = frame;
         context.globalCompositeOperation = "source-over";
-        // context.drawImage(img, 0, 0, output.current?.width, output.current?.height);
+        context.drawImage(img, 0, 0, width, height);
     }
 
-    const drawVideoFeed = useCallback((context) => {
+    const drawFeed = useCallback((context) => {
         if(!video.current) return;
         
-        drawInterval.current = setInterval(() => { 
-            const d = Math.min(output.current?.width, output.current?.height) - offset;
-            const sx = ( output.current?.width - video.current?.videoWidth ) / 2;
-            const sy = ( output.current?.height - video.current?.videoHeight ) / 2;
-            const dx = ( output.current?.width - d ) / 2;
-            const dy = ( output.current?.height - d ) / 2;
+        const w = output.current?.width;
+        const h = output.current?.height
+        const d = Math.min(w, h) - offset;
+        const sx = ( w - video.current?.videoWidth ) / 2;
+        const sy = ( h - video.current?.videoHeight ) / 2;
+        const dx = ( w - d ) / 2;
+        const dy = ( h - d ) / 2;
 
-            context.drawImage(video.current, sx, sy);
-            applyContrast(context);
-            applyBrightness(context);
-            drawFrame(context, controls, null);
-            convertPalette(context);
-
-            context.drawImage(output.current, sx, sy, sSize, sSize, dx, dy, d, d);
-        }, 17)
+        context.drawImage(video.current, sx, sy);
+        context.drawImage(output.current, sx, sy, sSize, sSize, dx, dy, d, d);          
+        applyContrast(context);
+        applyBrightness(context);
+        drawFrame(context, controls, w, h, null);
     }, [applyBrightness, applyContrast]);
 
     const drawSnapshot = useCallback((context) => {
@@ -121,7 +119,6 @@ const CameraProvider = ({ children }) => {
         const image = new Image();
         image.onload = () => context.drawImage(image, 0, 0, dSize, dSize, 0, 0, dMin, dMin); 
         image.src = URL.createObjectURL(snapshot);
-        //drawFrame(context, picture, frame)
     }, [snapshot])
 
     const drawRecording = useCallback((context) => {
@@ -135,11 +132,7 @@ const CameraProvider = ({ children }) => {
             player.current.play();
         }
         
-        drawInterval.current = setInterval(() => { 
-            context.drawImage(player.current, 0, 0, dSize, dSize, 0, 0, dMin, dMin);
-            //drawFrame(context, picture, frame)
-        }, 17);
-              
+        context.drawImage(player.current, 0, 0, dSize, dSize, 0, 0, dMin, dMin);              
     }, [player, recording])
 
     const initCamera = useCallback(async () => {
@@ -153,10 +146,14 @@ const CameraProvider = ({ children }) => {
 
         clearInterval(drawInterval.current);
 
-        if(snapshot) drawSnapshot(context);
-        else if(recording) drawRecording(context);
-        else drawVideoFeed(context);
-    }, [drawSnapshot, drawRecording, drawVideoFeed, recording, snapshot])
+        drawInterval.current = setInterval(() => { 
+            if(snapshot) drawSnapshot(context);
+            else if(recording) drawRecording(context);
+            else drawFeed(context);
+            
+            convertPalette(context);
+        }, 17)
+    }, [drawSnapshot, drawRecording, drawFeed, recording, snapshot])
 
     const takeSnapshot = () => {
         const c = document.createElement("canvas");
