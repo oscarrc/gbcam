@@ -1,0 +1,16 @@
+const drawFeed = useCallback((context) => {
+    if(!video.current) return;
+    const w = output.current?.width;
+    const h = output.current?.height
+    const d = Math.min(w, h) - offset;
+    // const sx = ( w - video.current?.videoWidth ) / 2;
+    // const sy = ( h - video.current?.videoHeight ) / 2;
+    const dx = ( w - d ) / 2;
+    const dy = ( h - d ) / 2;
+
+    const sMin = Math.min(video.current.videoWidth, video.current.videoHeight);
+    const sx = ( video.current.videoWidth - sMin ) / 2;
+    const sy = ( video.current.videoHeight - sMin ) / 2;
+
+    context.drawImage(video.current, sx, sy, sMin, sMin, dx, dy, d, d);
+}, [contrast, brightness, negative]);

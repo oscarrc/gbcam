@@ -6,21 +6,21 @@ const Controls = () => {
     const { setBrightness, setContrast, snapshot, recording, selectFrame } = useCamera();
 
     const handleUp = () => {
-        (!snapshot && !recording) && setBrightness( b => b + 0.01 > 1 ? 1 : b + 0.01 )
+        (!snapshot && !recording) && setBrightness( b => b + 1 > 200 ? 200 : b + 1 )
         (snapshot || recording ) && selectFrame(1)
     }
 
     const handleDown = () => {
-        (!snapshot && !recording) && setBrightness( b => b - 0.01 < 0 ? 0 : b - 0.01)
+        (!snapshot && !recording) && setBrightness( b => b - 1 < 0 ? 0 : b - 1)
         (snapshot || recording ) && selectFrame(-1)
     }
 
     const handleRight = () => {
-        (!snapshot && !recording) && setContrast( c => c + 0.01 > 1 ? 1 : c + 0.01 )
+        (!snapshot && !recording) && setContrast( c => c + 1 > 200 ? 200 : c + 1 )
         (snapshot || recording ) && selectFrame(1)
     }
     const handleLeft = () => { 
-        (!snapshot && !recording) && setContrast( c => c - 0.01 < 0 ? 0 : c - 0.01 ) 
+        (!snapshot && !recording) && setContrast( c => c - 1 < 0 ? 0 : c - 1 ) 
         (snapshot || recording ) && selectFrame(-1)
     }
     

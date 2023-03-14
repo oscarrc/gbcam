@@ -1,6 +1,5 @@
-import { createContext, lazy, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
 
-import controls from "../assets/frames/controls.png";
 import { similarColor } from "../helpers/colors";
 
 const CameraContext = createContext();
@@ -19,32 +18,15 @@ const CameraProvider = ({ children }) => {
     const isRecording = useMemo(() => recorder.current !== null, [recorder]);
     const [ cameraError, setCameraError ] = useState(false);
     const [ cameraEnabled, setCameraEnabled ] = useState(false);
-    const [ contrast, setContrast] = useState(0);
-    const [ brightness, setBrightness] = useState(0);
+    const [ contrast, setContrast] = useState(100);
+    const [ brightness, setBrightness] = useState(100);
     const [ snapshot, setSnapshot ] = useState(null);  
     const [ recording, setRecording ] = useState(null);
     const [ selfie, setSelfie ] = useState(true);
     const [ frame, setFrame ] = useState(0);
+    const [ negative, setNegative ] = useState(false);
     const [ constraints ] = useState(navigator.mediaDevices.getSupportedConstraints());
     
-    const applyBrightness = useCallback((context) => {
-        context.globalCompositeOperation = "lighten";
-        context.globalAlpha = brightness; // 0-1
-        context.fillStyle = "white";
-        context.fillRect(0,0,output.current.width,output.current.height);            
-        context.globalCompositeOperation = "source-over";
-        context.globalAlpha = 1; 
-    }, [brightness]);
-
-    const applyContrast = useCallback((context) => {
-        context.globalCompositeOperation = "saturation";
-        context.globalAlpha = contrast; // 0-1
-        context.fillStyle = "red";
-        context.fillRect(0,0,output.current.width,output.current.height);
-        context.globalCompositeOperation = "source-over";
-        context.globalAlpha = 1; 
-    }, [contrast]);
-
     const convertPalette = (context) => {
         const palette = [[34, 73, 57], [54, 119, 74], [77, 163, 80], [132, 205, 110]];
         const width = output.current.width;
@@ -70,10 +52,7 @@ const CameraProvider = ({ children }) => {
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: {
                     facingMode: selfie ? 'user' : 'environment',
-                    frameRate: { ideal: 60 },
-                    resizeMode: 'crop-and-scale',
-                    width: sSize,
-                    height: sSize
+                    frameRate: { ideal: 60 }
                 }
             });
 
@@ -89,32 +68,37 @@ const CameraProvider = ({ children }) => {
           }
     }, [selfie]);
 
-    const drawFrame = async (context, frame, width, height, selection = null) => {         
+    const drawFrame = useCallback((context) => {         
         const img = document.createElement("img");
-        if(selection) frame = await lazy(() => import(`../assets/frames/frame-${selection}.svg`));
-        img.src = frame;
+        let src;
+
+        if(snapshot || recording){
+            src = require(`../assets/frames/frame-${frame}.png`);
+        }else{            
+            src = require(`../assets/frames/controls.png`);
+        }
+
+        img.src = src;
         context.globalCompositeOperation = "source-over";
-        context.drawImage(img, 0, 0, width, height);
-    }
+        context.drawImage(img, 0, 0, output.current?.width, output.current?.height);
+    }, [frame, recording, snapshot])
 
     const drawFeed = useCallback((context) => {
         if(!video.current) return;
-        
         const w = output.current?.width;
         const h = output.current?.height
         const d = Math.min(w, h) - offset;
-        const sx = ( w - video.current?.videoWidth ) / 2;
-        const sy = ( h - video.current?.videoHeight ) / 2;
         const dx = ( w - d ) / 2;
         const dy = ( h - d ) / 2;
+    
+        const sMin = Math.min(video.current.videoWidth, video.current.videoHeight);
+        const sx = ( video.current.videoWidth - sMin ) / 2;
+        const sy = ( video.current.videoHeight - sMin ) / 2;
 
-        context.drawImage(video.current, sx, sy);
-        context.drawImage(output.current, sx, sy, sSize, sSize, dx, dy, d, d); 
-                
-        applyContrast(context);
-        applyBrightness(context); 
-        drawFrame(context, controls, w, h, null);
-    }, [applyBrightness, applyContrast]);
+        // context.filter = `contrast(${contrast}) brightness(${brightness}) ${negative ? 'invert(1)' : ''}`;
+        context.drawImage(video.current, sx, sy, sMin, sMin, dx, dy, d, d);
+        // context.filter = "none";
+    }, [contrast, brightness, negative]);
 
     const drawSnapshot = useCallback((context) => {
         const dMin = Math.min(output.current?.width, output.current?.height);
@@ -140,10 +124,10 @@ const CameraProvider = ({ children }) => {
     const initCamera = useCallback(async () => {
         const context = output.current?.getContext("2d", { 
             willReadFrequently: true,            
-            msImageSmoothingEnabled: false,
-            mozImageSmoothingEnabled: false,
-            webkitImageSmoothingEnabled: false,
-            imageSmoothingEnabled: false
+            // msImageSmoothingEnabled: false,
+            // mozImageSmoothingEnabled: false,
+            // webkitImageSmoothingEnabled: false,
+            // imageSmoothingEnabled: false
         });
 
         clearInterval(drawInterval.current);
@@ -152,10 +136,11 @@ const CameraProvider = ({ children }) => {
             if(snapshot) drawSnapshot(context);
             else if(recording) drawRecording(context);
             else drawFeed(context);
-            
+                            
+            drawFrame(context);
             convertPalette(context);
         }, 17)
-    }, [drawSnapshot, drawRecording, drawFeed, recording, snapshot])
+    }, [drawSnapshot, drawRecording, drawFeed, drawFrame, recording, snapshot])
 
     const takeSnapshot = () => {
         const c = document.createElement("canvas");
@@ -251,6 +236,7 @@ const CameraProvider = ({ children }) => {
                 selectFrame,
                 setBrightness, 
                 setContrast,
+                setNegative,
                 takeSnapshot,
                 startRecording,
                 stopRecording,
