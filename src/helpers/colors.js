@@ -28,8 +28,4 @@ const similarColor = (color, palette) => {
   return similar;
 }
 
-const dithering = () => {
-  
-}
-
-export { similarColor, dithering }
+export { similarColor, }

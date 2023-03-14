@@ -1,5 +1,4 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
-
 import { similarColor } from "../helpers/colors";
 
 const CameraContext = createContext();
@@ -31,7 +30,7 @@ const CameraProvider = ({ children }) => {
         const width = output.current.width;
         const height = output.current.height;
         const imgData = context.getImageData(0,0,width,height);
-        
+
         for (let y = 0; y < imgData.height; y++) {
           for (let x = 0; x < imgData.width; x++) {
             let i = y * 4 * imgData.width + x * 4;
