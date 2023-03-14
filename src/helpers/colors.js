@@ -32,4 +32,4 @@ const dithering = () => {
   
 }
 
-export { similarColor }
+export { similarColor, dithering }

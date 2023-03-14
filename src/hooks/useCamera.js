@@ -12,7 +12,6 @@ const CameraProvider = ({ children }) => {
     const recorder = useRef(null);
     const player = useRef(null);
     const dSize = 1024;
-    const sSize = 128;
     const offset = 60;
 
     const isRecording = useMemo(() => recorder.current !== null, [recorder]);
