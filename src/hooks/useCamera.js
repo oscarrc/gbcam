@@ -1,5 +1,5 @@
+import { convertPalette, gbDither } from "../helpers/dither";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
-import { similarColor } from "../helpers/colors";
 
 const CameraContext = createContext();
 // https://github.com/NielsLeenheer/CanvasDither
@@ -21,29 +21,14 @@ const CameraProvider = ({ children }) => {
     const [ snapshot, setSnapshot ] = useState(null);  
     const [ recording, setRecording ] = useState(null);
     const [ selfie, setSelfie ] = useState(true);
-    const [ frame, setFrame ] = useState(0);
-    const [ negative, setNegative ] = useState(false);
+    const [ frame, setFrame ] = useState(0);   
+    const [ palette, setPalette ] = useState(0)
     const [ constraints ] = useState(navigator.mediaDevices.getSupportedConstraints());
     
-    const convertPalette = (context) => {
-        const palette = [[34, 73, 57], [54, 119, 74], [77, 163, 80], [132, 205, 110]];
-        const width = output.current.width;
-        const height = output.current.height;
-        const imgData = context.getImageData(0,0,width,height);
-
-        for (let y = 0; y < imgData.height; y++) {
-          for (let x = 0; x < imgData.width; x++) {
-            let i = y * 4 * imgData.width + x * 4;
-            const color = similarColor([ imgData.data[i], imgData.data[i + 1], imgData.data[i + 2] ], palette);
-            
-            imgData.data[i] = color[0];
-            imgData.data[i + 1] = color[1];
-            imgData.data[i + 2] = color[2];
-          }
-        }
-
-        context.putImageData(imgData, 0, 0);
-    }
+    const swapPalette = useCallback((context) => {
+        const swapped = convertPalette(output.current, palette);
+        context.putImageData(swapped, 0, 0);
+    }, [palette])
 
     const initVideo = useCallback(async () => {
         try {
@@ -93,10 +78,9 @@ const CameraProvider = ({ children }) => {
         const sx = ( video.current.videoWidth - sMin ) / 2;
         const sy = ( video.current.videoHeight - sMin ) / 2;
 
-        // context.filter = `contrast(${contrast}) brightness(${brightness}) ${negative ? 'invert(1)' : ''}`;
-        context.drawImage(video.current, sx, sy, sMin, sMin, dx, dy, d, d);
-        // context.filter = "none";
-    }, [contrast, brightness, negative]);
+        context.drawImage(video.current, sx, sy, sMin, sMin, dx, dy, d, d);        
+        context.putImageData(gbDither(output.current, brightness, contrast, 0, 0.6), 0, 0);
+    }, [brightness, contrast]);
 
     const drawSnapshot = useCallback((context) => {
         const dMin = Math.min(output.current?.width, output.current?.height);
@@ -122,10 +106,10 @@ const CameraProvider = ({ children }) => {
     const initCamera = useCallback(async () => {
         const context = output.current?.getContext("2d", { 
             willReadFrequently: true,            
-            // msImageSmoothingEnabled: false,
-            // mozImageSmoothingEnabled: false,
-            // webkitImageSmoothingEnabled: false,
-            // imageSmoothingEnabled: false
+            msImageSmoothingEnabled: false,
+            mozImageSmoothingEnabled: false,
+            webkitImageSmoothingEnabled: false,
+            imageSmoothingEnabled: false
         });
 
         clearInterval(drawInterval.current);
@@ -134,11 +118,11 @@ const CameraProvider = ({ children }) => {
             if(snapshot) drawSnapshot(context);
             else if(recording) drawRecording(context);
             else drawFeed(context);
-                            
+                          
             drawFrame(context);
-            convertPalette(context);
+            swapPalette(context);
         }, 17)
-    }, [drawSnapshot, drawRecording, drawFeed, drawFrame, recording, snapshot])
+    }, [snapshot, recording, drawSnapshot, drawRecording, drawFeed, drawFrame, swapPalette])
 
     const takeSnapshot = () => {
         const c = document.createElement("canvas");
@@ -234,7 +218,7 @@ const CameraProvider = ({ children }) => {
                 selectFrame,
                 setBrightness, 
                 setContrast,
-                setNegative,
+                setPalette,
                 takeSnapshot,
                 startRecording,
                 stopRecording,
