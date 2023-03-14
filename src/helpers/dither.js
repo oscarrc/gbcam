@@ -32,18 +32,18 @@ const palettes = [
 	]
 ]
 
-const gbDither = (pixels, brightness, contrast, dither) => {
-    let data = pixels.data;
+const gbDither = (imgData, brightness, contrast, dither) => {
+    let data = imgData.data;
 
-    for(let h = 0; h < pixels.height; h++) {
-		for(let w = 0; w < pixels.width; w++) {
-			let matrix = threshold[(h)%8][(w)%8];
-			let i = h * 4 * pixels.width + w * 4;
+    for(let h = 0; h < imgData.height; h++) {
+		for(let w = 0; w < imgData.width; w++) {
+			let matrix = threshold[h%8][w%8];
+			let i = h * 4 * imgData.width + w * 4;
             
 			// https://en.wikipedia.org/wiki/Grayscale
 			let c = data[i] * 0.2126  + data[i+1] * 0.7152 + data[i+2] * 0.0722;
             
-            c = Math.min(Math.max(c / 255 * (255 - contrast) + brightness, 0), 255);         
+            c = Math.min(Math.max(c / 255 * (255 - contrast) + brightness, 0), 255);      
             c = Math.min(Math.max(c + ((matrix - 32) * dither), 0), 255);
             c = Math.min(Math.max(Math.round(c / 64), 0),3) * 64;
             
@@ -53,11 +53,11 @@ const gbDither = (pixels, brightness, contrast, dither) => {
         }
     }
 
-    return pixels;
+    return imgData;
 }
 
-const convertPalette = (pixels, palette) => {    
-    const data = pixels.data;
+const convertPalette = (imgData, palette) => {    
+    const data = imgData.data;
     
     for (let i = 0; i < data.length; i += 4) {
 		let c = Math.min(Math.max(Math.floor(data[i] / 64), 0), 3);
@@ -66,7 +66,7 @@ const convertPalette = (pixels, palette) => {
         }
 	}
 
-    return pixels;
+    return imgData;
 }
 
 export { gbDither, convertPalette }

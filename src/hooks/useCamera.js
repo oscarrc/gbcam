@@ -26,14 +26,14 @@ const CameraProvider = ({ children }) => {
     const [ constraints ] = useState(navigator.mediaDevices.getSupportedConstraints());
     
     const swapPalette = useCallback((context) => {
-        const pixels = context.getImageData(0,0,output.current.width,output.current.height);
-        const swapped = convertPalette(pixels, palette);
+        const imgData = context.getImageData(0,0,output.current.width,output.current.height);
+        const swapped = convertPalette(imgData, palette);
         context.putImageData(swapped, 0, 0);
     }, [palette])
 
     const applyDither = useCallback((context) => {
-        const pixels = context.getImageData(0,0,output.current.width,output.current.height);
-        const dithered = gbDither(pixels, brightness, contrast, 0.6)
+        const imgData = context.getImageData(0,0,output.current.width,output.current.height);
+        const dithered = gbDither(imgData, brightness, contrast, 0.6)
         context.putImageData(dithered, 0, 0);
     }, [brightness, contrast])
 
