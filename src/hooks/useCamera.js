@@ -16,8 +16,8 @@ const CameraProvider = ({ children }) => {
     const isRecording = useMemo(() => recorder.current !== null, [recorder]);
     const [ cameraError, setCameraError ] = useState(false);
     const [ cameraEnabled, setCameraEnabled ] = useState(false);
-    const [ contrast, setContrast] = useState(100);
-    const [ brightness, setBrightness] = useState(100);
+    const [ contrast, setContrast] = useState(51);
+    const [ brightness, setBrightness] = useState(51);
     const [ snapshot, setSnapshot ] = useState(null);  
     const [ recording, setRecording ] = useState(null);
     const [ selfie, setSelfie ] = useState(true);
@@ -26,30 +26,16 @@ const CameraProvider = ({ children }) => {
     const [ constraints ] = useState(navigator.mediaDevices.getSupportedConstraints());
     
     const swapPalette = useCallback((context) => {
-        const swapped = convertPalette(output.current, palette);
+        const pixels = context.getImageData(0,0,output.current.width,output.current.height);
+        const swapped = convertPalette(pixels, palette);
         context.putImageData(swapped, 0, 0);
     }, [palette])
 
-    const initVideo = useCallback(async () => {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: {
-                    facingMode: selfie ? 'user' : 'environment',
-                    frameRate: { ideal: 60 }
-                }
-            });
-
-            video.current = document.createElement("video");
-            video.current.srcObject = stream;
-            video.current.play();
-                    
-            setCameraEnabled(true);
-            setCameraError(false);
-          } catch(err) {
-            setCameraEnabled(false);
-            setCameraError(true);
-          }
-    }, [selfie]);
+    const applyDither = useCallback((context) => {
+        const pixels = context.getImageData(0,0,output.current.width,output.current.height);
+        const dithered = gbDither(pixels, brightness, contrast, 0.6)
+        context.putImageData(dithered, 0, 0);
+    }, [brightness, contrast])
 
     const drawFrame = useCallback((context) => {         
         const img = document.createElement("img");
@@ -62,7 +48,6 @@ const CameraProvider = ({ children }) => {
         }
 
         img.src = src;
-        context.globalCompositeOperation = "source-over";
         context.drawImage(img, 0, 0, output.current?.width, output.current?.height);
     }, [frame, recording, snapshot])
 
@@ -78,9 +63,10 @@ const CameraProvider = ({ children }) => {
         const sx = ( video.current.videoWidth - sMin ) / 2;
         const sy = ( video.current.videoHeight - sMin ) / 2;
 
-        context.drawImage(video.current, sx, sy, sMin, sMin, dx, dy, d, d);        
-        context.putImageData(gbDither(output.current, brightness, contrast, 0, 0.6), 0, 0);
-    }, [brightness, contrast]);
+        context.drawImage(video.current, sx, sy, sMin, sMin, dx, dy, d, d); 
+
+        applyDither(context);
+    }, [applyDither]);
 
     const drawSnapshot = useCallback((context) => {
         const dMin = Math.min(output.current?.width, output.current?.height);
@@ -123,6 +109,30 @@ const CameraProvider = ({ children }) => {
             swapPalette(context);
         }, 17)
     }, [snapshot, recording, drawSnapshot, drawRecording, drawFeed, drawFrame, swapPalette])
+    
+    const initVideo = useCallback(async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: selfie ? 'user' : 'environment',
+                    frameRate: { ideal: 60 },
+                    resizeMode: "crop-and-scale",
+                    width: 128,
+                    height: 128
+                }
+            });
+
+            video.current = document.createElement("video");
+            video.current.srcObject = stream;
+            video.current.play();
+                    
+            setCameraEnabled(true);
+            setCameraError(false);
+          } catch(err) {
+            setCameraEnabled(false);
+            setCameraError(true);
+          }
+    }, [selfie]);
 
     const takeSnapshot = () => {
         const c = document.createElement("canvas");
@@ -133,25 +143,15 @@ const CameraProvider = ({ children }) => {
         setSnapshot(c.toDataURL('image/png'))
     }
 
-    const saveSnapshot = () => {
-        if(!snapshot) return;
-        let a = document.createElement("a");
-        a.href = snapshot;
-        a.download = `${Date.now()}.png`;
-        a.click();
-    }
-
-    const clearSnapshot = () => setSnapshot(null);
-
     const startRecording = () => {
         const c = document.createElement("canvas");
-        const context = c.getContext("2d");
+        const ctx = c.getContext("2d");
         
         c.width = dSize;
         c.height = dSize;
 
         let interval = setInterval(() => {
-            context.drawImage(output.current, 0, 0, output.current.width, output.current.height, 0, 0, dSize, dSize);
+            ctx.drawImage(output.current, 0, 0, output.current.width, output.current.height, 0, 0, dSize, dSize);
         }, 17);
 
         let chunks = [];
@@ -173,28 +173,20 @@ const CameraProvider = ({ children }) => {
         if(recorder.current) recorder.current.stop();
     }
 
-    const saveRecording = () => {
-        if(!recording) return;
+    const save = () => {
         let a = document.createElement("a");
-        a.href = URL.createObjectURL(recording); 
-        a.download = `${Date.now()}.mp4`;
+        a.href = snapshot ? snapshot : URL.createObjectURL(recording);        
+        a.download = `${Date.now()}.${snapshot ? "png" : "mp4"}`;
         a.click();
     }
 
-    const clearRecording = () => {
-        setRecording(null);
-        if(player.current) player.current = null;
-        if(recorder.current) recorder.current = null;
-    }
-
-    const save = () => {
-        if(snapshot) saveSnapshot();
-        if(recording) saveRecording();
-    }
-
     const clear = () => {
-        if(snapshot) clearSnapshot();
-        if(recording) clearRecording();
+        if(snapshot) setSnapshot(null);
+        if(recording){
+            setRecording(null);
+            if(player.current) player.current = null;
+            if(recorder.current) recorder.current = null;
+        };
     }
 
     const flipCamera = () => setSelfie(s => !s);
