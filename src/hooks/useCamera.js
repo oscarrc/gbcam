@@ -118,7 +118,7 @@ const CameraProvider = ({ children }) => {
                     frameRate: { ideal: 60 },
                     resizeMode: "crop-and-scale",
                     width: 128,
-                    height: 128
+                    height: 126
                 }
             });
 
