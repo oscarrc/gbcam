@@ -1,6 +1,6 @@
 // Based on https://bisqwit.iki.fi/story/howto/dither/jy/
 
-const threshold = [
+const thresholds = [
 	[0,48,12,60,3,51,15,63],
 	[32,16,44,28,35,19,47,31],
 	[8,56,4,52,11,59,7,55],
@@ -39,7 +39,7 @@ const gbDither = (imgData, brightness, contrast, dither, invert) => {
 
     for(let h = 0; h < imgData.height; h++) {
 		for(let w = 0; w < imgData.width; w++) {
-			let matrix = threshold[h%8][w%8];
+			let matrix = thresholds[h%8][w%8];
 			let i = h * 4 * imgData.width + w * 4;
             
 			// https://en.wikipedia.org/wiki/Grayscale
