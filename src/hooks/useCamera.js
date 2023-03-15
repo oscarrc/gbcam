@@ -37,16 +37,16 @@ const CameraProvider = ({ children }) => {
         context.putImageData(dithered, 0, 0);
     }, [brightness, contrast])
 
-    const drawFrame = useCallback((context) => {         
+    const drawFrame = useCallback(async (context) => {         
         const img = document.createElement("img");
         let src;
 
         if(snapshot || recording){
-            src = require(`../assets/frames/frame-${frame}.png`);
+            src = `assets/frames/frame-${frame}.svg`;
         }else{            
-            src = require(`../assets/frames/controls.png`);
+            src = `assets/frames/controls.svg`;
         }
-
+        
         img.src = src;
         context.drawImage(img, 0, 0, output.current?.width, output.current?.height);
     }, [frame, recording, snapshot])

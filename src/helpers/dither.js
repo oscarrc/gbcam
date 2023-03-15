@@ -11,13 +11,6 @@ const threshold = [
 	[42,26,38,22,41,25,37,21]
 ];
 
-const gbMatrix = [
-	[0,8,16,24],
-	[1,9,17,25],
-	[2,10,18,27],
-	[3,11,19,27],
-]
-
 const palettes = [
     [ // DMG
         [34, 73, 57], 
@@ -46,7 +39,7 @@ const gbDither = (imgData, brightness, contrast, dither, invert) => {
 
     for(let h = 0; h < imgData.height; h++) {
 		for(let w = 0; w < imgData.width; w++) {
-			let matrix = threshold[h%4][w%4];
+			let matrix = threshold[h%8][w%8];
 			let i = h * 4 * imgData.width + w * 4;
             
 			// https://en.wikipedia.org/wiki/Grayscale
