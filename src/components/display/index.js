@@ -7,12 +7,16 @@ const Display = ({ className }) => {
 
     useEffect(() => {
         const canvas = output.current;
-        const setCanvasHeight = () => canvas.height = canvas.width;
+        const setCanvasSize = () => {
+            const { width, height } = canvas.getBoundingClientRect();
+            canvas.height = height;
+            canvas.width = width;
+        };
         
-        setCanvasHeight();
-        window.addEventListener("resize", setCanvasHeight)
+        setCanvasSize();
+        window.addEventListener("resize", setCanvasSize)
 
-        return () => window.removeEventListener("resize", setCanvasHeight)
+        return () => window.removeEventListener("resize", setCanvasSize)
     }, [output])
 
     useEffect(()=> {
