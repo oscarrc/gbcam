@@ -3,7 +3,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 
 const CameraContext = createContext();
 // https://github.com/NielsLeenheer/CanvasDither
-// Use canvas filters brightness, contrast and invert
+
 const CameraProvider = ({ children }) => {
     const video = useRef(null);
     const output = useRef(null);
@@ -20,19 +20,19 @@ const CameraProvider = ({ children }) => {
     const [ recording, setRecording ] = useState(null);
     const [ selfie, setSelfie ] = useState(true);
     const [ frame, setFrame ] = useState(0);   
-    const [ palette, setPalette ] = useState(0)
+    const [ palette, setPalette ] = useState(0);
     const [ constraints ] = useState(navigator.mediaDevices.getSupportedConstraints());
     
-    const swapPalette = useCallback((context) => {
-        const imgData = context.getImageData(0,0,output.current.width,output.current.height);
+    const swapPalette = useCallback((ctx) => {
+        const imgData = ctx.getImageData(0,0,output.current.width,output.current.height);
         const swapped = convertPalette(imgData, palette);
-        context.putImageData(swapped, 0, 0);
+        ctx.putImageData(swapped, 0, 0);
     }, [palette])
 
-    const applyDither = useCallback((context) => {
-        const imgData = context.getImageData(0,0,output.current.width,output.current.height);
+    const applyDither = useCallback((ctx, x, y, w, h) => {
+        const imgData = ctx.getImageData(x, y, w, h);
         const dithered = gbDither(imgData, brightness, contrast, 0.6)
-        context.putImageData(dithered, 0, 0);
+        ctx.putImageData(dithered, x, y, 0, 0, w, h);
     }, [brightness, contrast])
 
     const drawFrame = useCallback(async (context) => {         
@@ -47,7 +47,7 @@ const CameraProvider = ({ children }) => {
         
         img.src = src;
         context.drawImage(img, 0, 0, output.current?.width, output.current?.height);
-    }, [frame, recording, snapshot])
+    }, [frame, recording, snapshot, swapPalette])
 
     const drawFeed = useCallback((context) => {
         if(!video.current) return;
@@ -66,17 +66,16 @@ const CameraProvider = ({ children }) => {
         const sy = ( video.current.videoHeight - sh ) / 2;
 
         context.drawImage(video.current, sx, sy, sw, sh, dx, dy, dw, dh); 
-
-        applyDither(context);
+        applyDither(context, dx, dy, dw, dh);
     }, [applyDither]);
 
     const drawSnapshot = useCallback((context) => {
         const w = output.current.width
         const h = output.current.height
 
-        const image = new Image();
-        image.onload = () => context.drawImage(image, 0, 0, w, h, 0, 0, w, h); 
-        image.src = URL.createObjectURL(snapshot);
+        const image = document.createElement("img"); 
+        image.src = snapshot;
+        context.drawImage(image, 0, 0, w, h, 0, 0, w, h);
     }, [snapshot])
 
     const drawRecording = useCallback((context) => {
@@ -105,13 +104,15 @@ const CameraProvider = ({ children }) => {
 
         clearInterval(drawInterval.current);
 
-        drawInterval.current = setInterval(() => { 
+        drawInterval.current = setInterval(() => {                           
+            drawFrame(context);
+
             if(snapshot) drawSnapshot(context);
             else if(recording) drawRecording(context);
-            else drawFeed(context);
-                          
-            drawFrame(context);
-            swapPalette(context);
+            else{
+                drawFeed(context);                 
+                swapPalette(context);
+            }
         }, 17)
     }, [snapshot, recording, drawSnapshot, drawRecording, drawFeed, drawFrame, swapPalette])
     
@@ -141,13 +142,13 @@ const CameraProvider = ({ children }) => {
 
     const takeSnapshot = () => {
         const c = document.createElement("canvas");
-        const context = c.getContext("2d");
+        const ctx = c.getContext("2d");
         const w = output.current.width
         const h = output.current.height
 
         c.width = w;
         c.height = h;
-        context.drawImage(output.current, 0, 0, w, h, 0, 0, w, h);
+        ctx.drawImage(output.current, 0, 0, w, h, 0, 0, w, h);
         setSnapshot(c.toDataURL('image/png'))
     }
 
