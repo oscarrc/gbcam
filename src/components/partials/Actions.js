@@ -2,7 +2,7 @@ import { dataToFile } from "../../helpers/file";
 import { useCamera } from "../../hooks/useCamera";
 
 const Mode = () => {
-    const { save, recording, snapshot } = useCamera();
+    const { toggleOptions, recording, snapshot } = useCamera();
     //TODO: Implement share modal when navigator share is not working
     const share = async () => {
         if(!snapshot && !recording) return;
@@ -15,12 +15,12 @@ const Mode = () => {
     return (
         <div className="grid grid-cols-2 gap-4 font-bold text-neutral-content text-xs">
             <span className="-rotate-20">
-                <button onClick={save} name="Save" aria-label="Save" className="btn btn-secondary p-0 min-h-0 h-4 w-12 rounded-lg shadow"></button>
-                <label htmlFor="Save" className="text-button text-center block">SAVE</label>
+                <button onClick={share} name="Save" aria-label="Save" className="btn btn-secondary p-0 min-h-0 h-4 w-12 rounded-lg shadow"></button>
+                <label htmlFor="Share" className="text-button text-center block">SHARE</label>
             </span>
             <span className="-rotate-20">
-                <button onClick={share} name="Share" aria-label="Share" className="btn btn-secondary p-0 min-h-0 h-4 w-12 rounded-lg shadow"></button>
-                <label htmlFor="Share" className="text-button text-center block">SHARE</label>
+                <button onClick={toggleOptions} name="Share" aria-label="Share" className="btn btn-secondary p-0 min-h-0 h-4 w-12 rounded-lg shadow"></button>
+                <label htmlFor="Select" className="text-button text-center block">SELECT</label>
             </span>
         </div>
     )

@@ -1,5 +1,6 @@
 import { convertPalette, gbDither } from "../helpers/dither";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
+
 import { getCanvasImage } from "../helpers/canvas";
 
 const CameraContext = createContext();
@@ -54,7 +55,6 @@ const CameraProvider = ({ children }) => {
     const drawUI = useCallback((context) => {
         const img = document.createElement("img");
         img.src = `assets/ui/${snapshot || recording ? 'save' : options ? "options" : "controls"}.svg`;
-
         const { width, height } = output.current;
         const ui = getCanvasImage(img, width, height)
 
