@@ -1,5 +1,6 @@
 import { convertPalette, gbDither } from "../helpers/dither";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
+import { getCanvasImage } from "../helpers/canvas";
 
 const CameraContext = createContext();
 // https://github.com/NielsLeenheer/CanvasDither
@@ -19,68 +20,57 @@ const CameraProvider = ({ children }) => {
     const [ snapshot, setSnapshot ] = useState(null);  
     const [ recording, setRecording ] = useState(null);
     const [ selfie, setSelfie ] = useState(true);
+    const [ options, setOptions ] = useState(false);
     const [ frame, setFrame ] = useState(0);   
     const [ palette, setPalette ] = useState(0);
     const [ constraints ] = useState(navigator.mediaDevices.getSupportedConstraints());
     
-    const swapPalette = useCallback((ctx) => {
-        const imgData = ctx.getImageData(0,0,output.current.width,output.current.height);
+    // Image modification
+    const swapPalette = useCallback((canvas) => {
+        const context = canvas.getContext("2d", { willReadFrequently: true });
+        const imgData = context.getImageData(0,0,output.current.width,output.current.height);
         const swapped = convertPalette(imgData, palette);
-        ctx.putImageData(swapped, 0, 0);
+        context.putImageData(swapped, 0, 0);
     }, [palette])
 
-    const applyDither = useCallback((ctx, x, y, w, h) => {
-        const imgData = ctx.getImageData(x, y, w, h);
+    const applyDither = useCallback((context, x, y, w, h) => {
+        const imgData = context.getImageData(x, y, w, h);
         const dithered = gbDither(imgData, brightness, contrast, 0.6)
-        ctx.putImageData(dithered, x, y, 0, 0, w, h);
+        context.putImageData(dithered, x, y, 0, 0, w, h);
     }, [brightness, contrast])
 
-    const drawFrame = useCallback(async (context) => {         
+    // Draw to canvas
+    const drawFrame = useCallback((context) => {         
         const img = document.createElement("img");
-        let src;
+        img.src = `assets/frames/frame-${frame}.svg`;
 
-        if(snapshot || recording){
-            src = `assets/frames/frame-${frame}.svg`;
-        }else{            
-            src = `assets/frames/controls.svg`;
-        }
-        
-        img.src = src;
-        context.drawImage(img, 0, 0, output.current?.width, output.current?.height);
-    }, [frame, recording, snapshot, swapPalette])
+        const { width, height } = output.current;
+        const fr = getCanvasImage(img, width, height);
 
-    const drawFeed = useCallback((context) => {
-        if(!video.current) return;
-        const w = output.current?.width;
-        const h = output.current?.height;
-        const ox = 60 * w / 300
-        const oy = 60 * h / 300
-        const dw = w - ox;
-        const dh = h - oy;
-        const dx = ( w - dw ) / 2;
-        const dy = ( h - dh ) / 2;
+        swapPalette(fr)
+        context.drawImage(fr, 0, 0, output.current?.width, output.current?.height);
+    }, [frame, swapPalette])
+
+    const drawUI = useCallback((context) => {
+        const img = document.createElement("img");
+        img.src = `assets/ui/${snapshot || recording ? 'save' : options ? "options" : "controls"}.svg`;
+
+        const { width, height } = output.current;
+        const ui = getCanvasImage(img, width, height)
+
+        swapPalette(ui);        
+        context.drawImage(ui, 0, 0, width, height);
+    }, [options, recording, snapshot, swapPalette])
     
-        const sw = video.current.videoWidth;
-        const sh = video.current.videoHeight;
-        const sx = ( video.current.videoWidth - sw ) / 2;
-        const sy = ( video.current.videoHeight - sh ) / 2;
-
-        context.drawImage(video.current, sx, sy, sw, sh, dx, dy, dw, dh); 
-        applyDither(context, dx, dy, dw, dh);
-    }, [applyDither]);
-
     const drawSnapshot = useCallback((context) => {
-        const w = output.current.width
-        const h = output.current.height
-
+        const { width, height } = output.current;
         const image = document.createElement("img"); 
         image.src = snapshot;
-        context.drawImage(image, 0, 0, w, h, 0, 0, w, h);
+        context.drawImage(image, 0, 0, width, height, 0, 0, width, height);
     }, [snapshot])
 
     const drawRecording = useCallback((context) => {
-        const w = output.current.width
-        const h = output.current.height
+        const { width, height } = output.current
 
         if(!player.current){
             player.current = document.createElement( 'video' );
@@ -90,9 +80,31 @@ const CameraProvider = ({ children }) => {
             player.current.play();
         }
         
-        context.drawImage(player.current, 0, 0, w, h, 0, 0, w, h);              
+        context.drawImage(player.current, 0, 0, width, height, 0, 0, width, height);              
     }, [player, recording])
 
+    const drawFeed = useCallback((context) => {
+        if(!video.current) return;
+
+        const { width, height } = output.current;
+        const ox = 60 * width / 300
+        const oy = 60 * height / 300
+        const dw = width - ox;
+        const dh = height - oy;
+        const dx = ( width - dw ) / 2;
+        const dy = ( height - dh ) / 2;
+    
+        const sw = video.current.videoWidth;
+        const sh = video.current.videoHeight;
+        const sx = ( video.current.videoWidth - sw ) / 2;
+        const sy = ( video.current.videoHeight - sh ) / 2;
+
+        context.drawImage(video.current, sx, sy, sw, sh, dx, dy, dw, dh); 
+        applyDither(context, dx, dy, dw, dh);               
+        swapPalette(output.current);
+    }, [applyDither, swapPalette]);
+
+    // Camera initialization
     const initCamera = useCallback(async () => {
         const context = output.current?.getContext("2d", { 
             willReadFrequently: true,            
@@ -104,17 +116,14 @@ const CameraProvider = ({ children }) => {
 
         clearInterval(drawInterval.current);
 
-        drawInterval.current = setInterval(() => {                           
-            drawFrame(context);
-
+        drawInterval.current = setInterval(() => {
             if(snapshot) drawSnapshot(context);
             else if(recording) drawRecording(context);
-            else{
-                drawFeed(context);                 
-                swapPalette(context);
-            }
+            else drawFeed(context);
+                                       
+            drawUI(context);
         }, 17)
-    }, [snapshot, recording, drawSnapshot, drawRecording, drawFeed, drawFrame, swapPalette])
+    }, [snapshot, recording, drawSnapshot, drawRecording, drawFeed, drawUI])
     
     const initVideo = useCallback(async () => {
         try {
@@ -140,33 +149,24 @@ const CameraProvider = ({ children }) => {
           }
     }, [selfie]);
 
+    // Capture functions
     const takeSnapshot = () => {
-        const c = document.createElement("canvas");
-        const ctx = c.getContext("2d");
-        const w = output.current.width
-        const h = output.current.height
-
-        c.width = w;
-        c.height = h;
-        ctx.drawImage(output.current, 0, 0, w, h, 0, 0, w, h);
-        setSnapshot(c.toDataURL('image/png'))
+        const { width, height } = output.current
+        const img = getCanvasImage(output.current, width, height);
+        setSnapshot(img.toDataURL('image/png'))
     }
 
     const startRecording = () => {
-        const c = document.createElement("canvas");
-        const ctx = c.getContext("2d");
-        const w = output.current.width
-        const h = output.current.height
-
-        c.width = w;
-        c.height = h;
+        const { width, height } = output.current;
+        const feed = getCanvasImage(output.current, width, height);
+        const feedCtx = feed.getContext("2d");
 
         let interval = setInterval(() => {
-            ctx.drawImage(output.current, 0, 0, w, h, 0, 0, w, h);
+            feedCtx.drawImage(output.current, 0, 0, width, height, 0, 0, width, height);
         }, 17);
 
         let chunks = [];
-        const stream = c.captureStream(60);
+        const stream = feed.captureStream(60);
         
         recorder.current = new MediaRecorder(stream);
         recorder.current.ondataavailable = (e) => chunks.push(e.data);
@@ -200,7 +200,9 @@ const CameraProvider = ({ children }) => {
         };
     }
 
+    // Utilities
     const flipCamera = () => setSelfie(s => !s);
+    const toggleOptions = () => setOptions( o => !o);
 
     const selectFrame = (dir) => {
         const limit = 10;
@@ -222,15 +224,17 @@ const CameraProvider = ({ children }) => {
                 setBrightness, 
                 setContrast,
                 setPalette,
-                takeSnapshot,
                 startRecording,
                 stopRecording,
+                takeSnapshot,
+                toggleOptions,
                 isRecording,
                 brightness,
                 cameraEnabled,
                 cameraError,
                 constraints,
                 contrast,
+                options,
                 output,
                 recording,
                 selfie,
