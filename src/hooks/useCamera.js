@@ -24,6 +24,7 @@ const CameraProvider = ({ children }) => {
     const [ option, setOption ] = useState(-1);
     const [ frame, setFrame ] = useState(0);   
     const [ palette, setPalette ] = useState(0);
+    const [ inverted, setInverted ] = useState(false);
     const [ constraints ] = useState(navigator.mediaDevices.getSupportedConstraints());
     
     // Image modification
@@ -36,9 +37,9 @@ const CameraProvider = ({ children }) => {
 
     const applyDither = useCallback((context, x, y, w, h) => {
         const imgData = context.getImageData(x, y, w, h);
-        const dithered = gbDither(imgData, brightness, contrast, 0.6)
+        const dithered = gbDither(imgData, brightness, contrast, 0.6, inverted)
         context.putImageData(dithered, x, y, 0, 0, w, h);
-    }, [brightness, contrast])
+    }, [brightness, contrast, inverted])
 
     // Draw to canvas
     const drawFrame = useCallback((context) => {         
@@ -49,7 +50,7 @@ const CameraProvider = ({ children }) => {
         const fr = getCanvasImage(img, width, height);
 
         swapPalette(fr)
-        context.drawImage(fr, 0, 0, output.current?.width, output.current?.height);
+        context.drawImage(fr, 0, 0, width, height);
     }, [frame, swapPalette])
 
     const drawUI = useCallback((context) => {
@@ -65,9 +66,9 @@ const CameraProvider = ({ children }) => {
     
     const drawSnapshot = useCallback((context) => {
         const { width, height } = output.current;
-        const image = document.createElement("img"); 
-        image.src = snapshot;
-        context.drawImage(image, 0, 0, width, height, 0, 0, width, height);
+        const img = document.createElement("img"); 
+        img.src = snapshot;
+        context.drawImage(img, 0, 0, width, height, 0, 0, width, height);
     }, [snapshot])
 
     const drawRecording = useCallback((context) => {
@@ -118,7 +119,7 @@ const CameraProvider = ({ children }) => {
         clearInterval(drawInterval.current);
 
         drawInterval.current = setInterval(() => {
-            if(snapshot) drawSnapshot(context);
+            if(snapshot)  drawSnapshot(context);
             else if(recording) drawRecording(context);
             else drawFeed(context);
                                        
@@ -154,7 +155,9 @@ const CameraProvider = ({ children }) => {
     const takeSnapshot = () => {
         const { width, height } = output.current
         const img = getCanvasImage(output.current, width, height);
-        setSnapshot(img.toDataURL('image/png'))
+        const ctx = img.getContext("2d");
+        drawFrame(ctx);
+        setSnapshot(img.toDataURL('image/png'));
     }
 
     const startRecording = () => {
