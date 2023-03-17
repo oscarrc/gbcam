@@ -3,25 +3,30 @@ import { BsCaretDownFill, BsCaretLeftFill, BsCaretRightFill, BsCaretUpFill } fro
 import { useCamera } from "../../hooks/useCamera";
 
 const DPad = () => {
-    const { setBrightness, setContrast, snapshot, recording, selectFrame } = useCamera();
+    const { setBrightness, setContrast, option, setOption, snapshot, recording, selectFrame } = useCamera();
 
     const handleUp = () => {
-        (!snapshot && !recording) && setBrightness( b => b + 1 > 255 ? 255 : b + 1 )
-        (snapshot || recording ) && selectFrame(1)
-    }
-
-    const handleDown = () => {
-        (!snapshot && !recording) && setBrightness( b => b - 1 < 0 ? 0 : b - 1)
-        (snapshot || recording ) && selectFrame(-1)
+        if(option) setOption(1);
+        else if (snapshot || recording ) selectFrame(1);
+        else setBrightness( b => b + 1 > 255 ? 255 : b + 1 );
     }
 
     const handleRight = () => {
-        (!snapshot && !recording) && setContrast( c => c + 1 > 255 ? 255 : c + 1 )
-        (snapshot || recording ) && selectFrame(1)
+        if(option) setOption(2);
+        else if (snapshot || recording ) selectFrame(1);
+        else setContrast( c => c + 1 > 255 ? 255 : c + 1 );
     }
+
+    const handleDown = () => {
+        if(option) setOption(3);
+        else if (snapshot || recording ) selectFrame(-1);
+        else setBrightness( b => b - 1 < 0 ? 0 : b - 1);
+    }
+
     const handleLeft = () => { 
-        (!snapshot && !recording) && setContrast( c => c - 1 < 0 ? 0 : c - 1 ) 
-        (snapshot || recording ) && selectFrame(-1)
+        if(option) setOption(4);
+        else if (snapshot || recording ) selectFrame(-1);
+        else setContrast( c => c - 1 < 0 ? 0 : c - 1 ) ;
     }
     
     return (

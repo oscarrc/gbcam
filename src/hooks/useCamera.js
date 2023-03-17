@@ -21,7 +21,7 @@ const CameraProvider = ({ children }) => {
     const [ snapshot, setSnapshot ] = useState(null);  
     const [ recording, setRecording ] = useState(null);
     const [ selfie, setSelfie ] = useState(true);
-    const [ options, setOptions ] = useState(false);
+    const [ option, setOption ] = useState(-1);
     const [ frame, setFrame ] = useState(0);   
     const [ palette, setPalette ] = useState(0);
     const [ constraints ] = useState(navigator.mediaDevices.getSupportedConstraints());
@@ -54,14 +54,14 @@ const CameraProvider = ({ children }) => {
 
     const drawUI = useCallback((context) => {
         const img = document.createElement("img");
-        img.src = `assets/ui/${snapshot || recording ? 'save' : options ? "options" : "controls"}.svg`;
+        img.src = `assets/ui/${snapshot || recording ? 'save' : option >= 0 ? "option" : "controls"}.svg`;
 
         const { width, height } = output.current;
         const ui = getCanvasImage(img, width, height);
         swapPalette(ui);       
          
         context.drawImage(ui, 0, 0, width, height);
-    }, [options, recording, snapshot, swapPalette])
+    }, [option, recording, snapshot, swapPalette])
     
     const drawSnapshot = useCallback((context) => {
         const { width, height } = output.current;
@@ -203,7 +203,6 @@ const CameraProvider = ({ children }) => {
 
     // Utilities
     const flipCamera = () => setSelfie(s => !s);
-    const toggleOptions = () => setOptions( o => !o);
 
     const selectFrame = (dir) => {
         const limit = 10;
@@ -224,18 +223,18 @@ const CameraProvider = ({ children }) => {
                 selectFrame,
                 setBrightness, 
                 setContrast,
+                setOption,
                 setPalette,
                 startRecording,
                 stopRecording,
                 takeSnapshot,
-                toggleOptions,
                 isRecording,
                 brightness,
                 cameraEnabled,
                 cameraError,
                 constraints,
                 contrast,
-                options,
+                option,
                 output,
                 recording,
                 selfie,

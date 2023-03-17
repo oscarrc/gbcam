@@ -2,7 +2,7 @@ import { dataToFile } from "../../helpers/file";
 import { useCamera } from "../../hooks/useCamera";
 
 const Mode = () => {
-    const { toggleOptions, recording, snapshot } = useCamera();
+    const { setOption, recording, snapshot } = useCamera();
     //TODO: Implement share modal when navigator share is not working
     const share = async () => {
         if(!snapshot && !recording) return;
@@ -11,6 +11,8 @@ const Mode = () => {
 
         navigator.share({ files: [file] });
     }
+
+    const toggleOptions = setOption(o => o < 0 ? 0 : -1);
 
     return (
         <div className="grid grid-cols-2 gap-4 font-bold text-neutral-content text-xs">
