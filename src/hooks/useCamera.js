@@ -55,10 +55,11 @@ const CameraProvider = ({ children }) => {
     const drawUI = useCallback((context) => {
         const img = document.createElement("img");
         img.src = `assets/ui/${snapshot || recording ? 'save' : options ? "options" : "controls"}.svg`;
-        const { width, height } = output.current;
-        const ui = getCanvasImage(img, width, height)
 
-        swapPalette(ui);        
+        const { width, height } = output.current;
+        const ui = getCanvasImage(img, width, height);
+        swapPalette(ui);       
+         
         context.drawImage(ui, 0, 0, width, height);
     }, [options, recording, snapshot, swapPalette])
     

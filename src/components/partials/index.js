@@ -1,8 +1,8 @@
 import Actions from "./Actions";
 import Brand from "./Brand";
 import CamIcon from "./CamIcon";
-import Controls from "./Controls";
+import DPad from "./DPad";
 import GBIcon from "./GBIcon";
-import Snap from "./Snap";
+import Buttons from "./Buttons";
 
-export { Actions, Brand, CamIcon, Controls, GBIcon, Snap }
+export { Actions, Brand, CamIcon, DPad, GBIcon, Buttons }

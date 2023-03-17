@@ -2,7 +2,7 @@ import { BsCaretDownFill, BsCaretLeftFill, BsCaretRightFill, BsCaretUpFill } fro
 
 import { useCamera } from "../../hooks/useCamera";
 
-const Controls = () => {
+const DPad = () => {
     const { setBrightness, setContrast, snapshot, recording, selectFrame } = useCamera();
 
     const handleUp = () => {
@@ -37,4 +37,4 @@ const Controls = () => {
     )
 }
 
-export default Controls;
+export default DPad;
