@@ -54,7 +54,7 @@ const CameraProvider = ({ children }) => {
 
     const drawUI = useCallback((context) => {
         const img = document.createElement("img");
-        img.src = `assets/ui/${snapshot || recording ? 'save' : option >= 0 ? "option" : "controls"}.svg`;
+        img.src = `assets/ui/${(snapshot || recording) ? 'save' : option !== -1 ? "options" : "controls"}.svg`;
 
         const { width, height } = output.current;
         const ui = getCanvasImage(img, width, height);
