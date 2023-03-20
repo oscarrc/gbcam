@@ -26,6 +26,38 @@ const CameraProvider = ({ children }) => {
     const [ palette, setPalette ] = useState(0);
     const [ inverted, setInverted ] = useState(false);
     const [ constraints ] = useState(navigator.mediaDevices.getSupportedConstraints());
+
+    const getDimensions = useCallback(() => {
+        const { width, height } = output.current;
+        const { videoWidth, videoHeight } = video.current
+            
+        const ox = 60 * width / 300
+        const oy = 60 * height / 300
+        const dw = width - ox;
+        const dh = height - oy;
+        const dx = ( width - dw ) / 2;
+        const dy = ( height - dh ) / 2;
+    
+        const sw = videoWidth;
+        const sh = videoHeight;
+        const sx = ( videoWidth - sw ) / 2;
+        const sy = ( videoHeight - sh ) / 2;
+
+        return {
+            width,
+            height,
+            ox,
+            oy,
+            dw,
+            dh,
+            dx,
+            dy,
+            sw,
+            sh,
+            sx,
+            sy
+        }
+    }, [video, output])
     
     // Image modification
     const swapPalette = useCallback((canvas) => {
@@ -91,24 +123,12 @@ const CameraProvider = ({ children }) => {
 
     const drawFeed = useCallback((context) => {
         if(!video.current) return;
-
-        const { width, height } = output.current;
-        const ox = 60 * width / 300
-        const oy = 60 * height / 300
-        const dw = width - ox;
-        const dh = height - oy;
-        const dx = ( width - dw ) / 2;
-        const dy = ( height - dh ) / 2;
-    
-        const sw = video.current.videoWidth;
-        const sh = video.current.videoHeight;
-        const sx = ( video.current.videoWidth - sw ) / 2;
-        const sy = ( video.current.videoHeight - sh ) / 2;
+        const { sx, sy, sw, sh, dx, dy, dw, dh } = getDimensions();
 
         context.drawImage(video.current, sx, sy, sw, sh, dx, dy, dw, dh); 
         applyDither(context, dx, dy, dw, dh);               
         swapPalette(output.current);
-    }, [applyDither, swapPalette]);
+    }, [applyDither, getDimensions, swapPalette]);
 
     // Camera initialization
     const initCamera = useCallback(() => {
@@ -165,21 +185,14 @@ const CameraProvider = ({ children }) => {
     }
 
     const startRecording = async () => {
-        const { width, height } = output.current;
-        const ox = 60 * width / 300
-        const oy = 60 * height / 300
-        const dw = width - ox;
-        const dh = height - oy - 2;
-        const dx = ( width - dw ) / 2;
-        const dy = ( height - dh ) / 2 + 1;
-
+        const { width, height, dx, dy, dw, dh } = getDimensions();
         const feed = getCanvasImage(null, width, height);
         const feedCtx = feed.getContext("2d");        
         
         await drawFrame(feedCtx);
 
         let interval = setInterval(async () => {
-            feedCtx.drawImage(output.current, dx, dy, dw, dh, dx, dy, dw, dh);
+            feedCtx.drawImage(output.current, dx, dy + 1, dw, dh - 2, dx, dy + 1, dw, dh - 2);
         }, 17);
 
         let chunks = [];
