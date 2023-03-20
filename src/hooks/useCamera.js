@@ -22,7 +22,7 @@ const CameraProvider = ({ children }) => {
     const [ recording, setRecording ] = useState(null);
     const [ selfie, setSelfie ] = useState(true);
     const [ option, setOption ] = useState(-1);
-    const [ frame, setFrame ] = useState(0);   
+    const [ frame, setFrame ] = useState(17);   
     const [ palette, setPalette ] = useState(0);
     const [ inverted, setInverted ] = useState(false);
     const [ constraints ] = useState(navigator.mediaDevices.getSupportedConstraints());
@@ -42,26 +42,30 @@ const CameraProvider = ({ children }) => {
     }, [brightness, contrast, inverted])
 
     // Draw to canvas
-    const drawFrame = useCallback((context) => {         
+    const drawFrame = useCallback((context) => new Promise( (resolve) => {         
         const img = document.createElement("img");
         img.src = `assets/frames/frame-${frame}.svg`;
 
-        const { width, height } = output.current;
-        const fr = getCanvasImage(img, width, height);
+        img.onload = () => {
+            const { width, height } = output.current;
+            const fr = getCanvasImage(img, width, height);
 
-        swapPalette(fr)
-        context.drawImage(fr, 0, 0, width, height);
-    }, [frame, swapPalette])
+            swapPalette(fr)
+            context.drawImage(fr, 0, 0, width, height);
+
+            resolve();
+        }
+    }), [frame, swapPalette])
 
     const drawUI = useCallback((context) => {
         const img = document.createElement("img");
         img.src = `assets/ui/${(snapshot || recording) ? 'save' : option !== -1 ? "options" : "controls"}.svg`;
+     
+            const { width, height } = output.current;
+            const ui = getCanvasImage(img, width, height);
 
-        const { width, height } = output.current;
-        const ui = getCanvasImage(img, width, height);
-        swapPalette(ui);       
-         
-        context.drawImage(ui, 0, 0, width, height);
+            swapPalette(ui);            
+            context.drawImage(ui, 0, 0, width, height);
     }, [option, recording, snapshot, swapPalette])
     
     const drawSnapshot = useCallback((context) => {
@@ -107,7 +111,7 @@ const CameraProvider = ({ children }) => {
     }, [applyDither, swapPalette]);
 
     // Camera initialization
-    const initCamera = useCallback(async () => {
+    const initCamera = useCallback(() => {
         const context = output.current?.getContext("2d", { 
             willReadFrequently: true,            
             msImageSmoothingEnabled: false,
@@ -118,7 +122,7 @@ const CameraProvider = ({ children }) => {
 
         clearInterval(drawInterval.current);
 
-        drawInterval.current = setInterval(() => {
+        drawInterval.current = setInterval(async () => {
             if(snapshot)  drawSnapshot(context);
             else if(recording) drawRecording(context);
             else drawFeed(context);
@@ -152,21 +156,23 @@ const CameraProvider = ({ children }) => {
     }, [selfie]);
 
     // Capture functions
-    const takeSnapshot = () => {
+    const takeSnapshot = async () => {
         const { width, height } = output.current
         const img = getCanvasImage(output.current, width, height);
         const ctx = img.getContext("2d");
-        drawFrame(ctx);
+        await drawFrame(ctx);
         setSnapshot(img.toDataURL('image/png'));
     }
 
     const startRecording = () => {
         const { width, height } = output.current;
+        
         const feed = getCanvasImage(output.current, width, height);
         const feedCtx = feed.getContext("2d");
 
-        let interval = setInterval(() => {
+        let interval = setInterval(async () => {
             feedCtx.drawImage(output.current, 0, 0, width, height, 0, 0, width, height);
+            drawFrame(feedCtx);
         }, 17);
 
         let chunks = [];
