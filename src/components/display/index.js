@@ -37,7 +37,6 @@ const Display = ({ className }) => {
                     <span className="text-white text-2xs sm:text-xs relative -bottom-px">Camera</span>
                 </div>
                 <div className="relative">
-                    { isRecording && <span className="h-2 w-2 bg-base-100 absolute bottom-2 right-2 rounded-full animate-pulse"></span> }
                     <canvas ref={output} className="bg-display w-full aspect-10/9" />
                 </div>
             </div>
