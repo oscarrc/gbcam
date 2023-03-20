@@ -24,15 +24,15 @@ const CameraProvider = ({ children }) => {
     const [ option, setOption ] = useState(-1);
     const [ frame, setFrame ] = useState(17);   
     const [ palette, setPalette ] = useState(0);
-    const [ inverted, setInverted ] = useState(false);
+    const [ negative, setNegative ] = useState(false);
     const [ constraints ] = useState(navigator.mediaDevices.getSupportedConstraints());
 
     const getDimensions = useCallback(() => {
-        const { width, height } = output.current;
-        const { videoWidth, videoHeight } = video.current
+        const { width, height } = output.current ? output.current : { width: 0, height: 0};
+        const { videoWidth, videoHeight } = video.current ? video.current : { videoWidth: 0, videoHeight: 0 }
             
-        const ox = 60 * width / 300
-        const oy = 60 * height / 300
+        const ox = 60 * width / 300;
+        const oy = 60 * height / 300;
         const dw = width - ox;
         const dh = height - oy;
         const dx = ( width - dw ) / 2;
@@ -43,20 +43,7 @@ const CameraProvider = ({ children }) => {
         const sx = ( videoWidth - sw ) / 2;
         const sy = ( videoHeight - sh ) / 2;
 
-        return {
-            width,
-            height,
-            ox,
-            oy,
-            dw,
-            dh,
-            dx,
-            dy,
-            sw,
-            sh,
-            sx,
-            sy
-        }
+        return { width, height, ox, oy, dw, dh, dx, dy, sw, sh, sx, sy }
     }, [video, output])
     
     // Image modification
@@ -69,9 +56,9 @@ const CameraProvider = ({ children }) => {
 
     const applyDither = useCallback((context, x, y, w, h) => {
         const imgData = context.getImageData(x, y, w, h);
-        const dithered = gbDither(imgData, brightness, contrast, 0.6, inverted)
+        const dithered = gbDither(imgData, brightness, contrast, 0.6, negative)
         context.putImageData(dithered, x, y, 0, 0, w, h);
-    }, [brightness, contrast, inverted])
+    }, [brightness, contrast, negative])
 
     // Draw to canvas
     const drawFrame = useCallback((context) => new Promise( (resolve) => {         
@@ -122,7 +109,6 @@ const CameraProvider = ({ children }) => {
     }, [player, recording])
 
     const drawFeed = useCallback((context) => {
-        if(!video.current) return;
         const { sx, sy, sw, sh, dx, dy, dw, dh } = getDimensions();
 
         context.drawImage(video.current, sx, sy, sw, sh, dx, dy, dw, dh); 
@@ -177,7 +163,7 @@ const CameraProvider = ({ children }) => {
 
     // Capture functions
     const takeSnapshot = async () => {
-        const { width, height } = output.current
+        const { width, height } = getDimensions();
         const img = getCanvasImage(output.current, width, height);
         const ctx = img.getContext("2d");
         await drawFrame(ctx);
@@ -239,6 +225,8 @@ const CameraProvider = ({ children }) => {
         if( dir > 0 && frame + dir > limit ) return
         setFrame(f => f + dir);
     }
+
+    const toggleNegative = () => setNegative(n => !n)
 
     useEffect(() => { initVideo() }, [initVideo])
 
