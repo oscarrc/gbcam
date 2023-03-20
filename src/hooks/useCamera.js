@@ -109,6 +109,7 @@ const CameraProvider = ({ children }) => {
     }, [player, recording])
 
     const drawFeed = useCallback((context) => {
+        if(!video.current) return;
         const { sx, sy, sw, sh, dx, dy, dw, dh } = getDimensions();
 
         context.drawImage(video.current, sx, sy, sw, sh, dx, dy, dw, dh); 
@@ -220,7 +221,7 @@ const CameraProvider = ({ children }) => {
     const flipCamera = () => setSelfie(s => !s);
 
     const selectFrame = (dir) => {
-        const limit = 10;
+        const limit = 17;
         if( dir < 0 && frame + dir < 0 ) return
         if( dir > 0 && frame + dir > limit ) return
         setFrame(f => f + dir);
