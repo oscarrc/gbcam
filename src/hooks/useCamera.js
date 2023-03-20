@@ -164,15 +164,22 @@ const CameraProvider = ({ children }) => {
         setSnapshot(img.toDataURL('image/png'));
     }
 
-    const startRecording = () => {
+    const startRecording = async () => {
         const { width, height } = output.current;
+        const ox = 60 * width / 300
+        const oy = 60 * height / 300
+        const dw = width - ox;
+        const dh = height - oy - 2;
+        const dx = ( width - dw ) / 2;
+        const dy = ( height - dh ) / 2 + 1;
+
+        const feed = getCanvasImage(null, width, height);
+        const feedCtx = feed.getContext("2d");        
         
-        const feed = getCanvasImage(output.current, width, height);
-        const feedCtx = feed.getContext("2d");
+        await drawFrame(feedCtx);
 
         let interval = setInterval(async () => {
-            feedCtx.drawImage(output.current, 0, 0, width, height, 0, 0, width, height);
-            drawFrame(feedCtx);
+            feedCtx.drawImage(output.current, dx, dy, dw, dh, dx, dy, dw, dh);
         }, 17);
 
         let chunks = [];
