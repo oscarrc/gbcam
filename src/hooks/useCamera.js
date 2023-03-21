@@ -1,6 +1,7 @@
 import { convertPalette, gbDither } from "../helpers/dither";
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react"
 
+import fontface from "../assets/fonts/Rounded_5x5.ttf";
 import { getCanvasImage } from "../helpers/canvas";
 
 const CameraContext = createContext();
@@ -13,7 +14,6 @@ const CameraProvider = ({ children }) => {
     const recorder = useRef(null);
     const player = useRef(null);
 
-    const isRecording = useMemo(() => recorder.current !== null, [recorder]);
     const [ cameraError, setCameraError ] = useState(false);
     const [ cameraEnabled, setCameraEnabled ] = useState(false);
     const [ contrast, setContrast] = useState(51);
@@ -22,7 +22,7 @@ const CameraProvider = ({ children }) => {
     const [ recording, setRecording ] = useState(null);
     const [ selfie, setSelfie ] = useState(true);
     const [ option, setOption ] = useState(-1);
-    const [ frame, setFrame ] = useState(17);   
+    const [ frame, setFrame ] = useState(8);   
     const [ palette, setPalette ] = useState(0);
     const [ negative, setNegative ] = useState(false);
     const [ constraints ] = useState(navigator.mediaDevices.getSupportedConstraints());
@@ -75,6 +75,23 @@ const CameraProvider = ({ children }) => {
             resolve();
         }
     }), [frame, swapPalette])
+
+    const drawFrameSelector = useCallback((context) => {
+        const img = document.createElement("img");
+        img.src = `assets/ui/frames.svg`;
+
+        const { width, height } = output.current;
+        const selector = getCanvasImage(img, width, height);
+        const ctx = selector.getContext("2d");
+        const x = width * 81 / 160;
+        const y = height * 88 / 144;
+        const s = height * 24 / 144
+
+        ctx.font = `${s}px Rounded_5x5`;
+        ctx.fillText(`${frame < 10 ? '0' : ''}${frame}`, x, y);
+        swapPalette(selector)
+        context.drawImage(selector, 0, 0, width, height);
+    }, [frame, swapPalette])
 
     const drawUI = useCallback((context) => {
         const img = document.createElement("img");
@@ -230,6 +247,10 @@ const CameraProvider = ({ children }) => {
     const toggleNegative = () => setNegative(n => !n)
 
     useEffect(() => { initVideo() }, [initVideo])
+    useEffect(() => {
+        const font = new FontFace("Rounded_5x5", `url(${fontface})`);
+        font.load().then( (f) => document.fonts.add(f) );
+    }, [])
 
     return (
         <CameraContext.Provider 
@@ -246,7 +267,6 @@ const CameraProvider = ({ children }) => {
                 startRecording,
                 stopRecording,
                 takeSnapshot,
-                isRecording,
                 brightness,
                 cameraEnabled,
                 cameraError,
