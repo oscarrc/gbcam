@@ -92,6 +92,10 @@ const CameraProvider = ({ children }) => {
         swapPalette(selector)
         context.drawImage(selector, 0, 0, width, height);
     }, [frame, swapPalette])
+    
+    const drawIndicator = ( context, value, vertical ) => {
+        
+    }
 
     const drawUI = useCallback((context) => {
         const img = document.createElement("img");
