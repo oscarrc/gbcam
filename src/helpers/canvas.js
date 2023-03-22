@@ -9,4 +9,11 @@ const getCanvasImage = (img, w, h) => {
     return c;
 }
 
-export { getCanvasImage }
+const loadImage = (src) => new Promise((resolve) => {
+    const img = document.createElement("img");
+    img.src = src;
+
+    img.onload = () => resolve(img);
+})
+
+export { getCanvasImage, loadImage }
