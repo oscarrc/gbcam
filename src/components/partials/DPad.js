@@ -6,25 +6,25 @@ const DPad = () => {
     const { setBrightness, setContrast, option, setOption, snapshot, recording, selectFrame } = useCamera();
 
     const handleUp = () => {
-        if(option) setOption(1);
+        if(option === 0) setOption(1);
         else if (snapshot || recording ) selectFrame(1);
         else setBrightness( b => b + 1 > 255 ? 255 : b + 1 );
     }
 
     const handleRight = () => {
-        if(option) setOption(2);
+        if(option === 0) setOption(2);
         else if (snapshot || recording ) selectFrame(1);
         else setContrast( c => c + 1 > 255 ? 255 : c + 1 );
     }
 
     const handleDown = () => {
-        if(option) setOption(3);
+        if(option === 0) setOption(3);
         else if (snapshot || recording ) selectFrame(-1);
         else setBrightness( b => b - 1 < 0 ? 0 : b - 1);
     }
 
     const handleLeft = () => { 
-        if(option) setOption(4);
+        if(option === 0) setOption(4);
         else if (snapshot || recording ) selectFrame(-1);
         else setContrast( c => c - 1 < 0 ? 0 : c - 1 ) ;
     }

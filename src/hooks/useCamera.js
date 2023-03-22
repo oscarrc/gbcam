@@ -59,7 +59,7 @@ const CameraProvider = ({ children }) => {
         const dithered = gbDither(imgData, brightness, contrast, 0.6, negative)
         context.putImageData(dithered, x, y, 0, 0, w, h);
     }, [brightness, contrast, negative])
-
+    
     // Draw to canvas
     const drawFrame = useCallback((context) => new Promise( (resolve) => {         
         const img = document.createElement("img");
@@ -94,18 +94,25 @@ const CameraProvider = ({ children }) => {
     }, [frame, swapPalette])
     
     const drawIndicator = ( context, value, vertical ) => {
+        const { width, height } = output.current;
+        const w = vertical ? width * 5 / 160 : width / 160;
+        const h = vertical ? height / 144 : height * 5 / 144;
+        const x = vertical ? width - w - (width * 8 / 144) : (width * 30 / 160) + ( width * 101 / 160 * value / 255 );
+        const y = vertical ? (width * 30 / 160) + ( height * 82 / 144 * value / 255 ) : height - h - (height * 8 / 144)
         
+        context.fillStyle = "white";
+        context.fillRect(x, y, w, h);
     }
 
     const drawUI = useCallback((context) => {
         const img = document.createElement("img");
         img.src = `assets/ui/${(snapshot || recording) ? 'save' : option !== -1 ? "options" : "controls"}.svg`;
      
-            const { width, height } = output.current;
-            const ui = getCanvasImage(img, width, height);
+        const { width, height } = output.current;
+        const ui = getCanvasImage(img, width, height);
 
-            swapPalette(ui);            
-            context.drawImage(ui, 0, 0, width, height);
+        swapPalette(ui);            
+        context.drawImage(ui, 0, 0, width, height);
     }, [option, recording, snapshot, swapPalette])
     
     const drawSnapshot = useCallback((context) => {
@@ -157,7 +164,7 @@ const CameraProvider = ({ children }) => {
                                        
             drawUI(context);
         }, 17)
-    }, [snapshot, recording, drawSnapshot, drawRecording, drawFeed, drawUI])
+    }, [snapshot, drawSnapshot, recording, drawRecording, drawFeed, drawUI, drawIndicator, contrast, brightness])
     
     const initVideo = useCallback(async () => {
         try {
