@@ -98,7 +98,7 @@ const CameraProvider = ({ children }) => {
         const w = vertical ? width * 5 / 160 : width / 160;
         const h = vertical ? height / 144 : height * 5 / 144;
         const x = vertical ? width - w - (width * 8 / 144) : (width * 30 / 160) + ( width * 101 / 160 * value / 255 );
-        const y = vertical ? (width * 30 / 160) + ( height * 82 / 144 * value / 255 ) : height - h - (height * 8 / 144)
+        const y = vertical ? (height * 113 / 144) - ( height * 82 / 144 * value / 255 ) : height - h - (height * 8 / 144)
         
         context.fillStyle = "white";
         context.fillRect(x, y, w, h);
@@ -110,10 +110,16 @@ const CameraProvider = ({ children }) => {
      
         const { width, height } = output.current;
         const ui = getCanvasImage(img, width, height);
+        const ctx = ui.getContext("2d");
+        
+        if((!snapshot || !recording) && option === -1 ){
+            drawIndicator(ctx, contrast);
+            drawIndicator(ctx, brightness, true);
+        }
 
         swapPalette(ui);            
         context.drawImage(ui, 0, 0, width, height);
-    }, [option, recording, snapshot, swapPalette])
+    }, [brightness, contrast, option, recording, snapshot, swapPalette])
     
     const drawSnapshot = useCallback((context) => {
         const { width, height } = output.current;
@@ -164,7 +170,7 @@ const CameraProvider = ({ children }) => {
                                        
             drawUI(context);
         }, 17)
-    }, [snapshot, drawSnapshot, recording, drawRecording, drawFeed, drawUI, drawIndicator, contrast, brightness])
+    }, [snapshot, drawSnapshot, recording, drawRecording, drawFeed, drawUI])
     
     const initVideo = useCallback(async () => {
         try {
