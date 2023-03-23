@@ -1,8 +1,9 @@
+import { convertPalette, gbDither, palettes, variations } from "../helpers/dither";
 import { createContext, useCallback, useContext, useEffect, useReducer, useRef, useState } from "react";
-import { gbDither, convertPalette, palettes, variations } from "../helpers/dither";
-import fontface from "../assets/fonts/Rounded_5x5.ttf";
-import { loadImage, getCanvasImage } from "../helpers/canvas";
+import { getCanvasImage, loadImage } from "../helpers/canvas";
+
 import { dataToFile } from "../helpers/file";
+import fontface from "../assets/fonts/Rounded_5x5.ttf";
 
 const CameraContext = createContext();
 // https://github.com/NielsLeenheer/CanvasDither
@@ -59,8 +60,8 @@ const CameraProvider = ({ children }) => {
     const [ ready, setReady ] = useState(false);
     const [ state, dispatch ] = useReducer(CameraReducer, { brightness:51, contrast: 51, palette: 0, ratio: 0.6, variation: 0 });
 
-    const device = useCallback(async () => {
-        const { sw, sh } = CameraDimensions;
+    const init = useCallback(async () => {        
+        const { width, height, sw, sh } = CameraDimensions;
 
         video.current = await navigator.mediaDevices.getUserMedia({
             video: {
@@ -74,42 +75,36 @@ const CameraProvider = ({ children }) => {
 
         source.current = document.createElement("video");
         source.current.srcObject = video.current;
-        source.current.play();
-    }, [facingUser])
-
-    const stream = useCallback(() => {
-        const { width, height, sx, sy, sw, sh } = CameraDimensions;
+        source.current.play();      
 
         output.current = document.createElement("canvas")
         output.current.width = width;
         output.current.height = height;
-        
-        const ctx = output.current.getContext("2d", { 
+
+        return output.current.getContext("2d", { 
             willReadFrequently: true,            
             msImageSmoothingEnabled: false,
             mozImageSmoothingEnabled: false,
             webkitImageSmoothingEnabled: false,
             imageSmoothingEnabled: false
         });
-        
-        const { brightness, contrast, ratio } = state;
+    }, [facingUser])
 
-        clearInterval(interval);
+    const stream = useCallback((ctx) => {      
+        const { sx, sy, sw, sh } = CameraDimensions;
+        const { brightness, contrast, ratio, palette, variation } = state;
+           
+        ctx.drawImage(source.current, 0, 0, sw, sh, sx, sy, sw, sh);
 
-        interval.current = setInterval(() => {            
-            ctx.drawImage(source.current, 0, 0, sw, sh, sx, sy, sw, sh);
+        const imgData = ctx.getImageData(sx, sy, sw, sh);
+        const dithered = gbDither(imgData, brightness, contrast, ratio);
+        const converted = convertPalette(dithered, palette, variation);
 
-            const imgData = ctx.getImageData(sx, sy, sw, sh);
-            const dithered = gbDither(imgData, brightness, contrast, ratio);
-            const converted = convertPalette(dithered, state.palette, state.variation);
-
-            ctx.putImageData(converted, sx, sy, 0, 0, sw, sh);
-        }, 17)
+        ctx.putImageData(converted, sx, sy, 0, 0, sw, sh);
     }, [state])
 
-    const ui = useCallback(async () => {   
+    const ui = useCallback(async (ctx) => {   // Needs to be over the stream
         const { width, height } = CameraDimensions;
-        const ctx = output.current.getContext("2d");
 
         const ui = getCanvasImage(null, width, height);
         const uiCtx = ui.getContext("2d");
@@ -144,25 +139,22 @@ const CameraProvider = ({ children }) => {
         const converted = convertPalette(imgData, state.palette);
         
         uiCtx.putImageData(converted, 0, 0);
-        ctx.drawImage(ui, 0, 0, width, height)
+        ctx.drawImage(ui, 0, 0, width, height);
     }, [option, state.palette, state.contrast, state.brightness, frame])
 
-    const play = useCallback(async () => {
-        const { width, height } = CameraDimensions;        
-        const ctx = output.current.getContext("2d");
+    const play = useCallback(async (ctx) => {
+        const { width, height } = CameraDimensions;
         const playback = media instanceof Blob;
-
-        if(playback){
-            player.current = document.createElement( 'video' );
+        
+        if(!player.current){
+            player.current = document.createElement('video');
             player.current.muted = true;
             player.current.loop = true;
-            player.current.src = URL.createObjectURL(media);
+            player.current.src = playback ? URL.createObjectURL(media) : media;
             player.current.play();
-        }else if(!playback){
-            player.current = await loadImage(media);
-        }
+        }        
 
-        ctx.drawImage(player.current, 0, 0, width, height, 0, 0, width, height);     
+        ctx.drawImage(player.current, 0, 0, width, height, 0, 0, width, height);
     }, [media]);
 
     const capture = {
@@ -171,8 +163,12 @@ const CameraProvider = ({ children }) => {
             const img = getCanvasImage(output.current, width, height);
             const ctx = img.getContext("2d");
             const fr = await loadImage(`assets/frames/frame-${frame}.svg`);
-            
-            ctx.drawImage(fr, 0, 0, width, height);
+            const c = getCanvasImage(fr, width, height);
+            const cCtx = c.getContext("2d");
+            const imgData = cCtx.getImageData(0, 0, width, height);
+            const converted = convertPalette(imgData, state.palette);
+
+            ctx.putImageData(converted, 0, 0);
             setMedia(img.toDataURL('image/png'));
         },
         async start(){
@@ -180,8 +176,13 @@ const CameraProvider = ({ children }) => {
             const feed = getCanvasImage(null, width, height);
             const feedCtx = feed.getContext("2d",);   
 
-            const fr = await loadImage(`assets/frames/frame-${frame}.svg`);            
-            feedCtx.drawImage(fr, 0, 0, width, height);
+            const fr = await loadImage(`assets/frames/frame-${frame}.svg`);
+            const c = getCanvasImage(fr, width, height);
+            const cCtx = c.getContext("2d");
+            const imgData = cCtx.getImageData(0, 0, width, height);
+            const converted = convertPalette(imgData, state.palette);
+
+            feedCtx.putImageData(converted, 0, 0);
 
             let interval = setInterval(async () => {
                 feedCtx.drawImage(output.current, sx, sy, sw, sh, sx, sy, sw, sh);
@@ -206,9 +207,9 @@ const CameraProvider = ({ children }) => {
         }
     }
     
-    const save = () => {
+    const save = async () => {
         const a = document.createElement("a");
-        const file = dataToFile(media);
+        const file = await dataToFile(media);
         a.href = URL.createObjectURL(file);
         a.download = file.name;
         a.click();
@@ -216,22 +217,28 @@ const CameraProvider = ({ children }) => {
 
     const clear = () => {
         player.current = null;
-        setMedia(null);      
+        setMedia(null);
     }
 
-    const init = useCallback(async () => {
-        await device();
-
-        if(media) play();
-        else{
-            stream();
-            ui();
-        }
+    const start = useCallback(async () => {
+        const ctx = await init();
         
+        interval.current = setInterval(() => { 
+            if(media) play(ctx);
+            else stream(ctx);
+
+            ui(ctx);
+        })
+
         setReady(true);
-    }, [device, media, play, stream, ui])
+    }, [media, init, play, stream, ui])
     
-    useEffect(() => { init() }, [init])
+    useEffect(() => { start() }, [start])
+    useEffect(() => { setOption(() => media ? -2 : -1 )}, [media] );
+    useEffect(() => {
+        const font = new FontFace("Rounded_5x5", `url(${fontface})`);
+        font.load().then( (f) => document.fonts.add(f) );
+    }, []);
 
     return (
         <CameraContext.Provider value={{

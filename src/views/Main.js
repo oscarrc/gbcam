@@ -1,4 +1,5 @@
-import { Actions, Brand, DPad, Buttons } from "../components/partials";
+// import { Actions, Brand, DPad, Buttons } from "../components/partials";
+import { Actions, Brand, Buttons } from "../components/partials";
 import { useEffect, useState } from "react";
 
 import Display from "../components/display";
@@ -30,7 +31,7 @@ const Main = () => {
             { !landscape && renderDisplay() }
             <div className="flex flex-col flex-1 justify-around items-center w-full">
                 <div className={`flex ${landscape ? 'justify-around' : 'justify-between'} items-center w-full px-4`}>
-                    <DPad />
+                    {/* <DPad /> */}
                     { landscape && renderDisplay() }
                     <Buttons />
                 </div>

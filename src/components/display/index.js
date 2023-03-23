@@ -1,6 +1,7 @@
+import { useEffect, useRef } from "react";
+
 import { AiFillHeart } from "react-icons/ai";
 import { useCamera } from "../../hooks/useCamera";
-import { useEffect, useRef } from "react";
 
 const Display = ({ className }) => {
     const { output, ready } = useCamera();
@@ -23,9 +24,16 @@ const Display = ({ className }) => {
 
     useEffect(() => {
         if(!ready || !display.current) return;
+        
+        const ctx = display.current.getContext("2d", {     
+            msImageSmoothingEnabled: false,
+            mozImageSmoothingEnabled: false,
+            webkitImageSmoothingEnabled: false,
+            imageSmoothingEnabled: false
+        });
 
         interval.current = setInterval(async () => {            
-            display.current.getContext("2d").drawImage(output.current, 0, 0, display.current.width, display.current.height);
+            ctx.drawImage(output.current, 0, 0, display.current.width, display.current.height);
         }, 17);
 
         return () => clearInterval(interval.current);
