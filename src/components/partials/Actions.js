@@ -2,11 +2,10 @@ import { dataToFile } from "../../helpers/file";
 import { useCamera } from "../../hooks/useCamera";
 
 const Actions = () => {
-    const { setOption, recording, snapshot } = useCamera();
+    const { setOption, media } = useCamera();
     //TODO: Implement share modal when navigator share is not working
     const share = async () => {
-        if(!snapshot && !recording) return;
-        const media = snapshot ? snapshot : recording;
+        if(!media) return;
         const file = await dataToFile(media);
 
         navigator.share({ files: [file] });
