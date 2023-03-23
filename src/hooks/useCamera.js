@@ -109,7 +109,9 @@ const CameraProvider = ({ children }) => {
         const ui = getCanvasImage(null, width, height);
         const uiCtx = ui.getContext("2d");
 
-        const img = await loadImage(`assets/ui/ui${option}.svg`);
+        // const img = await loadImage(`assets/ui/ui${option}.svg`);
+        const img = document.createElement("img");
+        img.src = `assets/ui/ui${option}.svg`
         
         uiCtx.drawImage(img, 0, 0, width, height);
 
@@ -124,7 +126,10 @@ const CameraProvider = ({ children }) => {
             case 1:
                 break;
             case 2:
-                const fr = await loadImage(`assets/frames/frame-${frame}.svg`);
+                const fr = document.createElement("img");
+                fr.src = `assets/frames/frame-${frame}.svg`;
+                uiCtx.font = `24px Rounded_5x5`;
+                uiCtx.fillText(`${frame < 10 ? '0' : ''}${frame}`, 81, 88);
                 uiCtx.drawImage(fr, 0, 0, width, height);
                 break;
             case 3:
