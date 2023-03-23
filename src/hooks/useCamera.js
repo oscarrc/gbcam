@@ -243,6 +243,7 @@ const CameraProvider = ({ children }) => {
             setOption,
             capture,
             constraints,
+            facingUser,
             media,
             output,
             ready
