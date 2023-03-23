@@ -2,7 +2,7 @@ import { useCamera } from "../../hooks/useCamera";
 import { useRef } from "react"
 
 const Buttons = () => {
-    const { clear, option, startRecording, stopRecording, takeSnapshot, snapshot, recording, save, setOption } = useCamera();
+    const { clear, option, capture, media, save, setOption } = useCamera();
     const start = useRef(0);
     const timer = useRef(null);
     const snap = useRef(null);
@@ -13,7 +13,7 @@ const Buttons = () => {
     }
 
     const accept  = () => {
-        if(snapshot || recording) save();
+        if(media) save();
     }
 
     const checkTouches = (touches) => {
@@ -28,21 +28,21 @@ const Buttons = () => {
     }
 
     const handleStart = (e) => {
-        if(snapshot || recording) return;
+        if(media) return;
         if (e.type === "touchstart" && !checkTouches(e.touches)) return;
         
         start.current = Date.now();
-        timer.current = setTimeout(() => { startRecording() }, 500)
+        timer.current = setTimeout(() => { capture.start() }, 500)
     }
 
     const handleStop = (e) => {
-        if(snapshot || recording) return;
+        if(media) return;
         if (e.type === "touchstart" && checkTouches(e.touches)) return;
 
         if(Date.now() - start.current < 500 ){
             clearTimeout(timer.current);
-            takeSnapshot();
-        }else stopRecording();
+            capture.snapshot();
+        }else capture.stop();
     }
 
     const events = {
