@@ -3,30 +3,30 @@ import { BsCaretDownFill, BsCaretLeftFill, BsCaretRightFill, BsCaretUpFill } fro
 import { useCamera } from "../../hooks/useCamera";
 
 const DPad = () => {
-    const { setBrightness, setContrast, option, setOption, snapshot, recording, selectFrame } = useCamera();
+    const { dispatch, media, option, setOption } = useCamera();
 
     const handleUp = () => {
+        if(media) return;
         if(option === 0) setOption(1);
-        else if (snapshot || recording ) selectFrame(1);
-        else setBrightness( b => b + 1 > 255 ? 255 : b + 1 );
+        else dispatch({ type: "brightness", payload: 1 });
     }
 
     const handleRight = () => {
+        if(media) return;
         if(option === 0) setOption(2);
-        else if (snapshot || recording ) selectFrame(1);
-        else setContrast( c => c + 1 > 255 ? 255 : c + 1 );
+        else dispatch({ type: "contrast", payload: 1 }) ;
     }
 
     const handleDown = () => {
+        if(media) return;
         if(option === 0) setOption(3);
-        else if (snapshot || recording ) selectFrame(-1);
-        else setBrightness( b => b - 1 < 0 ? 0 : b - 1);
+        else dispatch({ type: "brightness", payload: -1 });
     }
 
-    const handleLeft = () => { 
+    const handleLeft = () => {
+        if(media) return; 
         if(option === 0) setOption(4);
-        else if (snapshot || recording ) selectFrame(-1);
-        else setContrast( c => c - 1 < 0 ? 0 : c - 1 ) ;
+        else dispatch({ type: "contrast", payload: -1 });
     }
     
     return (
