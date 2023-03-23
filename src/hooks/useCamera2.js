@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useReducer, useRef, useState } from "react";
-import { gbDither, convertPalette } from "../helpers/dither";
+import { gbDither, convertPalette, palettes, variations } from "../helpers/dither";
 import fontface from "../assets/fonts/Rounded_5x5.ttf";
 import { loadImage, getCanvasImage } from "../helpers/canvas";
 import { dataToFile } from "../helpers/file";
@@ -18,11 +18,17 @@ const CameraReducer = (state, action) => {
         case "contrast":
             value = payload > 0 && state.brightess < 254 ? state.brightness + 1 : state.brightness > 0 ? state.brightness -1 : 0
             break;
+        case "negative":
+            value = Boolean(payload);
+            break;
+        case "palette":            
+            value = payload >= 0 && payload < palettes.length ? payload : state.palette;
+            break;
         case "ratio":
             value = payload > 0 && state.brightess <= 4 ? state.ratio + .1 : state.ratio > 0 ? state.ratio -.1 : 0
             break;
-        case "negative":
-            value = Boolean(payload);
+        case "variation":            
+            value = payload >= 0 && payload < variations.length ? payload : state.variation;
             break;
         default:
             return state;
@@ -52,7 +58,7 @@ const CameraProvider = ({ children }) => {
     const [ option, setOption ] = useState(false);
     const [ frame, setFrame ] = useState(0);
     const [ media, setMedia ] = useState(null);
-    const [ state, dispatch ] = useReducer(CameraReducer, { brightness:51, contrast: 51, ratio: 0.6, negative: false });
+    const [ state, dispatch ] = useReducer(CameraReducer, { brightness:51, contrast: 51, negative: false, palette: 0, ratio: 0.6, variation: 0 });
 
     const init = useCallback(async () => {
         const { sw, sh } = CameraDimensions;
@@ -146,9 +152,9 @@ const CameraProvider = ({ children }) => {
         const { width, height } = CameraDimensions;
         const ctx = output.current.getContext("2d", { willReadFrequently: true });
         const imgData = ctx.getImageData(0, 0, width, height);
-        const swapped = convertPalette(imgData, state.palette);
+        const swapped = convertPalette(imgData, state.palette, state.variation);
         ctx.putImageData(swapped, 0, 0);
-    }, [state.palette])
+    }, [state.palette, state.variation])
 
     const capture = {
         async snapshot(){
@@ -207,19 +213,19 @@ const CameraProvider = ({ children }) => {
     useEffect(() => {
         init();
 
-        if(video) play();
+        if(media) play();
         else{
             stream();
             ui();
             palette();
         }
-    }, [init, palette, play, stream, ui])
+    }, [init, media, palette, play, stream, ui])
 
     return (
         <CameraContext.Provider value={{
+            capture,
             clear,
             dispatch,
-            play,
             save,
             setFacingUser,
             setFrame,

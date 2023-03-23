@@ -32,6 +32,15 @@ const palettes = [
 	]
 ]
 
+const variations = [
+	[0,1,2,3],
+	[3,2,1,0],
+	[0,2,1,3],
+	[3,1,2,0],
+	[0,2,3,1],
+	[3,0,1,2]
+]
+
 const clamp = (value, min, max) => value < min ? min : value > max ? max : value;
 
 const gbDither = (imgData, brightness, contrast, dither, invert) => {
@@ -58,7 +67,7 @@ const gbDither = (imgData, brightness, contrast, dither, invert) => {
     return imgData;
 }
 
-const convertPalette = (imgData, palette) => {    
+const convertPalette = (imgData, palette, variation) => {    
     const data = imgData.data;
     
     for (let i = 0; i < data.length; i += 4) {
@@ -71,4 +80,4 @@ const convertPalette = (imgData, palette) => {
     return imgData;
 }
 
-export { gbDither, convertPalette }
+export { gbDither, convertPalette, palettes, variations }
