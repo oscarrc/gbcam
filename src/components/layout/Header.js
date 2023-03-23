@@ -11,7 +11,9 @@ const Header = () => {
     const [ theme, setTheme ] = useState(localStorage.getItem("theme") || "classic");
     const themeRef = useRef(null);
     const { setFavicon } = useDynamicFavicon(theme);
-    const { flipCamera, selfie, constraints } = useCamera();
+    const { facingUser, setFacingUser, constraints } = useCamera();
+    
+    const flipCamera = () => setFacingUser(u => !u);
     
     const toggleTheme = (theme) => {
         localStorage.setItem("theme", theme);
@@ -34,7 +36,7 @@ const Header = () => {
                     {
                         constraints['facingMode'] &&
                             <button onClick={flipCamera} aria-label="flip camera">
-                                <CamIcon className={`h-6 w-6 ${theme}`} selfie={ selfie }/>
+                                <CamIcon className={`h-6 w-6 ${theme}`} selfie={ facingUser }/>
                             </button>
                     }
                     <ul className="dropdown dropdown-end">
