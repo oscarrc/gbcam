@@ -235,7 +235,7 @@ const CameraProvider = ({ children }) => {
         const ctx = await init();
         
         interval.current = setInterval(() => { 
-            if(media) play(ctx);
+            if(media !== null) play(ctx);
             else stream(ctx);
 
             ui(ctx);
