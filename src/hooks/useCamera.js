@@ -1,7 +1,6 @@
-import { convertPalette, gbDither } from "../helpers/dither";
+import { convertPalette, gbDither, palettes, variations } from "../helpers/dither";
 import { createContext, useCallback, useContext, useEffect, useReducer, useRef, useState } from "react";
 import { getCanvasImage, loadImage } from "../helpers/canvas";
-import { palettes, variations } from "../constants/colors";
 
 import { dataToFile } from "../helpers/file";
 import fontface from "../assets/fonts/Rounded_5x5.ttf";
@@ -153,16 +152,11 @@ const CameraProvider = ({ children }) => {
         const playback = media instanceof Blob;
         
         if(!player.current){
-            if(playback){
-                player.current = document.createElement('video');
-                player.current.muted = true;
-                player.current.loop = true;
-                player.current.src = URL.createObjectURL(media);
-                player.current.play();
-            }else{
-                player.current = document.createElement("img"); 
-                player.current.src = media;
-            }
+            player.current = document.createElement('video');
+            player.current.muted = true;
+            player.current.loop = true;
+            player.current.src = playback ? URL.createObjectURL(media) : media;
+            player.current.play();
         }        
 
         ctx.drawImage(player.current, 0, 0, width, height, 0, 0, width, height);
@@ -171,17 +165,16 @@ const CameraProvider = ({ children }) => {
     const capture = {
         async snapshot(){
             const { width, height } = CameraDimensions;
-            const pic = getCanvasImage(output.current, width, height);
-            const picCtx = pic.getContext("2d",);
-
+            const img = getCanvasImage(output.current, width, height);
+            const ctx = img.getContext("2d");
             const fr = await loadImage(`assets/frames/frame-${frame}.svg`);
             const c = getCanvasImage(fr, width, height);
             const cCtx = c.getContext("2d");
             const imgData = cCtx.getImageData(0, 0, width, height);
             const converted = convertPalette(imgData, state.palette);
 
-            picCtx.putImageData(converted, 0, 0);
-            setMedia(pic.toDataURL('image/png'));
+            ctx.putImageData(converted, 0, 0);
+            setMedia(img.toDataURL('image/png'));
         },
         async start(){
             const { width, height, sx, sy, sw, sh } = CameraDimensions;
@@ -236,7 +229,7 @@ const CameraProvider = ({ children }) => {
         const ctx = await init();
         
         interval.current = setInterval(() => { 
-            if(media !== null) play(ctx);
+            if(media) play(ctx);
             else stream(ctx);
 
             ui(ctx);
