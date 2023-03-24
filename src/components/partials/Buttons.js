@@ -12,10 +12,6 @@ const Buttons = () => {
         setOption(option > 0 ? 0 : -1)
     }
 
-    const accept  = () => {
-        if(media) save();
-    }
-
     const checkTouches = (touches) => {
         let isTouching = false;
 
@@ -28,7 +24,7 @@ const Buttons = () => {
     }
 
     const handleStart = (e) => {
-        if(media) return;
+        if(media) save();
         if (e.type === "touchstart" && !checkTouches(e.touches)) return;
         
         start.current = Date.now();
@@ -55,7 +51,7 @@ const Buttons = () => {
     return (
         <div className="grid grid-cols-2 grid-rows-2 rotate-35 text-button font-bold text-neutral-content text-xs">            
             <div className="text-center col-start-2  -rotate-35">
-                <button onClick={accept} ref={snap} { ...events } aria-label="Take photo or video" className="btn btn-circle shadow-lg btn-accent"></button>
+                <button ref={snap} { ...events } aria-label="Take photo or video" className="btn btn-circle shadow-lg btn-accent"></button>
                 <label className="block ml-8 -rotate-35">A</label>
             </div>
             <div className="text-center row-start-2 col-start-1 -rotate-35">

@@ -9,11 +9,15 @@ const getCanvasImage = (img, w, h) => {
     return c;
 }
 
-const loadImage = (src) => new Promise((resolve) => {
+const loadImage = (src) => new Promise((resolve, reject) => {
     const img = document.createElement("img");
     img.src = src;
 
-    img.onload = () => resolve(img);
+    try{
+        img.onload = () => resolve(img);
+    }catch(err){
+        reject(err)
+    }
 })
 
 export { getCanvasImage, loadImage }

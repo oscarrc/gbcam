@@ -152,11 +152,16 @@ const CameraProvider = ({ children }) => {
         const playback = media instanceof Blob;
         
         if(!player.current){
-            player.current = document.createElement('video');
-            player.current.muted = true;
-            player.current.loop = true;
-            player.current.src = playback ? URL.createObjectURL(media) : media;
-            player.current.play();
+            if(playback){
+                player.current = document.createElement('video');
+                player.current.muted = true;
+                player.current.loop = true;
+                player.current.src = URL.createObjectURL(media);
+                player.current.play();
+            }else{
+                player.current = document.createElement("img"); 
+                player.current.src = media;
+            }
         }        
 
         ctx.drawImage(player.current, 0, 0, width, height, 0, 0, width, height);
@@ -165,16 +170,17 @@ const CameraProvider = ({ children }) => {
     const capture = {
         async snapshot(){
             const { width, height } = CameraDimensions;
-            const img = getCanvasImage(output.current, width, height);
-            const ctx = img.getContext("2d");
+            const pic = getCanvasImage(output.current, width, height);
+            const picCtx = pic.getContext("2d",);
+
             const fr = await loadImage(`assets/frames/frame-${frame}.svg`);
             const c = getCanvasImage(fr, width, height);
             const cCtx = c.getContext("2d");
             const imgData = cCtx.getImageData(0, 0, width, height);
             const converted = convertPalette(imgData, state.palette);
 
-            ctx.putImageData(converted, 0, 0);
-            setMedia(img.toDataURL('image/png'));
+            picCtx.putImageData(converted, 0, 0);
+            setMedia(pic.toDataURL('image/png'));
         },
         async start(){
             const { width, height, sx, sy, sw, sh } = CameraDimensions;
