@@ -249,8 +249,8 @@ const GbCamProvider = ({ children }) => {
 
 const useGbCam = () => {
     const context = useContext(GbCamContext);
-    if(context === undefined) throw new Error("useCamera must be used within a GBCamProvider");
+    if(context === undefined) throw new Error("useGbCam must be used within a GBCamProvider");
     return context;
-} 
+}
 
 export { GbCamProvider, useGbCam }
