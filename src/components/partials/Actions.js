@@ -1,5 +1,5 @@
 import { dataToFile } from "../../helpers/file";
-import { useGbCam } from "../../hooks/useCamera";
+import { useGbCam } from "../../hooks/useGbCam";
 
 const Actions = () => {
     const { setOption, capture } = useGbCam();

@@ -1,9 +1,9 @@
-import { saveFile } from "../helpers/file";
-import { useCamera } from "../../hooks/useCamera";
+import { saveFile } from "../../helpers/file";
+import { useGbCam } from "../../hooks/useGbCam";
 import { useRef } from "react"
 
 const Buttons = () => {
-    const { clear, option, capture, setOption, snap, record } = useCamera();
+    const { clear, option, capture, setOption, snap, record } = useGbCam();
     const start = useRef(0);
     const timer = useRef(null);
     const btn = useRef(null);

@@ -1,9 +1,9 @@
 import { BsCaretDownFill, BsCaretLeftFill, BsCaretRightFill, BsCaretUpFill } from "react-icons/bs"
 
-import { useCamera } from "../../hooks/useCamera";
+import { useGbCam } from "../../hooks/useGbCam";
 
 const DPad = () => {
-    const { dispatch, capture, option, setOption } = useCamera();
+    const { dispatch, capture, option, setOption } = useGbCam();
 
     const handleUp = () => {
         if(capture) return;
