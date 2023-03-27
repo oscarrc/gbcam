@@ -11,7 +11,7 @@ const Actions = () => {
         navigator.share({ files: [file] });
     }
 
-    const toggleOptions = () => setOption(o => o < 0 ? 0 : -1);
+    const toggleOptions = () => setOption(o => o === null ? 0 : null);
 
     return (
         <div className="grid grid-cols-2 gap-4 font-bold text-neutral-content text-xs">

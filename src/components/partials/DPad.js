@@ -3,30 +3,30 @@ import { BsCaretDownFill, BsCaretLeftFill, BsCaretRightFill, BsCaretUpFill } fro
 import { useGbCam } from "../../hooks/useGbCam";
 
 const DPad = () => {
-    const { dispatch, capture, option, setOption } = useGbCam();
+    const { setting, capture, option, setOption } = useGbCam();
 
     const handleUp = () => {
         if(capture) return;
         if(option === 0) setOption(1);
-        else dispatch({ type: "brightness", payload: 1 });
+        else setting({ type: "brightness", payload: 1 });
     }
 
     const handleRight = () => {
         if(capture) return;
         if(option === 0) setOption(2);
-        else dispatch({ type: "contrast", payload: 1 }) ;
+        else setting({ type: "contrast", payload: 1 }) ;
     }
 
     const handleDown = () => {
         if(capture) return;
         if(option === 0) setOption(3);
-        else dispatch({ type: "brightness", payload: -1 });
+        else setting({ type: "brightness", payload: -1 });
     }
 
     const handleLeft = () => {
         if(capture) return; 
         if(option === 0) setOption(4);
-        else dispatch({ type: "contrast", payload: -1 });
+        else setting({ type: "contrast", payload: -1 });
     }
     
     return (
