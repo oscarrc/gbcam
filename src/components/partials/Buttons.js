@@ -1,11 +1,12 @@
+import { saveFile } from "../helpers/file";
 import { useCamera } from "../../hooks/useCamera";
 import { useRef } from "react"
 
 const Buttons = () => {
-    const { clear, option, capture, media, save, setOption } = useCamera();
+    const { clear, option, capture, setOption, snap, record } = useCamera();
     const start = useRef(0);
     const timer = useRef(null);
-    const snap = useRef(null);
+    const btn = useRef(null);
 
     const cancel = () => {
         clear();
@@ -17,28 +18,28 @@ const Buttons = () => {
 
         Object.values(touches).forEach(t => {
             let elm = document.elementFromPoint(t.pageX,t.pageY)
-            if(elm === snap.current) isTouching = true;
+            if(elm === btn.current) isTouching = true;
         })
 
         return isTouching;
     }
 
     const handleStart = (e) => {
-        if(media) save();
+        if(capture) saveFile(capture);
         if (e.type === "touchstart" && !checkTouches(e.touches)) return;
         
         start.current = Date.now();
-        timer.current = setTimeout(() => { capture.start() }, 500)
+        timer.current = setTimeout(() => { record() }, 500)
     }
 
     const handleStop = (e) => {
-        if(media) return;
+        if(capture) return;
         if (e.type === "touchstart" && checkTouches(e.touches)) return;
 
         if(Date.now() - start.current < 500 ){
             clearTimeout(timer.current);
-            capture.snapshot();
-        }else capture.stop();
+            snap();
+        }else record(true);
     }
 
     const events = {
@@ -51,7 +52,7 @@ const Buttons = () => {
     return (
         <div className="grid grid-cols-2 grid-rows-2 rotate-35 text-button font-bold text-neutral-content text-xs">            
             <div className="text-center col-start-2  -rotate-35">
-                <button ref={snap} { ...events } aria-label="Take photo or video" className="btn btn-circle shadow-lg btn-accent"></button>
+                <button ref={btn} { ...events } aria-label="Take photo or video" className="btn btn-circle shadow-lg btn-accent"></button>
                 <label className="block ml-8 -rotate-35">A</label>
             </div>
             <div className="text-center row-start-2 col-start-1 -rotate-35">

@@ -1,12 +1,12 @@
 import { dataToFile } from "../../helpers/file";
-import { useCamera } from "../../hooks/useCamera";
+import { useGbCam } from "../../hooks/useCamera";
 
 const Actions = () => {
-    const { setOption, media } = useCamera();
+    const { setOption, capture } = useGbCam();
     //TODO: Implement share modal when navigator share is not working
     const share = async () => {
-        if(!media) return;
-        const file = await dataToFile(media);
+        if(!capture) return;
+        const file = await dataToFile(capture);
 
         navigator.share({ files: [file] });
     }
