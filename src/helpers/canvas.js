@@ -1,4 +1,4 @@
-const getCanvasImage = (img, w, h) => {
+const getCanvas = (img, w, h) => {
     const c = document.createElement("canvas");
     const ctx = c.getContext("2d");
 
@@ -7,6 +7,18 @@ const getCanvasImage = (img, w, h) => {
     img && ctx.drawImage(img, 0, 0);
 
     return c;
+}
+
+const loadVideo = (src) => {
+    const video = document.createElement("video");
+
+    try { video.srcObject = src } 
+    catch (error) { video.src = URL.createObjectURL(src) }
+    
+    video.loop = true;
+    video.play();
+
+    return video;
 }
 
 const loadImage = (src) => new Promise((resolve, reject) => {
@@ -20,4 +32,4 @@ const loadImage = (src) => new Promise((resolve, reject) => {
     }
 })
 
-export { getCanvasImage, loadImage }
+export { getCanvas, loadImage, loadVideo }

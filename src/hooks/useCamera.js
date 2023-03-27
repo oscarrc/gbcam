@@ -1,6 +1,6 @@
 import { convertPalette, gbDither } from "../helpers/dither";
 import { createContext, useCallback, useContext, useEffect, useReducer, useRef, useState } from "react";
-import { getCanvasImage, loadImage } from "../helpers/canvas";
+import { getCanvas, loadImage } from "../helpers/canvas";
 import { palettes, variations } from "../constants/colors";
 
 import { dataToFile } from "../helpers/file";
@@ -107,7 +107,7 @@ const CameraProvider = ({ children }) => {
     const ui = useCallback(async (ctx) => {   // Needs to be over the stream
         const { width, height } = CameraDimensions;
 
-        const ui = getCanvasImage(null, width, height);
+        const ui = getCanvas(null, width, height);
         const uiCtx = ui.getContext("2d");
 
         // const img = await loadImage(`assets/ui/ui${option}.svg`);
@@ -171,11 +171,11 @@ const CameraProvider = ({ children }) => {
     const capture = {
         async snapshot(){
             const { width, height } = CameraDimensions;
-            const pic = getCanvasImage(output.current, width, height);
+            const pic = getCanvas(output.current, width, height);
             const picCtx = pic.getContext("2d",);
 
             const fr = await loadImage(`assets/frames/frame-${frame}.svg`);
-            const c = getCanvasImage(fr, width, height);
+            const c = getCanvas(fr, width, height);
             const cCtx = c.getContext("2d");
             const imgData = cCtx.getImageData(0, 0, width, height);
             const converted = convertPalette(imgData, state.palette);
@@ -185,11 +185,11 @@ const CameraProvider = ({ children }) => {
         },
         async start(){
             const { width, height, sx, sy, sw, sh } = CameraDimensions;
-            const feed = getCanvasImage(null, width, height);
+            const feed = getCanvas(null, width, height);
             const feedCtx = feed.getContext("2d",);   
 
             const fr = await loadImage(`assets/frames/frame-${frame}.svg`);
-            const c = getCanvasImage(fr, width, height);
+            const c = getCanvas(fr, width, height);
             const cCtx = c.getContext("2d");
             const imgData = cCtx.getImageData(0, 0, width, height);
             const converted = convertPalette(imgData, state.palette);
