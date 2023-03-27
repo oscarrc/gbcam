@@ -2,16 +2,17 @@ import {CamIcon, GBIcon} from "../partials/";
 import { useEffect, useRef, useState } from "react";
 
 import { BsChevronDown } from "react-icons/bs";
-import { useCamera } from "../../hooks/useCamera";
 import { useDynamicFavicon } from "../../hooks/useDynamicFavicon";
+import { useGbCam } from "../../hooks/useGbCam";
 
 const MODELS = ["classic", "yellow", "red", "black", "white", "blue", "green", "transparent"];
 
 const Header = () => {
     const [ theme, setTheme ] = useState(localStorage.getItem("theme") || "classic");
-    const themeRef = useRef(null);
     const { setFavicon } = useDynamicFavicon(theme);
-    const { facingUser, setFacingUser, constraints } = useCamera();
+    const { facingUser, setFacingUser } = useGbCam();
+    
+    const themeRef = useRef(null);
     
     const flipCamera = () => setFacingUser(u => !u);
     
@@ -33,12 +34,9 @@ const Header = () => {
                     <a href="/" className="btn btn-ghost normal-case text-2xl sm:text-4xl font-title italic">GBCam</a>
                 </div>
                 <div className="flex-none font-text mx-4 gap-2">
-                    {
-                        constraints['facingMode'] &&
-                            <button onClick={flipCamera} aria-label="flip camera">
-                                <CamIcon className={`h-6 w-6 ${theme}`} selfie={ facingUser }/>
-                            </button>
-                    }
+                    <button onClick={flipCamera} aria-label="flip camera">
+                        <CamIcon className={`h-6 w-6 ${theme}`} selfie={ facingUser }/>
+                    </button>
                     <ul className="dropdown dropdown-end">
                         <li tabIndex="0">
                             <button ref={themeRef} aria-label="Model" className="flex items-center gap-2">

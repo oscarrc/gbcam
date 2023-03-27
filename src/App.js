@@ -1,14 +1,14 @@
-import { CameraProvider } from "./hooks/useCamera";
+import { GbCamProvider } from "./hooks/useGbCam";
 import Layout from './components/layout';
 import Main from './views/Main';
 
 const App = () => {
   return (
-    <CameraProvider>
+    <GbCamProvider>
       <Layout>
         <Main />
       </Layout>
-    </CameraProvider>
+    </GbCamProvider>
   );
 }
 

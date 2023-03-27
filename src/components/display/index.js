@@ -1,10 +1,10 @@
 import { useEffect, useRef } from "react";
 
 import { AiFillHeart } from "react-icons/ai";
-import { useCamera } from "../../hooks/useCamera";
+import { useGbCam } from "../../hooks/useGbCam";
 
 const Display = ({ className }) => {
-    const { output, ready } = useCamera();
+    const { output, ready } = useGbCam();
     const display = useRef(null);
     const interval = useRef(null);
 

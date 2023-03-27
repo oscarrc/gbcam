@@ -3,6 +3,8 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useReducer,
 import { getCanvas, loadImage, loadVideo } from "../helpers/canvas";
 import { palettes, variations } from "../constants/colors";
 
+import fontface from "../assets/fonts/Rounded_5x5.ttf";
+
 const DIMENSIONS = { width: 160, height: 144, sw: 128, sh: 112, sx: 16, sy: 16 };
 const DEFAULT_SETTINGS = { brightness: 51, contrast: 51, frame: 0, fps: 60, palette: 0, ratio: 0.6, variation: 0 }
 
@@ -57,6 +59,7 @@ const GbCamProvider = ({ children }) => {
     const source = useRef(null);
 
     const timeout = useMemo(() => 1000 / fps, [fps]);
+    const ready = useMemo(() => output.current !== null, [output]);
 
     const context = useMemo(() => {
         if(!output.current) return null;
@@ -222,12 +225,17 @@ const GbCamProvider = ({ children }) => {
         context.putImageData(converted, 0, 0);
     }, [context, drawUI, drawVideo, height, palette, sh, sw, sx, sy, variation, width])
 
-    useEffect(() => init, [init]);
+    useEffect(() => init, [init])
 
     useEffect(() => { 
         interval.current = setTimeout(() => capture ? playback() : stream(), timeout)
         return () => clearInterval(interval.current)
     }, [playback, stream, timeout])
+
+    useEffect(() => {
+        const font = new FontFace("Rounded_5x5", `url(${fontface})`);
+        font.load().then( (f) => document.fonts.add(f) );
+    }, [])
 
     return (
         <GbCamContext.Provider value={{ 
@@ -235,6 +243,7 @@ const GbCamProvider = ({ children }) => {
             facingUser,
             option,
             output,
+            ready,
             clear,
             setFacingUser,
             setOption,
