@@ -45,33 +45,29 @@ const GbCamReducer = (state, action) => {
 
 const GbCamProvider = ({ children }) => {
     const [ settings, setting ] = useReducer(GbCamReducer, JSON.parse(localStorage.getItem("settings")) || DEFAULT_SETTINGS );
-    const [ option, setOption ] = useState(0);
-    const [ facingUser, setFacingUser ] = useState(0);
+    const [ option, setOption ] = useState(null);
+    const [ facingUser, setFacingUser ] = useState(true);
+    const [ capture, setCapture ] = useState(null);
+    const [ media, setMedia ] = useState({ source: null, output: null });
           
     const { brightness, contrast, frame, fps, palette, ratio, variation } = settings 
     const { width, height, sx, sy, sw, sh } = DIMENSIONS;
 
-    const capture = useRef(null);
     const interval = useRef(null);     
-    const output = useRef(null);     
     const player = useRef(null);     
     const recorder = useRef(null);
-    const source = useRef(null);
 
     const timeout = useMemo(() => 1000 / fps, [fps]);
-    const ready = useMemo(() => output.current !== null, [output]);
-
+    const ready = useMemo(() => media.output !== null, [media]);    
     const context = useMemo(() => {
-        if(!output.current) return null;
-
-        return output.current.getgbCamCtx("2d", { 
+       return media.output ? media.output.getContext("2d", { 
             willReadFrequently: true,            
             msImageSmoothingEnabled: false,
             mozImageSmoothingEnabled: false,
             webkitImageSmoothingEnabled: false,
             imageSmoothingEnabled: false
-        });
-    }, [output])
+        }) : null
+    }, [media])
 
     const sourceOptions = useMemo(() => {
         return {
@@ -93,29 +89,32 @@ const GbCamProvider = ({ children }) => {
 
     const init = useCallback(async () => {
         const media = await navigator.mediaDevices.getUserMedia(sourceOptions);
+        const font = await (new FontFace("Rounded_5x5", `url(${fontface})`)).load();
+        const video = loadVideo(media);
+        const canvas = getCanvas(null, width, height);
+        
+        document.fonts.add(font);
 
-        source.current = loadVideo(media);
-        output.current = getCanvas(null, width, height);
+        setMedia({source: video, output: canvas})
     }, [height, sourceOptions, width]);
 
     const drawUI = useCallback(() => {
-        const { selected, value } = option;
         const canvas = getCanvas(null, width, height);
         const ctx = canvas.getContext("2d");
 
         const img = document.createElement("img");
-        img.src = `assets/ui/ui-${option}.svg`
-
-        switch(selected){
+        img.src = `assets/ui/ui-${option ? option : (capture ? 'save' : 'default') }.svg`
+        
+        switch(option){
             case 0: // Options menu
                 break;
             case 1: // Flip
                 break;
             case 2: // Frame
                 const fr = document.createElement("img");
-                fr.src = `assets/frames/frame-${value}.svg`;
+                fr.src = `assets/frames/frame-${frame}.svg`;
                 ctx.font = `24px Rounded_5x5`;
-                ctx.fillText(`${value < 10 ? '0' : ''}${value}`, 81, 88);
+                ctx.fillText(`${frame < 10 ? '0' : ''}${frame}`, 81, 88);
                 ctx.drawImage(fr, 0, 0, width, height);
                 break;
             case 3: // Palette
@@ -123,24 +122,21 @@ const GbCamProvider = ({ children }) => {
             case 4: // Dither
                 break;
             default: // Brightness / Contrast
-                const { brightness, contrast } = value;
-                img.src = `assets/ui/ui-default.svg`
-                ctx.fillStyle = "white";
+                if(capture) break;
                 ctx.fillRect(30 + 101 * contrast / 255, height - 13, 1, 5);
                 ctx.fillRect(width - 13, 113 - 82 * brightness / 255, 5, 1);
-                return;
         }
 
-        ctx.drawImage(canvas, 0, 0, width, height);
+        ctx.drawImage(img, 0, 0, width, height);
 
         return canvas;
-    }, [option, width, height])
+    }, [width, height, option, frame, capture, contrast, brightness])
 
     const drawVideo = useCallback(() => {
         const canvas = getCanvas(null, sw, sh);
         const ctx = canvas.getContext("2d");
 
-        ctx.drawImage(source.current, 0, 0, sw, sh);
+        ctx.drawImage(media.source, 0, 0, sw, sh);
 
         const imgData = ctx.getImageData(0, 0, sw, sh);
         const dithered = gbDither(imgData, brightness, contrast, ratio);
@@ -149,7 +145,7 @@ const GbCamProvider = ({ children }) => {
         ctx.putImageData(converted, 0, 0);
 
         return canvas;
-    }, [sw, sh, brightness, contrast, ratio, palette, variation])
+    }, [sw, sh, media.source, brightness, contrast, ratio, palette, variation])
 
     const record = useCallback(async (save = false) => {
         if(save) return recorder.current && recorder.current.stop();        
@@ -177,10 +173,9 @@ const GbCamProvider = ({ children }) => {
         recorder.current.onstop = () => {
             let blob = new Blob(chunks, { 'type' : 'video/mp4' });
             
+            setCapture(blob);
             clearInterval(interval);
-
             recorder.current = null;
-            capture.current = blob;
         }
 
         recorder.current.start();
@@ -198,24 +193,23 @@ const GbCamProvider = ({ children }) => {
         const converted = convertPalette(imgData, palette, variation);
 
         ctx.putImageData(converted, 0, 0, width, height);
-
-        capture.current = img;
+        setCapture(img);
     }, [drawVideo, frame, height, palette, sh, sw, sx, sy, variation, width])
 
     const playback = useCallback(() => {
         if(!player.current){
             player.current = capture instanceof Blob ? loadVideo(capture) : loadImage(capture);
         }
-
+        
         context.drawImage(player.current, 0, 0, width, height, 0, 0, width, height);
-    }, [context, height, width])
+    }, [capture, context, height, width])
 
     const stream = useCallback(() => {
-        if(!output.current) return;
+        if(!context) return;
 
         const ui = drawUI();
         const video = drawVideo();
-
+        
         context.drawImage(video, sx, sy, sw, sh);
         context.drawImage(ui, 0, 0, width, height);
         
@@ -228,21 +222,16 @@ const GbCamProvider = ({ children }) => {
     useEffect(() => init, [init])
 
     useEffect(() => { 
-        interval.current = setTimeout(() => capture ? playback() : stream(), timeout)
+        interval.current = setInterval(() => capture ? playback() : stream(), timeout)
         return () => clearInterval(interval.current)
-    }, [playback, stream, timeout])
-
-    useEffect(() => {
-        const font = new FontFace("Rounded_5x5", `url(${fontface})`);
-        font.load().then( (f) => document.fonts.add(f) );
-    }, [])
+    }, [capture, timeout, playback, stream])
 
     return (
         <GbCamContext.Provider value={{ 
-            capture: capture.current,
+            capture,
             facingUser,
             option,
-            output,
+            output: media.output,
             ready,
             clear,
             setFacingUser,

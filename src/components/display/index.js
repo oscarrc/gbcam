@@ -33,7 +33,7 @@ const Display = ({ className }) => {
         });
 
         interval.current = setInterval(async () => {            
-            ctx.drawImage(output.current, 0, 0, display.current.width, display.current.height);
+            ctx.drawImage(output, 0, 0, display.current.width, display.current.height);
         }, 17);
 
         return () => clearInterval(interval.current);
