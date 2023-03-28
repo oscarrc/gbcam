@@ -226,8 +226,8 @@ const GbCamProvider = ({ children }) => {
         const ui = drawUI();
         const video = drawVideo();
         
+        context.drawImage(ui, offsets.x, offsets.y, width + Math.abs(offsets.x), height + Math.abs(offsets.y));
         context.drawImage(video, sx + offsets.x, sy + offsets.x, sw, sh);
-        context.drawImage(ui, 0, 0, width + Math.abs(offsets.x), height + Math.abs(offsets.y));
         
         const imgData = context.getImageData(0, 0, width, height);
         const converted = convertPalette(imgData, palette, variation);
