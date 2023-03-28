@@ -1,6 +1,6 @@
 import { convertPalette, gbDither } from "../helpers/dither";
 import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState } from "react";
-import { getCanvas, loadImage, loadVideo } from "../helpers/canvas";
+import { drawImage, getCanvas, loadImage, loadVideo } from "../helpers/canvas";
 import { palettes, variations } from "../constants/colors";
 
 import fontface from "../assets/fonts/Rounded_5x5.ttf";
@@ -82,6 +82,17 @@ const GbCamProvider = ({ children }) => {
         }
     }, [facingUser, fps, height, width])
 
+    const offsets = useMemo(() => {
+        let x = 0;
+        let y = 0;
+
+        if(option === 1) y = sy;
+        if(option === 3) y = -sy;
+        if(option === 4) x = sx;
+
+        return { x, y }
+    }, [option, sx, sy])
+
     const clear = () => {
         capture.current = null;
         player.current = null;
@@ -98,39 +109,44 @@ const GbCamProvider = ({ children }) => {
         setMedia({source: video, output: canvas})
     }, [height, sourceOptions, width]);
 
-    const drawUI = useCallback(() => {
-        const canvas = getCanvas(null, width, height);
+    const drawUI = useCallback(() => {   
+        const w = width + Math.abs(offsets.x);
+        const h = height + Math.abs(offsets.y);
+        const canvas = getCanvas(null, w, h);
         const ctx = canvas.getContext("2d");
 
-        const img = document.createElement("img");
-        img.src = `assets/ui/ui-${option ? option : (capture ? 'save' : 'default') }.svg`
-        
         switch(option){
             case 0: // Options menu
+                drawImage(`assets/ui/ui-0.svg`, ctx, offsets.x, offsets.y, width, height)
                 break;
             case 1: // Flip
+                drawImage(`assets/ui/ui-0.svg`, ctx, offsets.x, offsets.y, width, height)
+                drawImage(`assets/ui/ui-${option}.svg`, ctx, 0, 0, width, Math.abs(offsets.y));
                 break;
-            case 2: // Frame
-                const fr = document.createElement("img");
-                fr.src = `assets/frames/frame-${frame}.svg`;
+            case 2: // Frame    
+                drawImage(`assets/ui/ui-${option}.svg`, ctx, 0, 0, width, height);                           
+                drawImage(`assets/frames/frame-${frame}.svg`, ctx, 0, 0, width, height)
                 ctx.font = `24px Rounded_5x5`;
                 ctx.fillText(`${frame < 10 ? '0' : ''}${frame}`, 81, 88);
-                ctx.drawImage(fr, 0, 0, width, height);
                 break;
             case 3: // Palette
+                drawImage(`assets/ui/ui-0.svg`, ctx, offsets.x, offsets.y, width, height)
+                drawImage(`assets/ui/ui-${option}.svg`, ctx, 0, height - Math.abs(offsets.y), width, Math.abs(offsets.y));
                 break;
             case 4: // Dither
+                drawImage(`assets/ui/ui-0.svg`, ctx, offsets.x, offsets.y, width, height);
+                drawImage(`assets/ui/ui-${option}.svg`, ctx, 0, 0, Math.abs(offsets.x), height);
                 break;
-            default: // Brightness / Contrast
-                if(capture) break;
-                ctx.fillRect(30 + 101 * contrast / 255, height - 13, 1, 5);
-                ctx.fillRect(width - 13, 113 - 82 * brightness / 255, 5, 1);
+            default: // Brightness / Contrast or Save 
+                drawImage(`assets/ui/ui-${capture ? 'save' : 'default' }.svg`, ctx, 0, 0, width, height)
+                if(!capture){
+                    ctx.fillRect(30 + 101 * contrast / 255, height - 13, 1, 5);
+                    ctx.fillRect(width - 13, 113 - 82 * brightness / 255, 5, 1);
+                }
         }
 
-        ctx.drawImage(img, 0, 0, width, height);
-
         return canvas;
-    }, [width, height, option, frame, capture, contrast, brightness])
+    }, [width, height, offsets, option, frame, capture, contrast, brightness])
 
     const drawVideo = useCallback(() => {
         const canvas = getCanvas(null, sw, sh);
@@ -210,14 +226,14 @@ const GbCamProvider = ({ children }) => {
         const ui = drawUI();
         const video = drawVideo();
         
-        context.drawImage(video, sx, sy, sw, sh);
-        context.drawImage(ui, 0, 0, width, height);
+        context.drawImage(video, sx + offsets.x, sy + offsets.x, sw, sh);
+        context.drawImage(ui, 0, 0, width + Math.abs(offsets.x), height + Math.abs(offsets.y));
         
         const imgData = context.getImageData(0, 0, width, height);
         const converted = convertPalette(imgData, palette, variation);
 
         context.putImageData(converted, 0, 0);
-    }, [context, drawUI, drawVideo, height, palette, sh, sw, sx, sy, variation, width])
+    }, [context, drawUI, drawVideo, height, offsets, palette, sh, sw, sx, sy, variation, width])
 
     useEffect(() => init, [init])
 

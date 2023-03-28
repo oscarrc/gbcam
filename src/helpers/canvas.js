@@ -1,3 +1,9 @@
+const drawImage = (src, ctx, x, y, w, h) => {
+    const img = document.createElement("img");
+    img.src = src;
+    ctx.drawImage(img, x, y, w, h)
+}
+
 const getCanvas = (img, w, h) => {
     const c = document.createElement("canvas");
     const ctx = c.getContext("2d");
@@ -32,4 +38,4 @@ const loadImage = (src) => new Promise((resolve, reject) => {
     }
 })
 
-export { getCanvas, loadImage, loadVideo }
+export { drawImage, getCanvas, loadImage, loadVideo }
