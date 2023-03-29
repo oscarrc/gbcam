@@ -146,12 +146,11 @@ const GbCamProvider = ({ children }) => {
 
         const imgData = ctx.getImageData(0, 0, sw, sh);
         const dithered = gbDither(imgData, brightness, contrast, ratio);
-        const converted = convertPalette(dithered, palette, variation);
 
-        ctx.putImageData(converted, 0, 0);
+        ctx.putImageData(dithered, 0, 0);
 
         return canvas;
-    }, [sw, sh, media.source, brightness, contrast, ratio, palette, variation])
+    }, [sw, sh, media.source, brightness, contrast, ratio])
 
     const record = useCallback(async (save = false) => {
         if(save) return recorder.current && recorder.current.stop();        
