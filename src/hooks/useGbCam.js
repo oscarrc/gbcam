@@ -117,10 +117,10 @@ const GbCamProvider = ({ children }) => {
 
         switch(option){
             case 0: // Options menu
-                drawImage(`assets/ui/ui-options.svg`, ctx, offsets.x, offsets.y, width, height)
+                drawImage(`assets/ui/ui-options.svg`, ctx, 0, 0, width, height)
                 break;
-            case 1: // Flip
-                drawImage(`assets/ui/ui-options.svg`, ctx, offsets.x, offsets.y, width, height)
+            case 1: // Flip *
+                drawImage(`assets/ui/ui-options.svg`, ctx, 0, 0, width, height)
                 drawImage(`assets/ui/ui-flip.svg`, ctx, 0, 0, width, Math.abs(offsets.y));
                 break;
             case 2: // Frame    
@@ -130,12 +130,12 @@ const GbCamProvider = ({ children }) => {
                 ctx.fillText(`${frame < 10 ? '0' : ''}${frame}`, 81, 88);
                 break;
             case 3: // Palette
-                drawImage(`assets/ui/ui-options.svg`, ctx, offsets.x, offsets.y, width, height)
-                drawImage(`assets/ui/ui-palette.svg`, ctx, 0, height - Math.abs(offsets.y), width, Math.abs(offsets.y));
+                drawImage(`assets/ui/ui-options.svg`, ctx, 0, 0, width, height)
+                drawImage(`assets/ui/ui-palette.svg`, ctx, 0, height, width, Math.abs(offsets.y));
                 break;
-            case 4: // Dither
-                drawImage(`assets/ui/ui-options.svg`, ctx, offsets.x, offsets.y, width, height);
-                drawImage(`assets/ui/ui-${option}.svg`, ctx, 0, 0, Math.abs(offsets.x), height);
+            case 4: // Dither *
+                drawImage(`assets/ui/ui-options.svg`, ctx, 0, 0, width, height);
+                drawImage(`assets/ui/ui-dither.svg`, ctx, 0, 0, Math.abs(offsets.x), height);
                 break;
             default: // Brightness / Contrast or Save 
                 drawImage(`assets/ui/ui-${capture ? 'save' : 'default' }.svg`, ctx, 0, 0, width, height)
@@ -226,8 +226,8 @@ const GbCamProvider = ({ children }) => {
         const ui = drawUI();
         const video = drawVideo();
         
-        context.drawImage(ui, offsets.x, offsets.y, width + Math.abs(offsets.x), height + Math.abs(offsets.y));
-        context.drawImage(video, sx + offsets.x, sy + offsets.x, sw, sh);
+        context.drawImage(video, sx + offsets.x, sy + offsets.y, sw, sh);
+        context.drawImage(ui, 0 + offsets.x, 0 + offsets.y, width + Math.abs(offsets.x), height + Math.abs(offsets.y));
         
         const imgData = context.getImageData(0, 0, width, height);
         const converted = convertPalette(imgData, palette, variation);
