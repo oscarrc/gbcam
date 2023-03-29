@@ -21,6 +21,9 @@ const GbCamReducer = (state, action) => {
         case "contrast":
             value = payload > 0 && state.brightess < 254 ? state.brightness + 1 : state.brightness > 0 ? state.brightness -1 : 0
             break;
+        case "frame":
+            value = payload > 0 && state.frame < 17 ? state.frame + 1 : state.frame > 0 ? state.frame - 1 : 0
+            break;
         case "fps":
             value = payload > 60 || payload < 15 ? state.fps : payload;
             break;
@@ -28,7 +31,7 @@ const GbCamReducer = (state, action) => {
             value = payload >= 0 && payload < palettes.length ? payload : state.palette;
             break;
         case "ratio":
-            value = payload > 0 && state.brightess <= 4 ? state.ratio + .1 : state.ratio > 0 ? state.ratio -.1 : 0
+            value = payload > 0 && state.ratio < 4 ? state.ratio + .1 : state.ratio > 0 ? state.ratio -.1 : 0
             break;
         case "variation":            
             value = payload >= 0 && payload < variations.length ? payload : state.variation;
@@ -94,8 +97,8 @@ const GbCamProvider = ({ children }) => {
     }, [option, sx, sy])
 
     const clear = () => {
-        capture.current = null;
         player.current = null;
+        setCapture(null);
     }
 
     const init = useCallback(async () => {
