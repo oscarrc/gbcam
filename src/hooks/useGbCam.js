@@ -7,37 +7,18 @@ import fontface from "../assets/fonts/Rounded_5x5.ttf";
 
 const DIMENSIONS = { width: 160, height: 144, sw: 128, sh: 112, sx: 16, sy: 16 };
 const DEFAULT_SETTINGS = { brightness: 51, contrast: 51, frame: 0, fps: 60, palette: 0, ratio: 0.6, variation: 0 }
-
+const MAX_VALUE = { brightness: 255, contrast: 255, frame: 17, fps: 60, palette: palettes.length - 1, ratio: 0.6, variation: variations.length - 1 }
+const INCREMENTS = { brightness: 1, contrast: 1, frame: 1, fps: 1, palette: 1, ratio: 0.2, variation: 1 }
 const GbCamContext = createContext();
 
 const GbCamReducer = (state, action) => {
     const { type, payload } = action;
     let value;
 
-    switch(type){
-        case "brightness":
-            value = payload > 0 && state.brightess < 254 ? state.brightness + 1 : state.brightness > 0 ? state.brightness -1 : 0
-            break;
-        case "contrast":
-            value = payload > 0 && state.brightess < 254 ? state.brightness + 1 : state.brightness > 0 ? state.brightness -1 : 0
-            break;
-        case "frame":
-            value = payload > 0 && state.frame !== 17 ? state.frame + 1 : state.frame > 0 ? state.frame - 1 : state.frame
-            break;
-        case "fps":
-            value = payload > 60 || payload < 15 ? state.fps : payload;
-            break;
-        case "palette":            
-            value = payload >= 0 && payload < palettes.length ? payload : state.palette;
-            break;
-        case "ratio":
-            value = payload > 0 && state.ratio < 4 ? state.ratio + .1 : state.ratio > 0 ? state.ratio -.1 : 0
-            break;
-        case "variation":            
-            value = payload >= 0 && payload < variations.length ? payload : state.variation;
-            break;
-        default:
-            return state;
+    if(payload > 0){
+        value = state[type] < MAX_VALUE[type] ? state[type] + INCREMENTS[type] : state[type]
+    }else{
+        value = state[type] > 0 ? state[type] - INCREMENTS[type] : state[type]
     }
 
     state = { ...state, [type]: value }
@@ -117,6 +98,7 @@ const GbCamProvider = ({ children }) => {
         const h = height + Math.abs(offsets.y);
         const canvas = getCanvas(null, w, h);
         const ctx = canvas.getContext("2d");
+        const positions = [9, 36, 66, 90, 114, 138]
 
         switch(option){
             case 0: // Options menu
@@ -135,7 +117,8 @@ const GbCamProvider = ({ children }) => {
                 break;
             case 3: // Palette
                 drawImage(`assets/ui/ui-options.svg`, ctx, 0, 0, width, height)
-                drawImage(`assets/ui/ui-palette.svg`, ctx, 0, height, width, Math.abs(offsets.y));
+                drawImage(`assets/ui/ui-palette.svg`, ctx, 0, height, width, Math.abs(offsets.y));                
+                drawImage(`assets/ui/ui-down.svg`, ctx, positions[variation], height - 8, 16, 16);
                 break;
             case 4: // Dither *
                 drawImage(`assets/ui/ui-options.svg`, ctx, offsets.x, 0, width, height);
@@ -153,7 +136,7 @@ const GbCamProvider = ({ children }) => {
         }
 
         return canvas;
-    }, [width, offsets.x, offsets.y, height, option, frame, ratio, capture, contrast, brightness])
+    }, [width, offsets, height, option, frame, variation, ratio, capture, contrast, brightness])
 
     const drawVideo = useCallback(() => {
         const canvas = getCanvas(null, sw, sh);
