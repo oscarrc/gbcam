@@ -22,7 +22,7 @@ const GbCamReducer = (state, action) => {
             value = payload > 0 && state.brightess < 254 ? state.brightness + 1 : state.brightness > 0 ? state.brightness -1 : 0
             break;
         case "frame":
-            value = payload > 0 && state.frame < 17 ? state.frame + 1 : state.frame > 0 ? state.frame - 1 : 0
+            value = payload > 0 && state.frame !== 17 ? state.frame + 1 : state.frame > 0 ? state.frame - 1 : state.frame
             break;
         case "fps":
             value = payload > 60 || payload < 15 ? state.fps : payload;
