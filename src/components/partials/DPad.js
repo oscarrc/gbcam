@@ -7,73 +7,33 @@ const DPad = () => {
 
     const handleUp = () => {
         if(capture) return;
-        switch(option){
-            case 0:
-                setOption(1);
-                break;
-            case 2:
-                break;
-            case 3: 
-                break;
-            case 4:
-                setting({ type: "ratio", payload: 1 }); 
-                break;
-            default:
-                setting({ type: "brightness", payload: 1 }); 
-        }
+        if(capture) return; 
+        else if(option === 0) setOption(1);
+        else if(option === 4) setting({ type: "ratio", payload: 1 }); 
+        else setting({ type: "brightness", payload: 1 }); 
     }
 
-    const handleRight = () => {
-        if(capture) return;
-        switch(option){
-            case 0:
-                setOption(2);
-                break;
-            case 2:
-                setting({ type: "frame", payload: 1 }); 
-                break;
-            case 3: 
-                break;
-            case 4:
-                break;
-            default:
-                setting({ type: "contrast", payload: 1 }); 
-        }
+    const handleRight = () => {        
+        if(capture) return; 
+        else if(option === 0) setOption(2);
+        else if(option === 2) setting({ type: "frame", payload: 1 }); 
+        else if(option === 3) setting({ type: "variation", payload: 1 }); 
+        else setting({ type: "contrast", payload: 1 }); 
     }
 
     const handleDown = () => {
-        if(capture) return;
-        switch(option){
-            case 0:
-                setOption(3);
-                break;
-            case 2:
-                break;
-            case 3: 
-                break;
-            case 4:
-                setting({ type: "ratio", payload: -1 }); 
-                break;
-            default:
-                setting({ type: "brightness", payload: -1 }); 
-        }
+        if(capture) return; 
+        else if(option === 0) setOption(3);
+        else if(option === 4) setting({ type: "ratio", payload: -1 }); 
+        else setting({ type: "brightness", payload: -1 }); 
     }
 
     const handleLeft = () => {
-        if(capture) return; switch(option){
-            case 0:
-                setOption(4);
-                break;
-            case 2:
-                setting({ type: "frame", payload: -1 }); 
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
-            default:
-                setting({ type: "contrast", payload: -1 }); 
-        }
+        if(capture) return; 
+        else if(option === 0) setOption(4);
+        else if(option === 2) setting({ type: "frame", payload: -1 }); 
+        else if(option === 3) setting({ type: "variation", payload: -1 }); 
+        else setting({ type: "contrast", payload: -1 }); 
     }
     
     return (
