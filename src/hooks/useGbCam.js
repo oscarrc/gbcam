@@ -125,8 +125,9 @@ const GbCamProvider = ({ children }) => {
                 break;
             case 2: // Frame    
                 drawImage(`assets/ui/ui-frame.svg`, ctx, 0, 0, width, height);                           
-                drawImage(`assets/frames/frame-${frame}.svg`, ctx, 0, 0, width, height)
-                ctx.font = `24px Rounded_5x5`;
+                drawImage(`assets/frames/frame-${frame}.svg`, ctx, 0, 0, width, height);
+                ctx.font = `24px Rounded_5x5`;                
+                ctx.fillStyle = "#000000";
                 ctx.fillText(`${frame < 10 ? '0' : ''}${frame}`, 81, 88);
                 break;
             case 3: // Palette
@@ -134,19 +135,22 @@ const GbCamProvider = ({ children }) => {
                 drawImage(`assets/ui/ui-palette.svg`, ctx, 0, height, width, Math.abs(offsets.y));
                 break;
             case 4: // Dither *
-                drawImage(`assets/ui/ui-options.svg`, ctx, 0, 0, width, height);
+                drawImage(`assets/ui/ui-options.svg`, ctx, offsets.x, 0, width, height);
                 drawImage(`assets/ui/ui-dither.svg`, ctx, 0, 0, Math.abs(offsets.x), height);
+                ctx.fillStyle = "#000000";                
+                ctx.fillRect(9, 113 - 82 * ratio / 2, 5, 1);
                 break;
             default: // Brightness / Contrast or Save 
                 drawImage(`assets/ui/ui-${capture ? 'save' : 'default' }.svg`, ctx, 0, 0, width, height)
                 if(!capture){
+                    ctx.fillStyle = "#ffffff";
                     ctx.fillRect(30 + 101 * contrast / 255, height - 13, 1, 5);
                     ctx.fillRect(width - 13, 113 - 82 * brightness / 255, 5, 1);
                 }
         }
 
         return canvas;
-    }, [width, height, offsets, option, frame, capture, contrast, brightness])
+    }, [width, offsets.x, offsets.y, height, option, frame, ratio, capture, contrast, brightness])
 
     const drawVideo = useCallback(() => {
         const canvas = getCanvas(null, sw, sh);
@@ -227,7 +231,7 @@ const GbCamProvider = ({ children }) => {
         const video = drawVideo();
         
         context.drawImage(video, sx + offsets.x, sy + offsets.y, sw, sh);
-        context.drawImage(ui, 0 + offsets.x, 0 + offsets.y, width + Math.abs(offsets.x), height + Math.abs(offsets.y));
+        context.drawImage(ui, 0, 0 + offsets.y, width + Math.abs(offsets.x), height + Math.abs(offsets.y));
         
         const imgData = context.getImageData(0, 0, width, height);
         const converted = convertPalette(imgData, palette, variation);
