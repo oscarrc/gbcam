@@ -5,10 +5,16 @@ const Actions = () => {
     const { setOption, capture } = useGbCam();
     //TODO: Implement share modal when navigator share is not working
     const share = async () => {
-        if(!capture) return;
-        const file = await dataToFile(capture);
-
-        navigator.share({ files: [file] });
+        if(!capture){
+            navigator.share({
+                title: "Virtual GB Cam",
+                text: "A Lo-Fi camera for 90s kids",
+                url: window.location.href
+            })
+        }else{
+            const file = await dataToFile(capture);
+            navigator.share({ files: [file] });
+        }
     }
 
     const toggleOptions = () => setOption(o => o === null ? 0 : null);
