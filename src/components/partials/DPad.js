@@ -18,6 +18,7 @@ const DPad = () => {
         else if(option === 0) setOption(2);
         else if(option === 2) setting({ type: "frame", payload: 1 }); 
         else if(option === 3) setting({ type: "variation", payload: 1 }); 
+        else if(option === 4) setting({ type: "flip", payload: 1 });
         else setting({ type: "contrast", payload: 1 }); 
     }
 
@@ -33,6 +34,7 @@ const DPad = () => {
         else if(option === 0) setOption(4);
         else if(option === 2) setting({ type: "frame", payload: -1 }); 
         else if(option === 3) setting({ type: "variation", payload: -1 }); 
+        else if(option === 4) setting({ type: "flip", payload: -1 });
         else setting({ type: "contrast", payload: -1 }); 
     }
     
