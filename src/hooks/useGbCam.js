@@ -117,24 +117,24 @@ const GbCamProvider = ({ children }) => {
 
         switch(option){
             case 0: // Options menu
-                drawImage(`assets/ui/ui-0.svg`, ctx, offsets.x, offsets.y, width, height)
+                drawImage(`assets/ui/ui-options.svg`, ctx, offsets.x, offsets.y, width, height)
                 break;
             case 1: // Flip
-                drawImage(`assets/ui/ui-0.svg`, ctx, offsets.x, offsets.y, width, height)
-                drawImage(`assets/ui/ui-${option}.svg`, ctx, 0, 0, width, Math.abs(offsets.y));
+                drawImage(`assets/ui/ui-options.svg`, ctx, offsets.x, offsets.y, width, height)
+                drawImage(`assets/ui/ui-flip.svg`, ctx, 0, 0, width, Math.abs(offsets.y));
                 break;
             case 2: // Frame    
-                drawImage(`assets/ui/ui-${option}.svg`, ctx, 0, 0, width, height);                           
+                drawImage(`assets/ui/ui-frame.svg`, ctx, 0, 0, width, height);                           
                 drawImage(`assets/frames/frame-${frame}.svg`, ctx, 0, 0, width, height)
                 ctx.font = `24px Rounded_5x5`;
                 ctx.fillText(`${frame < 10 ? '0' : ''}${frame}`, 81, 88);
                 break;
             case 3: // Palette
-                drawImage(`assets/ui/ui-0.svg`, ctx, offsets.x, offsets.y, width, height)
-                drawImage(`assets/ui/ui-${option}.svg`, ctx, 0, height - Math.abs(offsets.y), width, Math.abs(offsets.y));
+                drawImage(`assets/ui/ui-options.svg`, ctx, offsets.x, offsets.y, width, height)
+                drawImage(`assets/ui/ui-palette.svg`, ctx, 0, height - Math.abs(offsets.y), width, Math.abs(offsets.y));
                 break;
             case 4: // Dither
-                drawImage(`assets/ui/ui-0.svg`, ctx, offsets.x, offsets.y, width, height);
+                drawImage(`assets/ui/ui-options.svg`, ctx, offsets.x, offsets.y, width, height);
                 drawImage(`assets/ui/ui-${option}.svg`, ctx, 0, 0, Math.abs(offsets.x), height);
                 break;
             default: // Brightness / Contrast or Save 
@@ -235,7 +235,7 @@ const GbCamProvider = ({ children }) => {
         context.putImageData(converted, 0, 0);
     }, [context, drawUI, drawVideo, height, offsets, palette, sh, sw, sx, sy, variation, width])
 
-    useEffect(() => init, [init])
+    useEffect(() => { init() }, [init])
 
     useEffect(() => { 
         interval.current = setInterval(() => capture ? playback() : stream(), timeout)
