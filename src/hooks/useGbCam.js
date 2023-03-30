@@ -152,6 +152,18 @@ const GbCamProvider = ({ children }) => {
         return canvas;
     }, [sw, sh, media.source, brightness, contrast, ratio])
 
+    const swapPalette = (video, ui, palette, variation) => {
+        const vCtx = video.getContext("2d");
+        const vData = vCtx.getImageData(0, 0, ui.width, ui.height);  
+        const vConverted = convertPalette(vData, palette, variation);      
+        const uCtx = ui.getContext("2d");
+        const uData = uCtx.getImageData(0, 0, ui.width, ui.height);
+        const uConverted = convertPalette(uData, palette, 0);   
+
+        vCtx.putImageData(vConverted, 0, 0);
+        uCtx.putImageData(uConverted, 0, 0);
+    }
+
     const record = useCallback(async (save = false) => {
         if(save) return recorder.current && recorder.current.stop();        
         const recording = getCanvas(null, width, height);        
@@ -164,10 +176,7 @@ const GbCamProvider = ({ children }) => {
             ctx.drawImage(img, sx, sy, sw, sh)
             ctx.drawImage(fr, 0, 0, width, height);
 
-            const imgData = ctx.getImageData(0, 0, width, height);
-            const converted = convertPalette(imgData, palette, variation);
-
-            ctx.putImageData(converted, 0, 0, width, height);
+            swapPalette(img, fr, palette, variation);
         }, timeout);
 
         let chunks = [];
@@ -194,10 +203,7 @@ const GbCamProvider = ({ children }) => {
         ctx.drawImage(img, sx, sy, sw, sh)
         ctx.drawImage(fr, 0, 0, width, height);
 
-        const imgData = ctx.getImageData(0, 0, width, height);
-        const converted = convertPalette(imgData, palette, variation);
-
-        ctx.putImageData(converted, 0, 0, width, height);
+        swapPalette(img, fr, palette, variation);
         setCapture(img);
     }, [drawVideo, frame, height, palette, sh, sw, sx, sy, variation, width])
 
@@ -211,17 +217,16 @@ const GbCamProvider = ({ children }) => {
 
     const stream = useCallback(() => {
         if(!context) return;
+        const uiw = width + Math.abs(offsets.x);
+        const uih = height + Math.abs(offsets.y);
 
-        const ui = drawUI();
+        const ui = drawUI();        
         const video = drawVideo();
+
+        swapPalette(video, ui, palette, variation);
         
         context.drawImage(video, sx + offsets.x, sy + offsets.y, sw, sh);
-        context.drawImage(ui, 0, 0 + offsets.y, width + Math.abs(offsets.x), height + Math.abs(offsets.y));
-        
-        const imgData = context.getImageData(0, 0, width, height);
-        const converted = convertPalette(imgData, palette, variation);
-
-        context.putImageData(converted, 0, 0);
+        context.drawImage(ui, 0, 0 + offsets.y, uiw, uih);
     }, [context, drawUI, drawVideo, height, offsets, palette, sh, sw, sx, sy, variation, width])
 
     useEffect(() => { init() }, [init])
