@@ -3,7 +3,7 @@ import { useGbCam } from "../../hooks/useGbCam";
 import { useRef } from "react"
 
 const Buttons = () => {
-    const { clear, option, capture, setOption, snap, record } = useGbCam();
+    const { clear, option, capture, setOption, snapshot, record } = useGbCam();
     const start = useRef(0);
     const timer = useRef(null);
     const btn = useRef(null);
@@ -38,7 +38,7 @@ const Buttons = () => {
 
         if(Date.now() - start.current < 1000 ){
             clearTimeout(timer.current);
-            snap();
+            snapshot();
         }else record(true);
     }
 

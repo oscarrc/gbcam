@@ -1,6 +1,6 @@
 import { convertPalette, gbDither } from "../helpers/dither";
 import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState } from "react";
-import { drawImage, getCanvas, loadImage, loadVideo } from "../helpers/canvas";
+import { drawImage, getCanvas, getCanvasImage, loadImage, loadVideo } from "../helpers/canvas";
 import { palettes, variations } from "../constants/colors";
 
 import fontface from "../assets/fonts/Rounded_5x5.ttf";
@@ -87,8 +87,8 @@ const GbCamProvider = ({ children }) => {
     const init = useCallback(async () => {
         const media = await navigator.mediaDevices.getUserMedia(sourceOptions);
         const font = await (new FontFace("Rounded_5x5", `url(${fontface})`)).load();
-        const video = loadVideo(media);
-        const canvas = getCanvas(null, width, height);
+        const video = await loadVideo(media);
+        const { canvas } = getCanvas(width, height);
         
         document.fonts.add(font);
 
@@ -98,8 +98,7 @@ const GbCamProvider = ({ children }) => {
     const drawUI = useCallback(() => {   
         const w = width + Math.abs(offsets.x);
         const h = height + Math.abs(offsets.y);
-        const canvas = getCanvas(null, w, h);
-        const ctx = canvas.getContext("2d");
+        const { canvas, ctx } = getCanvas(w, h);
         const dPos = [9, 36, 66, 90, 114, 138];
         const uPos = [33, 73, 113];
 
@@ -143,8 +142,7 @@ const GbCamProvider = ({ children }) => {
     }, [width, offsets.x, offsets.y, height, option, flip, frame, variation, ratio, capture, contrast, brightness])
 
     const drawVideo = useCallback(() => {
-        const canvas = getCanvas(null, sw, sh);
-        const ctx = canvas.getContext("2d");
+        const { canvas, ctx } = getCanvas(sw, sh);
         const tw = flip === 1 ? sw : 0;
         const th = flip === 2 ? sh : 0;
         const tx = flip === 1 ? -1 : 1;
@@ -165,34 +163,38 @@ const GbCamProvider = ({ children }) => {
     }, [sw, sh, flip, media.source, brightness, contrast, ratio])
 
     const swapPalette = (video, ui, palette, variation) => {
-        const vCtx = video.getContext("2d");
-        const vData = vCtx.getImageData(0, 0, ui.width, ui.height);  
-        const vConverted = convertPalette(vData, palette, variation);      
-        const uCtx = ui.getContext("2d");
-        const uData = uCtx.getImageData(0, 0, ui.width, ui.height);
-        const uConverted = convertPalette(uData, palette, 0);   
+        if(video){
+            const vCtx = video.getContext("2d");
+            const vData = vCtx.getImageData(0, 0, video.width, video.height);  
+            const vConverted = convertPalette(vData, palette, variation);
+            vCtx.putImageData(vConverted, 0, 0);    
+        }
 
-        vCtx.putImageData(vConverted, 0, 0);
-        uCtx.putImageData(uConverted, 0, 0);
+        if(ui){
+            const uCtx = ui.getContext("2d");
+            const uData = uCtx.getImageData(0, 0, ui.width, ui.height);
+            const uConverted = convertPalette(uData, palette, 0); 
+            uCtx.putImageData(uConverted, 0, 0);
+        }
     }
 
     const record = async (save = false) => {
-        if(save) return recorder.current && recorder.current.stop();        
-        const recording = getCanvas(null, width, height);        
-        const ctx = recording.getContext("2d", { willReadFrequently: true });        
-        const fr = await loadImage(`assets/frames/frame-${frame}`);
+        if(save) return recorder.current && recorder.current.stop(); 
+
+        const { canvas, ctx } = getCanvas(width, height, { willReadFrequently: true } ); 
+        const fr = await getCanvasImage(`assets/frames/frame-${frame}.svg`, width, height);
         
         let interval = setInterval(async () => {
             const img = drawVideo();
 
+            swapPalette(img, fr, palette, variation);
+
             ctx.drawImage(img, sx, sy, sw, sh)
             ctx.drawImage(fr, 0, 0, width, height);
-
-            swapPalette(img, fr, palette, variation);
         }, timeout);
 
         let chunks = [];
-        const stream = recording.captureStream(60);
+        const stream = canvas.captureStream(60);
 
         recorder.current = new MediaRecorder(stream);
         recorder.current.ondataavailable = (e) => chunks.push(e.data);
@@ -207,26 +209,31 @@ const GbCamProvider = ({ children }) => {
         recorder.current.start();
     }
 
-    const snap = async () => {
-        const img = drawVideo();
-        const canvas = getCanvas(null, width, height);
-        const ctx = canvas.getContext("2d");
-        const fr = await loadImage(`assets/frames/frame-${frame}`);
-        
-        ctx.drawImage(img, sx, sy, sw, sh)
-        ctx.drawImage(fr, 0, 0, width, height);
+    const snapshot = async () => {
+        const { canvas, ctx } = getCanvas(width, height); 
+        const img = drawVideo();        
+        const fr = await getCanvasImage(`assets/frames/frame-${frame}.svg`, width, height);
         
         swapPalette(img, fr, palette, variation);
+
+        ctx.drawImage(img, sx, sy, sw, sh)
+        ctx.drawImage(fr, 0, 0, width, height);
+
         setCapture(canvas.toDataURL('image/png'));
     }
 
-    const playback = useCallback(() => {
+    const playback = useCallback(async () => {
         if(!player.current){
-            player.current = capture instanceof Blob ? loadVideo(capture) : loadImage(capture);
+            player.current = capture instanceof Blob ? await loadVideo(capture) : await loadImage(capture);
         }
+
+        const ui = drawUI();
         
+        swapPalette(null, ui, palette, variation);
+
         context.drawImage(player.current, 0, 0, width, height, 0, 0, width, height);
-    }, [capture, context, height, width])
+        context.drawImage(ui, 0, 0, width, height);
+    }, [capture, context, drawUI, height, palette, variation, width])
 
     const stream = useCallback(() => {
         if(!context) return;
@@ -260,7 +267,7 @@ const GbCamProvider = ({ children }) => {
             setFacingUser,
             setOption,
             setting,
-            snap, 
+            snapshot, 
             record
         }} >
             { children }
