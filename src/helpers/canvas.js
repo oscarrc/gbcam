@@ -34,6 +34,7 @@ const loadImage = (src) => new Promise((resolve, reject) => {
     try{
         img.onload = () => resolve(img);
     }catch(err){
+        console.log(err)
         reject(err)
     }
 })

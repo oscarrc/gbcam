@@ -29,14 +29,14 @@ const Buttons = () => {
         if (e.type === "touchstart" && !checkTouches(e.touches)) return;
         
         start.current = Date.now();
-        timer.current = setTimeout(() => { record() }, 500)
+        timer.current = setTimeout(() => { record() }, 1000)
     }
 
     const handleStop = (e) => {
         if(capture) return;
         if (e.type === "touchstart" && checkTouches(e.touches)) return;
 
-        if(Date.now() - start.current < 500 ){
+        if(Date.now() - start.current < 1000 ){
             clearTimeout(timer.current);
             snap();
         }else record(true);

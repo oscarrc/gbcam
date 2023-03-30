@@ -176,10 +176,10 @@ const GbCamProvider = ({ children }) => {
         uCtx.putImageData(uConverted, 0, 0);
     }
 
-    const record = useCallback(async (save = false) => {
+    const record = async (save = false) => {
         if(save) return recorder.current && recorder.current.stop();        
         const recording = getCanvas(null, width, height);        
-        const ctx = recording.getContext("2d");        
+        const ctx = recording.getContext("2d", { willReadFrequently: true });        
         const fr = await loadImage(`assets/frames/frame-${frame}`);
         
         let interval = setInterval(async () => {
@@ -205,19 +205,20 @@ const GbCamProvider = ({ children }) => {
         }
 
         recorder.current.start();
-    }, [drawVideo, frame, height, palette, sh, sw, sx, sy, timeout, variation, width])
+    }
 
-    const snap = useCallback(async () => {
+    const snap = async () => {
         const img = drawVideo();
-        const ctx = img.getContext("2d");
+        const canvas = getCanvas(null, width, height);
+        const ctx = canvas.getContext("2d");
         const fr = await loadImage(`assets/frames/frame-${frame}`);
-
+        
         ctx.drawImage(img, sx, sy, sw, sh)
         ctx.drawImage(fr, 0, 0, width, height);
-
+        
         swapPalette(img, fr, palette, variation);
-        setCapture(img);
-    }, [drawVideo, frame, height, palette, sh, sw, sx, sy, variation, width])
+        setCapture(canvas.toDataURL('image/png'));
+    }
 
     const playback = useCallback(() => {
         if(!player.current){
