@@ -6,9 +6,9 @@ import { palettes, variations } from "../constants/colors";
 import fontface from "../assets/fonts/Rounded_5x5.ttf";
 
 const DIMENSIONS = { width: 160, height: 144, sw: 128, sh: 112, sx: 16, sy: 16 };
-const DEFAULT_SETTINGS = { brightness: 51, contrast: 51, frame: 0, fps: 60, palette: 0, ratio: 0.6, variation: 0 }
-const MAX_VALUE = { brightness: 255, contrast: 255, frame: 17, fps: 60, palette: palettes.length - 1, ratio: 0.6, variation: variations.length - 1 }
-const INCREMENTS = { brightness: 1, contrast: 1, frame: 1, fps: 1, palette: 1, ratio: 0.2, variation: 1 }
+const DEFAULT_SETTINGS = { brightness: 51, contrast: 51, frame: 0, flip: 0, fps: 60, palette: 0, ratio: 0.6, variation: 0 }
+const MAX_VALUE = { brightness: 255, contrast: 255, frame: 17, flip: 2 , fps: 60, palette: palettes.length - 1, ratio: 0.6, variation: variations.length - 1 }
+const INCREMENTS = { brightness: 1, contrast: 1, frame: 1, flip: 1, fps: 1, palette: 1, ratio: 0.2, variation: 1 }
 const GbCamContext = createContext();
 
 const GbCamReducer = (state, action) => {
@@ -28,13 +28,13 @@ const GbCamReducer = (state, action) => {
 };
 
 const GbCamProvider = ({ children }) => {
-    const [ settings, setting ] = useReducer(GbCamReducer, JSON.parse(localStorage.getItem("settings")) || DEFAULT_SETTINGS );
+    const [ settings, setting ] = useReducer(GbCamReducer, {...DEFAULT_SETTINGS, ...JSON.parse(localStorage.getItem("settings"))} || DEFAULT_SETTINGS );
     const [ option, setOption ] = useState(null);
     const [ facingUser, setFacingUser ] = useState(true);
     const [ capture, setCapture ] = useState(null);
     const [ media, setMedia ] = useState({ source: null, output: null });
           
-    const { brightness, contrast, frame, fps, palette, ratio, variation } = settings 
+    const { brightness, contrast, frame, flip, fps, palette, ratio, variation } = settings 
     const { width, height, sx, sy, sw, sh } = DIMENSIONS;
 
     const interval = useRef(null);     
@@ -98,15 +98,17 @@ const GbCamProvider = ({ children }) => {
         const h = height + Math.abs(offsets.y);
         const canvas = getCanvas(null, w, h);
         const ctx = canvas.getContext("2d");
-        const positions = [9, 36, 66, 90, 114, 138]
+        const dPos = [9, 36, 66, 90, 114, 138];
+        const uPos = [33, 73, 113];
 
         switch(option){
             case 0: // Options menu
                 drawImage(`assets/ui/ui-options.svg`, ctx, 0, 0, width, height)
                 break;
             case 1: // Flip *
-                drawImage(`assets/ui/ui-options.svg`, ctx, 0, 0, width, height)
-                drawImage(`assets/ui/ui-flip.svg`, ctx, 0, 0, width, Math.abs(offsets.y));
+                drawImage(`assets/ui/ui-options.svg`, ctx, 0, Math.abs(offsets.y), width, height)
+                drawImage(`assets/ui/ui-flip.svg`, ctx, 0, 0, width, Math.abs(offsets.y));                
+                drawImage(`assets/ui/ui-UP.svg`, ctx, uPos[flip], 9, 16, 16);
                 break;
             case 2: // Frame    
                 drawImage(`assets/ui/ui-frame.svg`, ctx, 0, 0, width, height);                           
@@ -118,7 +120,7 @@ const GbCamProvider = ({ children }) => {
             case 3: // Palette
                 drawImage(`assets/ui/ui-options.svg`, ctx, 0, 0, width, height)
                 drawImage(`assets/ui/ui-palette.svg`, ctx, 0, height, width, Math.abs(offsets.y));                
-                drawImage(`assets/ui/ui-down.svg`, ctx, positions[variation], height - 8, 16, 16);
+                drawImage(`assets/ui/ui-down.svg`, ctx, dPos[variation], height - 8, 16, 16);
                 break;
             case 4: // Dither *
                 drawImage(`assets/ui/ui-options.svg`, ctx, offsets.x, 0, width, height);
@@ -136,13 +138,21 @@ const GbCamProvider = ({ children }) => {
         }
 
         return canvas;
-    }, [width, offsets, height, option, frame, variation, ratio, capture, contrast, brightness])
+    }, [width, offsets.x, offsets.y, height, option, flip, frame, variation, ratio, capture, contrast, brightness])
 
     const drawVideo = useCallback(() => {
         const canvas = getCanvas(null, sw, sh);
         const ctx = canvas.getContext("2d");
+        const tw = flip === 1 ? sw : 0;
+        const th = flip === 2 ? sh : 0;
+        const tx = flip === 1 ? -1 : 1;
+        const ty = flip === 2 ? -1 : 1;
 
+        ctx.save();
+        ctx.translate(tw, th);
+        ctx.scale(tx, ty);
         ctx.drawImage(media.source, 0, 0, sw, sh);
+        ctx.restore();
 
         const imgData = ctx.getImageData(0, 0, sw, sh);
         const dithered = gbDither(imgData, brightness, contrast, ratio);
@@ -150,7 +160,7 @@ const GbCamProvider = ({ children }) => {
         ctx.putImageData(dithered, 0, 0);
 
         return canvas;
-    }, [sw, sh, media.source, brightness, contrast, ratio])
+    }, [sw, sh, flip, media.source, brightness, contrast, ratio])
 
     const swapPalette = (video, ui, palette, variation) => {
         const vCtx = video.getContext("2d");
@@ -226,7 +236,7 @@ const GbCamProvider = ({ children }) => {
         swapPalette(video, ui, palette, variation);
         
         context.drawImage(video, sx + offsets.x, sy + offsets.y, sw, sh);
-        context.drawImage(ui, 0, 0 + offsets.y, uiw, uih);
+        context.drawImage(ui, 0, 0 + offsets.y < 0 && offsets.y, uiw, uih);
     }, [context, drawUI, drawVideo, height, offsets, palette, sh, sw, sx, sy, variation, width])
 
     useEffect(() => { init() }, [init])
