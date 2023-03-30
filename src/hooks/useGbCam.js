@@ -7,7 +7,7 @@ import fontface from "../assets/fonts/Rounded_5x5.ttf";
 
 const DIMENSIONS = { width: 160, height: 144, sw: 128, sh: 112, sx: 16, sy: 16 };
 const DEFAULT_SETTINGS = { brightness: 51, contrast: 51, frame: 0, flip: 0, fps: 60, palette: 0, ratio: 0.6, variation: 0 }
-const MAX_VALUE = { brightness: 255, contrast: 255, frame: 17, flip: 2 , fps: 60, palette: palettes.length - 1, ratio: 0.6, variation: variations.length - 1 }
+const MAX_VALUE = { brightness: 255, contrast: 255, frame: 17, flip: 2 , fps: 60, palette: palettes.length - 1, ratio: 2, variation: variations.length - 1 }
 const INCREMENTS = { brightness: 1, contrast: 1, frame: 1, flip: 1, fps: 1, palette: 1, ratio: 0.2, variation: 1 }
 const GbCamContext = createContext();
 
@@ -20,6 +20,8 @@ const GbCamReducer = (state, action) => {
     }else{
         value = state[type] > 0 ? state[type] - INCREMENTS[type] : state[type]
     }
+
+    value = value > MAX_VALUE[type] ? MAX_VALUE[type] : value < 0 ? 0 : value
 
     state = { ...state, [type]: value }
     localStorage.setItem("settings", JSON.stringify(state));
