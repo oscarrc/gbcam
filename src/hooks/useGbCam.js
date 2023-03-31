@@ -46,8 +46,8 @@ const GbCamProvider = ({ children }) => {
     const timeout = useMemo(() => 1000 / fps, [fps]);
     const ready = useMemo(() => media.output !== null, [media]);    
     const context = useMemo(() => {
-       return media.output ? media.output.getContext("2d", { 
-            willReadFrequently: true,            
+       return media.output ? media.output.getContext("2d", {   
+            desynchronized: true,
             msImageSmoothingEnabled: false,
             mozImageSmoothingEnabled: false,
             webkitImageSmoothingEnabled: false,
@@ -98,7 +98,7 @@ const GbCamProvider = ({ children }) => {
     const drawUI = useCallback(() => {   
         const w = width + Math.abs(offsets.x);
         const h = height + Math.abs(offsets.y);
-        const { canvas, ctx } = getCanvas(w, h);
+        const { canvas, ctx } = getCanvas(w, h, { willReadFrequently: true });
         const dPos = [9, 36, 66, 90, 114, 138];
         const uPos = [33, 73, 113];
 
@@ -142,7 +142,7 @@ const GbCamProvider = ({ children }) => {
     }, [width, offsets.x, offsets.y, height, option, flip, frame, variation, ratio, capture, contrast, brightness])
 
     const drawVideo = useCallback(() => {
-        const { canvas, ctx } = getCanvas(sw, sh);
+        const { canvas, ctx } = getCanvas(sw, sh, { willReadFrequently: true });
         const tw = flip === 1 ? sw : 0;
         const th = flip === 2 ? sh : 0;
         const tx = flip === 1 ? -1 : 1;
@@ -163,10 +163,12 @@ const GbCamProvider = ({ children }) => {
     }, [sw, sh, flip, media.source, brightness, contrast, ratio])
 
     const swapPalette = (canvas, palette, variation = 0) => {
-        const ctx = canvas.getContext("2d");
+        const ctx = canvas.getContext("2d", { willReadFrequently: true });
         const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);  
         const converted = convertPalette(imgData, palette, variation);
         ctx.putImageData(converted, 0, 0);  
+
+        return canvas;
     }
 
     const record = async (save = false) => {
@@ -202,11 +204,11 @@ const GbCamProvider = ({ children }) => {
 
     const snapshot = async () => {
         const { canvas, ctx } = getCanvas(width, height); 
-        const img = drawVideo();        
-        const fr = await getCanvasImage(`assets/frames/frame-${frame}.svg`, width, height);
+        let img = drawVideo();        
+        let fr = await getCanvasImage(`assets/frames/frame-${frame}.svg`, width, height);
         
-        swapPalette(img, palette, variation);
-        swapPalette(fr, palette);
+        img = swapPalette(img, palette, variation);
+        fr = swapPalette(fr, palette);
 
         ctx.drawImage(img, sx, sy, sw, sh)
         ctx.drawImage(fr, 0, 0, width, height);
@@ -219,9 +221,9 @@ const GbCamProvider = ({ children }) => {
             player.current = capture instanceof Blob ? await loadVideo(capture) : await loadImage(capture);
         }
 
-        const ui = drawUI();
+        let ui = drawUI();
         
-        swapPalette(ui, palette);
+        ui = swapPalette(ui, palette);
 
         context.drawImage(player.current, 0, 0, width, height, 0, 0, width, height);
         context.drawImage(ui, 0, 0, width, height);
@@ -232,11 +234,11 @@ const GbCamProvider = ({ children }) => {
         const uiw = width + Math.abs(offsets.x);
         const uih = height + Math.abs(offsets.y);
 
-        const ui = drawUI();        
-        const video = drawVideo();
+        let ui = drawUI();        
+        let video = drawVideo();
 
-        swapPalette(video, palette, variation);
-        swapPalette(ui, palette);
+        video = swapPalette(video, palette, variation);
+        ui = swapPalette(ui, palette);
         
         context.drawImage(video, sx + offsets.x, sy + offsets.y, sw, sh);
         context.drawImage(ui, 0, 0 + offsets.y < 0 && offsets.y, uiw, uih);

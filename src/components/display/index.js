@@ -25,7 +25,8 @@ const Display = ({ className }) => {
     useEffect(() => {
         if(!ready || !display.current) return;
         
-        const ctx = display.current.getContext("2d", {     
+        const ctx = display.current.getContext("2d", { 
+            desynchronized: true,    
             msImageSmoothingEnabled: false,
             mozImageSmoothingEnabled: false,
             webkitImageSmoothingEnabled: false,
@@ -33,7 +34,7 @@ const Display = ({ className }) => {
         });
 
         interval.current = setInterval(async () => {            
-            ctx.drawImage(output, 0, 0, display.current.width, display.current.height);
+            ctx.drawImage(output, 0, 0, display.current?.width, display.current?.height);
         }, timeout);
 
         return () => clearInterval(interval.current);
