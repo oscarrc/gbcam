@@ -35,7 +35,7 @@ const GbCamProvider = ({ children }) => {
     const [ facingUser, setFacingUser ] = useState(true);
     const [ capture, setCapture ] = useState(null);
     const [ media, setMedia ] = useState({ source: null, output: null });
-    const [ palette, setPalette ] = useState(localStorage.getItem("palette") || 0)
+    const [ palette, setPalette ] = useState(localStorage.getItem("palette") || 0);    
           
     const { brightness, contrast, frame, flip, fps, ratio, variation } = settings 
     const { width, height, sx, sy, sw, sh } = DIMENSIONS;
@@ -62,12 +62,12 @@ const GbCamProvider = ({ children }) => {
                 facingMode: facingUser ? 'user' : 'environment',
                 frameRate: { ideal: fps },
                 resizeMode: "crop-and-scale",
-                width: width,
-                height: height
+                width: sw,
+                height: sh
             },
             audio: false
         }
-    }, [facingUser, fps, height, width])
+    }, [facingUser, fps, sw, sh])
 
     const offsets = useMemo(() => {
         let x = 0;
@@ -148,11 +148,13 @@ const GbCamProvider = ({ children }) => {
         const th = flip === 2 ? sh : 0;
         const tx = flip === 1 ? -1 : 1;
         const ty = flip === 2 ? -1 : 1;
+        const sx = ( media.source.videoWidth - sw ) / 2;
+        const sy = ( media.source.videoHeight - sh ) / 2;
 
         ctx.save();
         ctx.translate(tw, th);
         ctx.scale(tx, ty);
-        ctx.drawImage(media.source, 0, 0, sw, sh);
+        ctx.drawImage(media.source, sx, sy, sw, sh, 0, 0, sw, sh);
         ctx.restore();
 
         const imgData = ctx.getImageData(0, 0, sw, sh);
@@ -167,6 +169,7 @@ const GbCamProvider = ({ children }) => {
         const ctx = canvas.getContext("2d", { willReadFrequently: true });
         const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);  
         const converted = convertPalette(imgData, palette, variation);
+        
         ctx.putImageData(converted, 0, 0);  
 
         return canvas;
