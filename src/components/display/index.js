@@ -1,12 +1,15 @@
+import { useEffect, useRef } from "react";
+
 import { AiFillHeart } from "react-icons/ai";
-import { useCamera } from "../../hooks/useCamera";
-import { useEffect } from "react";
+import { useGbCam } from "../../hooks/useGbCam";
 
 const Display = ({ className }) => {
-    const { output, isRecording, initCamera, cameraEnabled } = useCamera();
+    const { output, ready, timeout } = useGbCam();
+    const display = useRef(null);
+    const interval = useRef(null);
 
     useEffect(() => {
-        const canvas = output.current;
+        const canvas = display.current;
         const setCanvasSize = () => {
             const { width, height } = canvas.getBoundingClientRect();
             canvas.height = height;
@@ -14,16 +17,29 @@ const Display = ({ className }) => {
         };
         
         setCanvasSize();
-        window.addEventListener("resize", setCanvasSize)
+        window.addEventListener("resize", setCanvasSize);
 
-        return () => window.removeEventListener("resize", setCanvasSize)
-    }, [output])
+        return () => window.removeEventListener("resize", setCanvasSize);
+    }, [display])
 
-    useEffect(()=> {
-        if(!output.current) return;
-        initCamera()
-    },[initCamera, output])
+    useEffect(() => {
+        if(!ready || !display.current) return;
+        
+        const ctx = display.current.getContext("2d", { 
+            desynchronized: true,    
+            msImageSmoothingEnabled: false,
+            mozImageSmoothingEnabled: false,
+            webkitImageSmoothingEnabled: false,
+            imageSmoothingEnabled: false
+        });
 
+        interval.current = setInterval(async () => {            
+            ctx.drawImage(output, 0, 0, display.current?.width, display.current?.height);
+        }, timeout);
+
+        return () => clearInterval(interval.current);
+    }, [ready, output, display, timeout])
+   
     return (
         <div className={`aspect-4/3 ${className} bg-base-100 rounded-lg rounded-br-[2rem] flex flex-col gap-2 py-2`}>
             <div className="flex flex-row items-center gap-4 px-4 py-0 sm:py-1">
@@ -33,11 +49,11 @@ const Display = ({ className }) => {
             </div>
             <div className="flex flex-row items-start justify-center pb-6 sm:pb-10 px-12 sm:px-16 pt-1 relative">
                 <div className="flex flex-col items-center justify-center gap-2 w-12 sm:w-16 absolute left-0 top-[25%]">
-                    <span className={`h-2 w-2 bg-red rounded-full ${cameraEnabled ? 'glow' : 'bg-opacity-20'}`}></span>
+                    <span className={`h-2 w-2 bg-red rounded-full ${ready ? 'glow' : 'bg-opacity-20'}`}></span>
                     <span className="text-white text-2xs sm:text-xs relative -bottom-px">Camera</span>
                 </div>
                 <div className="relative">
-                    <canvas ref={output} className="bg-display w-full aspect-10/9" />
+                    <canvas ref={display} className="bg-display w-full aspect-10/9" />
                 </div>
             </div>
         </div>

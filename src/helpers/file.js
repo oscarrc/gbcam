@@ -6,4 +6,12 @@ const dataToFile = async (data) => {
     return file;
 }
 
-export { dataToFile };
+const saveFile = async (data) => {
+    const a = document.createElement("a");
+    const file = await dataToFile(data);
+    a.href = URL.createObjectURL(file);
+    a.download = file.name;
+    a.click();
+}
+
+export { dataToFile, saveFile };

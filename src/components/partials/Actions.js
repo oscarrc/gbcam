@@ -1,18 +1,23 @@
 import { dataToFile } from "../../helpers/file";
-import { useCamera } from "../../hooks/useCamera";
+import { useGbCam } from "../../hooks/useGbCam";
 
 const Actions = () => {
-    const { setOption, recording, snapshot } = useCamera();
+    const { setOption, capture } = useGbCam();
     //TODO: Implement share modal when navigator share is not working
     const share = async () => {
-        if(!snapshot && !recording) return;
-        const media = snapshot ? snapshot : recording;
-        const file = await dataToFile(media);
-
-        navigator.share({ files: [file] });
+        if(!capture){
+            navigator.share({
+                title: "Virtual GB Cam",
+                text: "A Lo-Fi camera for 90s kids",
+                url: window.location.href
+            })
+        }else{
+            const file = await dataToFile(capture);
+            navigator.share({ files: [file] });
+        }
     }
 
-    const toggleOptions = () => setOption(o => o < 0 ? 0 : -1);
+    const toggleOptions = () => setOption(o => o === null ? 0 : null);
 
     return (
         <div className="grid grid-cols-2 gap-4 font-bold text-neutral-content text-xs">

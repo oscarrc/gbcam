@@ -1,32 +1,41 @@
 import { BsCaretDownFill, BsCaretLeftFill, BsCaretRightFill, BsCaretUpFill } from "react-icons/bs"
 
-import { useCamera } from "../../hooks/useCamera";
+import { useGbCam } from "../../hooks/useGbCam";
 
 const DPad = () => {
-    const { setBrightness, setContrast, option, setOption, snapshot, recording, selectFrame } = useCamera();
+    const { setting, capture, option, setOption } = useGbCam();
 
     const handleUp = () => {
-        if(option === 0) setOption(1);
-        else if (snapshot || recording ) selectFrame(1);
-        else setBrightness( b => b + 1 > 255 ? 255 : b + 1 );
+        if(capture) return;
+        if(capture) return; 
+        else if(option === 0) setOption(1);
+        else if(option === 4) setting({ type: "ratio", payload: 1 }); 
+        else setting({ type: "brightness", payload: 1 }); 
     }
 
-    const handleRight = () => {
-        if(option === 0) setOption(2);
-        else if (snapshot || recording ) selectFrame(1);
-        else setContrast( c => c + 1 > 255 ? 255 : c + 1 );
+    const handleRight = () => {        
+        if(capture) return; 
+        else if(option === 0) setOption(2); 
+        else if(option === 1) setting({ type: "flip", payload: 1 });
+        else if(option === 2) setting({ type: "frame", payload: 1 }); 
+        else if(option === 3) setting({ type: "variation", payload: 1 });
+        else setting({ type: "contrast", payload: 1 }); 
     }
 
     const handleDown = () => {
-        if(option === 0) setOption(3);
-        else if (snapshot || recording ) selectFrame(-1);
-        else setBrightness( b => b - 1 < 0 ? 0 : b - 1);
+        if(capture) return; 
+        else if(option === 0) setOption(3);
+        else if(option === 4) setting({ type: "ratio", payload: -1 }); 
+        else setting({ type: "brightness", payload: -1 }); 
     }
 
-    const handleLeft = () => { 
-        if(option === 0) setOption(4);
-        else if (snapshot || recording ) selectFrame(-1);
-        else setContrast( c => c - 1 < 0 ? 0 : c - 1 ) ;
+    const handleLeft = () => {
+        if(capture) return; 
+        else if(option === 0) setOption(4); 
+        else if(option === 1) setting({ type: "flip", payload: -1 });
+        else if(option === 2) setting({ type: "frame", payload: -1 }); 
+        else if(option === 3) setting({ type: "variation", payload: -1 });
+        else setting({ type: "contrast", payload: -1 }); 
     }
     
     return (
