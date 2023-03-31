@@ -78,7 +78,7 @@ const GbCamProvider = ({ children }) => {
 
         return { x, y }
     }, [option, sx, sy])
-
+    
     const clear = () => {
         player.current = null;
         setCapture(null);
@@ -256,6 +256,7 @@ const GbCamProvider = ({ children }) => {
             option,
             output: media.output,
             ready,
+            timeout,
             clear,
             setFacingUser,
             setOption,

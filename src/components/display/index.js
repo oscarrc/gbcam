@@ -4,7 +4,7 @@ import { AiFillHeart } from "react-icons/ai";
 import { useGbCam } from "../../hooks/useGbCam";
 
 const Display = ({ className }) => {
-    const { output, ready } = useGbCam();
+    const { output, ready, timeout } = useGbCam();
     const display = useRef(null);
     const interval = useRef(null);
 
@@ -34,10 +34,10 @@ const Display = ({ className }) => {
 
         interval.current = setInterval(async () => {            
             ctx.drawImage(output, 0, 0, display.current.width, display.current.height);
-        }, 17);
+        }, timeout);
 
         return () => clearInterval(interval.current);
-    }, [ready, output, display])
+    }, [ready, output, display, timeout])
    
     return (
         <div className={`aspect-4/3 ${className} bg-base-100 rounded-lg rounded-br-[2rem] flex flex-col gap-2 py-2`}>
