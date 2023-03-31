@@ -26,13 +26,13 @@ const Main = () => {
     }
 
     return (
-        <section className={`flex flex-col flex-1 items-center justify-around px-12 pt-8 x-auto ${landscape && "w-full"}`}>
+        <section className={`flex flex-col flex-1 items-center justify-around px-4 sm:px-12 pt-8 ${landscape && "w-full"}`}>
             { !landscape && renderDisplay() }
             <div className="flex flex-col flex-1 justify-around items-center w-full">
-                <div className={`flex ${landscape ? 'justify-around' : 'justify-between'} items-center w-full px-4`}>
-                    <DPad />
+                <div className={`flex ${landscape ? 'justify-around' : 'justify-between'} items-center w-full`}>
+                    <DPad className={!landscape ? 'relative left-2' : ''} />
                     { landscape && renderDisplay() }
-                    <Buttons />
+                    <Buttons className={!landscape ? 'relative -left-10' : ''} />
                 </div>
                 <Actions />
             </div>

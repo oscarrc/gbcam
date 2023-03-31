@@ -2,7 +2,7 @@ import { BsCaretDownFill, BsCaretLeftFill, BsCaretRightFill, BsCaretUpFill } fro
 
 import { useGbCam } from "../../hooks/useGbCam";
 
-const DPad = () => {
+const DPad = ({ className }) => {
     const { setting, capture, option, setOption } = useGbCam();
 
     const handleUp = () => {
@@ -39,7 +39,7 @@ const DPad = () => {
     }
     
     return (
-        <div className="grid grid-cols-3 grid-rows-3">
+        <div className={`grid grid-cols-3 grid-rows-3 ${className}`}>
             <div className="relative right-[5%] bottom-[5%] rounded flex items-center justify-center w-[110%] h-[110%] bg-primary col-start-2 row-start-2">
                 <span className="rounded-full bg-white bg-opacity-5 h-6 w-6 block" />
             </div>
