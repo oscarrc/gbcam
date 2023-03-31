@@ -11,7 +11,7 @@ const PALETTES = ["DMG", "GBC", "Gray"];
 const Header = () => {
     const [ theme, setTheme ] = useState(localStorage.getItem("theme") || "classic");
     const { setFavicon } = useDynamicFavicon(theme);
-    const { facingUser, setFacingUser, setPalette } = useGbCam();
+    const { facingUser, setFacingUser, palette, setPalette } = useGbCam();
     
     const themeRef = useRef(null);
     const paletteRef = useRef(null);
@@ -47,7 +47,7 @@ const Header = () => {
                     </button>
                     <div className="dropdown dropdown-end">
                         <label tabIndex="0" role="button" ref={paletteRef} aria-label="Palete" className="flex items-center gap-2">                            
-                            <PaletteIcon className="h-6 w-6" palette={0}/>
+                            <PaletteIcon className="h-6 w-6" palette={palette}/>
                         </label>
                         <ul className="dropdown-content menu nav-menu shadow w-40 bg-neutral top-8">
                             {
