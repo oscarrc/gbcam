@@ -219,6 +219,7 @@ const GbCamProvider = ({ children }) => {
 
     const playback = useCallback(async () => {
         if(!player.current){
+            setOption(null);
             player.current = capture instanceof Blob ? await loadVideo(capture) : await loadImage(capture);
         }
 
