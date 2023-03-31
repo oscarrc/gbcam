@@ -8,8 +8,8 @@ const Main = () => {
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
-        const checkOrientation = () => setLandscape(window.innerWidth >= window.innerHeight);
-
+        const checkOrientation = () => setLandscape(window.innerWidth >= window.innerHeight && window.innerWidth >= 896);
+        
         checkOrientation();
         window.addEventListener("resize", checkOrientation);
 
