@@ -1,14 +1,14 @@
 import { convertPalette, gbDither } from "../helpers/dither";
 import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { drawImage, getCanvas, getCanvasImage, loadImage, loadVideo } from "../helpers/canvas";
-import { palettes, variations } from "../constants/colors";
+import { variations } from "../constants/colors";
 
 import fontface from "../assets/fonts/Rounded_5x5.ttf";
 
 const DIMENSIONS = { width: 160, height: 144, sw: 128, sh: 112, sx: 16, sy: 16 };
-const DEFAULT_SETTINGS = { brightness: 51, contrast: 51, frame: 0, flip: 0, fps: 60, palette: 0, ratio: 0.6, variation: 0 }
-const MAX_VALUE = { brightness: 255, contrast: 255, frame: 17, flip: 2 , fps: 60, palette: palettes.length - 1, ratio: 2, variation: variations.length - 1 }
-const INCREMENTS = { brightness: 1, contrast: 1, frame: 1, flip: 1, fps: 1, palette: 1, ratio: 0.2, variation: 1 }
+const DEFAULT_SETTINGS = { brightness: 51, contrast: 51, frame: 0, flip: 0, fps: 60, ratio: 0.6, variation: 0 }
+const MAX_VALUE = { brightness: 255, contrast: 255, frame: 17, flip: 2 , fps: 60, ratio: 2, variation: variations.length - 1 }
+const INCREMENTS = { brightness: 1, contrast: 1, frame: 1, flip: 1, fps: 1, ratio: 0.2, variation: 1 }
 const GbCamContext = createContext();
 
 const GbCamReducer = (state, action) => {
@@ -35,8 +35,9 @@ const GbCamProvider = ({ children }) => {
     const [ facingUser, setFacingUser ] = useState(true);
     const [ capture, setCapture ] = useState(null);
     const [ media, setMedia ] = useState({ source: null, output: null });
+    const [ palette, setPalette ] = useState(localStorage.getItem("palette") || 0)
           
-    const { brightness, contrast, frame, flip, fps, palette, ratio, variation } = settings 
+    const { brightness, contrast, frame, flip, fps, ratio, variation } = settings 
     const { width, height, sx, sy, sw, sh } = DIMENSIONS;
 
     const interval = useRef(null);     
@@ -78,7 +79,7 @@ const GbCamProvider = ({ children }) => {
 
         return { x, y }
     }, [option, sx, sy])
-    
+
     const clear = () => {
         player.current = null;
         setCapture(null);
@@ -257,11 +258,13 @@ const GbCamProvider = ({ children }) => {
             facingUser,
             option,
             output: media.output,
+            palette,
             ready,
             timeout,
             clear,
             setFacingUser,
             setOption,
+            setPalette,
             setting,
             snapshot, 
             record
