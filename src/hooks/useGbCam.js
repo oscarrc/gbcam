@@ -162,20 +162,11 @@ const GbCamProvider = ({ children }) => {
         return canvas;
     }, [sw, sh, flip, media.source, brightness, contrast, ratio])
 
-    const swapPalette = (video, ui, palette, variation) => {
-        if(video){
-            const vCtx = video.getContext("2d");
-            const vData = vCtx.getImageData(0, 0, video.width, video.height);  
-            const vConverted = convertPalette(vData, palette, variation);
-            vCtx.putImageData(vConverted, 0, 0);    
-        }
-
-        if(ui){
-            const uCtx = ui.getContext("2d");
-            const uData = uCtx.getImageData(0, 0, ui.width, ui.height);
-            const uConverted = convertPalette(uData, palette, 0); 
-            uCtx.putImageData(uConverted, 0, 0);
-        }
+    const swapPalette = (canvas, palette, variation = 0) => {
+        const ctx = canvas.getContext("2d");
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);  
+        const converted = convertPalette(imgData, palette, variation);
+        ctx.putImageData(converted, 0, 0);  
     }
 
     const record = async (save = false) => {
@@ -184,13 +175,13 @@ const GbCamProvider = ({ children }) => {
         const { canvas, ctx } = getCanvas(width, height, { willReadFrequently: true } ); 
         const fr = await getCanvasImage(`assets/frames/frame-${frame}.svg`, width, height);
         
+        swapPalette(fr, palette);
+        ctx.drawImage(fr, 0, 0, width, height);
+
         let interval = setInterval(async () => {
             const img = drawVideo();
-
-            swapPalette(img, fr, palette, variation);
-
+            swapPalette(img, palette, variation);
             ctx.drawImage(img, sx, sy, sw, sh)
-            ctx.drawImage(fr, 0, 0, width, height);
         }, timeout);
 
         let chunks = [];
@@ -214,7 +205,8 @@ const GbCamProvider = ({ children }) => {
         const img = drawVideo();        
         const fr = await getCanvasImage(`assets/frames/frame-${frame}.svg`, width, height);
         
-        swapPalette(img, fr, palette, variation);
+        swapPalette(img, palette, variation);
+        swapPalette(fr, palette);
 
         ctx.drawImage(img, sx, sy, sw, sh)
         ctx.drawImage(fr, 0, 0, width, height);
@@ -229,11 +221,11 @@ const GbCamProvider = ({ children }) => {
 
         const ui = drawUI();
         
-        swapPalette(null, ui, palette, variation);
+        swapPalette(ui, palette);
 
         context.drawImage(player.current, 0, 0, width, height, 0, 0, width, height);
         context.drawImage(ui, 0, 0, width, height);
-    }, [capture, context, drawUI, height, palette, variation, width])
+    }, [capture, context, drawUI, height, palette, width])
 
     const stream = useCallback(() => {
         if(!context) return;
@@ -243,7 +235,8 @@ const GbCamProvider = ({ children }) => {
         const ui = drawUI();        
         const video = drawVideo();
 
-        swapPalette(video, ui, palette, variation);
+        swapPalette(video, palette, variation);
+        swapPalette(ui, palette);
         
         context.drawImage(video, sx + offsets.x, sy + offsets.y, sw, sh);
         context.drawImage(ui, 0, 0 + offsets.y < 0 && offsets.y, uiw, uih);
