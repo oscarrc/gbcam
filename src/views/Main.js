@@ -32,7 +32,7 @@ const Main = () => {
                 <div className={`flex justify-between max-w-md md:justify-around md:max-w-none items-center w-full`}>
                     <DPad className="relative left-2" />
                     { landscape && renderDisplay() }
-                    <Buttons className="relative -left-10" />
+                    <Buttons className="relative -left-8 md:left-0" />
                 </div>
                 <div className="mt-4">
                     <Actions />
