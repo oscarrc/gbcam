@@ -8,7 +8,7 @@ const Main = () => {
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
-        const checkOrientation = () => setLandscape(window.innerWidth >= window.innerHeight && window.innerWidth >= 896);
+        const checkOrientation = () => setLandscape(window.innerWidth >= window.innerHeight && window.innerWidth >= 768);
         
         checkOrientation();
         window.addEventListener("resize", checkOrientation);
@@ -26,10 +26,10 @@ const Main = () => {
     }
 
     return (
-        <section className={`flex flex-col flex-1 items-center justify-around px-4 sm:px-12 pt-8 ${landscape && "w-full"}`}>
+        <section className={`flex flex-col flex-1 items-center justify-around px-4 md:px-12 pt-8 w-full`}>
             { !landscape && renderDisplay() }
             <div className="flex flex-col flex-1 justify-around items-center w-full">
-                <div className={`flex ${landscape ? 'justify-around' : 'justify-between max-w-md'} items-center w-full`}>
+                <div className={`flex justify-between max-w-md md:justify-around md:max-w-none items-center w-full`}>
                     <DPad className="relative left-2" />
                     { landscape && renderDisplay() }
                     <Buttons className="relative -left-10" />
