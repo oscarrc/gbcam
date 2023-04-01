@@ -1,10 +1,10 @@
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Y8Y43D7I3)
 
-## Tactylophone
+## Virtual GB Cam
 
-A synthetizer at your fingertips
+A Lo-fi camera for 90s kids
 
-![Tactylophone](https://github.com/oscarrc/gbcam/blob/master/public/assets/screenshot.png?raw=true "Virtual GB Cam")
+![GBCam](https://github.com/oscarrc/gbcam/blob/master/public/assets/screenshot.png?raw=true "Virtual GB Cam")
 
 <table>
   <tr>
@@ -23,8 +23,8 @@ A synthetizer at your fingertips
 ### How it works
 
 1. Visit the [GB Cam web page](https://gbcam.oscarrc.me) or install [the GB Cam app](https://play.google.com/store/apps/details?id=me.oscarrc.gbcam.twa).
-2. Take a picture with "A"
-3. Now you can save the picture with "A" (or press and hold to take a video), take another with "B" or share it with the "Share button"
+2. Take a picture by pressing a "A" (or press and hold to take a video)
+3. Now you can save the picture with "A", take another with "B" or share it with the "Share button"
 
 ### Features
 
