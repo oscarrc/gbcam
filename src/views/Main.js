@@ -1,4 +1,4 @@
-import { Actions, Brand, DPad, Buttons } from "../components/partials";
+import { Actions, Brand, Buttons, DPad } from "../components/partials";
 import { useEffect, useState } from "react";
 
 import Display from "../components/display";
@@ -29,10 +29,10 @@ const Main = () => {
         <section className={`flex flex-col flex-1 items-center justify-around px-4 sm:px-12 pt-8 ${landscape && "w-full"}`}>
             { !landscape && renderDisplay() }
             <div className="flex flex-col flex-1 justify-around items-center w-full">
-                <div className={`flex ${landscape ? 'justify-around' : 'justify-between'} items-center w-full`}>
-                    <DPad className={!landscape ? 'relative left-2' : ''} />
+                <div className={`flex ${landscape ? 'justify-around' : 'justify-between max-w-md'} items-center w-full`}>
+                    <DPad className="relative left-2" />
                     { landscape && renderDisplay() }
-                    <Buttons className={!landscape ? 'relative -left-10' : ''} />
+                    <Buttons className="relative -left-10" />
                 </div>
                 <div className="mt-4">
                     <Actions />
