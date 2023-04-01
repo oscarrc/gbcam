@@ -67,12 +67,6 @@
           "purpose": "maskable"
       },
       {
-          "src": "icons/monochrome_icon.png",
-          "type": "image/png",
-          "sizes": "1024x1024",
-          "purpose": "monochrome"
-      },
-      {
         "src": "icons/monochrome_icon.svg",
         "type": "image/svg+xml",
         "sizes": "any",
@@ -81,7 +75,8 @@
       {
         "src": "icons/icon.svg",
         "type": "image/svg+xml",
-        "sizes": "any"
+        "sizes": "any",
+        "purpose": "any"
       }
   ],
   "related_applications": [

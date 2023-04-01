@@ -1,9 +1,9 @@
 import { convertPalette, gbDither } from "../helpers/dither";
 import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { drawImage, getCanvas, getCanvasImage, loadImage, loadVideo } from "../helpers/canvas";
-import { variations } from "../constants/colors";
 
 import fontface from "../assets/fonts/Rounded_5x5.ttf";
+import { variations } from "../constants/colors";
 
 const DIMENSIONS = { width: 160, height: 144, sw: 128, sh: 112, sx: 16, sy: 16 };
 const DEFAULT_SETTINGS = { brightness: 51, contrast: 51, frame: 0, flip: 0, fps: 60, ratio: 0.6, variation: 0 }
@@ -33,9 +33,10 @@ const GbCamProvider = ({ children }) => {
     const [ settings, setting ] = useReducer(GbCamReducer, {...DEFAULT_SETTINGS, ...JSON.parse(localStorage.getItem("settings"))} || DEFAULT_SETTINGS );
     const [ option, setOption ] = useState(null);
     const [ facingUser, setFacingUser ] = useState(true);
+    const [ portrait, setPortrait ] = useState(false);
     const [ capture, setCapture ] = useState(null);
     const [ media, setMedia ] = useState({ source: null, output: null });
-    const [ palette, setPalette ] = useState(localStorage.getItem("palette") || 0)
+    const [ palette, setPalette ] = useState(localStorage.getItem("palette") || 0);    
           
     const { brightness, contrast, frame, flip, fps, ratio, variation } = settings 
     const { width, height, sx, sy, sw, sh } = DIMENSIONS;
@@ -62,12 +63,12 @@ const GbCamProvider = ({ children }) => {
                 facingMode: facingUser ? 'user' : 'environment',
                 frameRate: { ideal: fps },
                 resizeMode: "crop-and-scale",
-                width: width,
-                height: height
+                width: portrait ? sh : sw,
+                height: portrait ? sw : sh
             },
             audio: false
         }
-    }, [facingUser, fps, height, width])
+    }, [facingUser, portrait, fps, sw, sh])
 
     const offsets = useMemo(() => {
         let x = 0;
@@ -148,11 +149,13 @@ const GbCamProvider = ({ children }) => {
         const th = flip === 2 ? sh : 0;
         const tx = flip === 1 ? -1 : 1;
         const ty = flip === 2 ? -1 : 1;
+        const sx = ( Math.max(media.source.videoWidth, media.source.videoHeight)  - sw ) / 2;
+        const sy = ( Math.min(media.source.videoWidth, media.source.videoHeight) - sh ) / 2;
 
         ctx.save();
         ctx.translate(tw, th);
         ctx.scale(tx, ty);
-        ctx.drawImage(media.source, 0, 0, sw, sh);
+        ctx.drawImage(media.source, sx, sy, sw, sh);
         ctx.restore();
 
         const imgData = ctx.getImageData(0, 0, sw, sh);
@@ -167,6 +170,7 @@ const GbCamProvider = ({ children }) => {
         const ctx = canvas.getContext("2d", { willReadFrequently: true });
         const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);  
         const converted = convertPalette(imgData, palette, variation);
+        
         ctx.putImageData(converted, 0, 0);  
 
         return canvas;
@@ -219,6 +223,7 @@ const GbCamProvider = ({ children }) => {
 
     const playback = useCallback(async () => {
         if(!player.current){
+            setOption(null);
             player.current = capture instanceof Blob ? await loadVideo(capture) : await loadImage(capture);
         }
 
@@ -246,6 +251,13 @@ const GbCamProvider = ({ children }) => {
     }, [context, drawUI, drawVideo, height, offsets, palette, sh, sw, sx, sy, variation, width])
 
     useEffect(() => { init() }, [init])
+
+    useEffect(() => {        
+        const checkPortrait = (e) => setPortrait(e.matches);
+        setPortrait(window.matchMedia("(orientation: portrait)").matches);
+        window.matchMedia("(orientation: portrait)").addEventListener("change", checkPortrait);
+        return () => window.matchMedia("(orientation: portrait)").removeEventListener("change", checkPortrait);
+    }, [])
 
     useEffect(() => { 
         interval.current = setInterval(() => capture ? playback() : stream(), timeout)

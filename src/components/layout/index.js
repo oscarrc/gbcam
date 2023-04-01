@@ -3,7 +3,7 @@ import Header from "./Header";
 
 const Layout = ({ children }) => {
     return (
-        <div className="relative bg-gradient-gb flex flex-col bg-neutral w-full h-dscreen rounded-2xl rounded-br-[6rem] z-10">
+        <div className="relative bg-gradient-gb flex flex-col bg-neutral w-full h-full min-h-dscreen rounded-2xl rounded-br-[6rem] z-10">
             <Header />
             <main className="flex flex-col flex-1 z-10">
                 { children }

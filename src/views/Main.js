@@ -1,4 +1,4 @@
-import { Actions, Brand, DPad, Buttons } from "../components/partials";
+import { Actions, Brand, Buttons, DPad } from "../components/partials";
 import { useEffect, useState } from "react";
 
 import Display from "../components/display";
@@ -8,8 +8,8 @@ const Main = () => {
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
-        const checkOrientation = () => setLandscape(window.innerWidth >= window.innerHeight);
-
+        const checkOrientation = () => setLandscape(window.innerWidth >= window.innerHeight && window.innerWidth >= 768);
+        
         checkOrientation();
         window.addEventListener("resize", checkOrientation);
 
@@ -26,15 +26,17 @@ const Main = () => {
     }
 
     return (
-        <section className={`flex flex-col flex-1 items-center justify-around px-12 pt-8 x-auto ${landscape && "w-full"}`}>
+        <section className={`flex flex-col flex-1 items-center justify-around px-4 md:px-12 pt-8 w-full`}>
             { !landscape && renderDisplay() }
             <div className="flex flex-col flex-1 justify-around items-center w-full">
-                <div className={`flex ${landscape ? 'justify-around' : 'justify-between'} items-center w-full px-4`}>
-                    <DPad />
+                <div className={`flex justify-between max-w-md md:justify-around md:max-w-none items-center w-full`}>
+                    <DPad className="relative left-2" />
                     { landscape && renderDisplay() }
-                    <Buttons />
+                    <Buttons className="relative -left-8 md:left-0" />
                 </div>
-                <Actions />
+                <div className="mt-4">
+                    <Actions />
+                </div>
             </div>
         </section>
     )
