@@ -50,7 +50,7 @@ const Buttons = ({ className }) => {
     }
 
     return (
-        <div className={`grid grid-cols-2 grid-rows-2 rotate-35 text-button font-bold text-neutral-content text-xs ${className}`}>            
+        <div className={`buttons relative grid grid-cols-2 grid-rows-2 rotate-35 text-button font-bold text-neutral-content text-xs ${className}`}>
             <div className="text-center col-start-2  -rotate-35">
                 <button ref={btn} { ...events } aria-label="Take photo or video" className="btn btn-circle shadow-lg btn-accent"></button>
                 <label className="block ml-8 -rotate-35">A</label>

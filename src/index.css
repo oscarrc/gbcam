@@ -265,6 +265,37 @@
                           url("assets/transparent.svg");
         background-size: cover;
     }
+
+    body[data-theme="transparent"] .d-pad{
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 100%;
+    }
+
+    body[data-theme="transparent"] .buttons:before{
+        content: "";
+        display: block;
+        position: absolute;
+        width: 4rem;
+        left: 0.6rem;
+        top: -0.8rem;
+        height: 9rem;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 2rem;
+        transform: rotate(35deg);
+    }
+
+    body[data-theme="transparent"] .actions:before{
+        content: "";
+        display: block;
+        position: absolute;
+        width: 6rem;
+        height: 6rem;
+        left: 0.325rem;
+        top: -2.5rem;
+        background: rgba(66, 67, 70, 0.8);
+        border-radius: 6rem 1rem 6rem 1rem;
+        transform: rotate(40deg);
+    }
     
     .bg-gradient-gb{
         background-image: linear-gradient(145deg, rgba(0,0,0,0) calc(100% - 6rem), rgba(0,0,0,.75) 100%), linear-gradient(90deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 1rem, rgba(0,0,0,0) 50%, rgba(0,0,0,0) calc(100vw - 1rem), rgba(0,0,0,0.2) 100%);

@@ -20,7 +20,7 @@ const Actions = () => {
     const toggleOptions = () => setOption(o => o === null ? 0 : null);
 
     return (
-        <div className="grid grid-cols-2 gap-4 font-bold text-neutral-content text-xs">
+        <div className="actions relative grid grid-cols-2 gap-4 font-bold text-neutral-content text-xs">
             <span className="-rotate-20">
                 <button onClick={share} name="Save" aria-label="Save" className="btn btn-secondary p-0 min-h-0 h-4 w-12 rounded-lg shadow"></button>
                 <label htmlFor="Share" className="text-button text-center block">SHARE</label>

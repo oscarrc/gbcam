@@ -39,7 +39,7 @@ const DPad = ({ className }) => {
     }
     
     return (
-        <div className={`grid grid-cols-3 grid-rows-3 ${className}`}>
+        <div className={`grid grid-cols-3 grid-rows-3 p-4 d-pad ${className}`}>
             <div className="relative right-[5%] bottom-[5%] rounded flex items-center justify-center w-[110%] h-[110%] bg-primary col-start-2 row-start-2">
                 <span className="rounded-full bg-white bg-opacity-5 h-6 w-6 block" />
             </div>
