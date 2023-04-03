@@ -136,10 +136,14 @@ const GbCamProvider = ({ children }) => {
                 break;
             default: // Brightness / Contrast or Save 
                 if(capture){
-                    let vx = Math.floor(Math.random() * 2) * Math.random() > 0.5 ? -1 : 1;;
-                    let vy = Math.floor(Math.random() * 2) * Math.random() > 0.5 ? -1 : 1;
+                    let vx = 0;
+                    let vy = 0;
                     
-                    if(Date.now() - animation >= 500) setAnimation(Date.now());
+                    if(Date.now() - animation >= 100){
+                        setAnimation(Date.now());
+                        vx = Math.floor((Math.random() * 4) + 1) * Math.random() > 0.5 ? -1 : 1;
+                        vy = Math.floor((Math.random() * 4) + 1) * Math.random() > 0.5 ? -1 : 1;
+                    }
                     drawImage(`assets/ui/ui-save.svg`, ctx, 0 + vx, 0 + vy, width, height);
                 }else{  
                     drawImage(`assets/ui/ui-default.svg`, ctx, 0, 0, width, height)
