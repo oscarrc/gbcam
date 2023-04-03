@@ -9,8 +9,8 @@
 
 import { createHandlerBoundToURL, precacheAndRoute } from 'workbox-precaching';
 
+import { CacheFirst } from 'workbox-strategies';
 import { ExpirationPlugin } from 'workbox-expiration';
-import { StaleWhileRevalidate } from 'workbox-strategies';
 import { clientsClaim } from 'workbox-core';
 import { registerRoute } from 'workbox-routing';
 
@@ -66,7 +66,7 @@ registerRoute(
 registerRoute(
   // Add in any other file extensions or routing criteria as needed.
   ({ url }) => url.origin === self.location.origin && ( url.pathname.endsWith('.png') || url.pathname.endsWith('.svg') ), // Customize this strategy as needed, e.g., by changing to CacheFirst.
-  new StaleWhileRevalidate({
+  new CacheFirst({
     cacheName: 'images',
     plugins: [
       // Ensure that once this runtime cache reaches a maximum size the
