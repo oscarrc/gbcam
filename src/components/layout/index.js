@@ -5,7 +5,7 @@ const Layout = ({ children }) => {
     return (
         <div className="relative bg-gradient-gb flex flex-col bg-neutral w-full h-full min-h-dscreen rounded-2xl rounded-br-[6rem] z-10">
             <Header />
-            <main className="flex flex-col flex-1 z-10">
+            <main className="flex flex-col flex-1 z-10 overflow-x-hidden">
                 { children }
             </main>
             <div className="flex gap-2 -rotate-35 absolute bottom-8 right-4 sm:right-8 z-0">
