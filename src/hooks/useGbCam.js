@@ -114,7 +114,7 @@ const GbCamProvider = ({ children }) => {
             case 1: // Flip
                 drawImage(`assets/ui/ui-options.svg`, ctx, 0, Math.abs(offsets.y), width, height)
                 drawImage(`assets/ui/ui-flip.svg`, ctx, 0, 0, width, Math.abs(offsets.y));                
-                drawImage(`assets/ui/ui-UP.svg`, ctx, uPos[flip], 9, 16, 16);
+                drawImage(`assets/ui/ui-up.svg`, ctx, uPos[flip], 9, 16, 16);
                 break;
             case 2: // Frame    
                 drawImage(`assets/ui/ui-frame.svg`, ctx, 0, 0, width, height);                           
