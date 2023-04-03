@@ -4,7 +4,7 @@
 
 A Lo-fi camera for 90s kids
 
-![GBCam](https://github.com/oscarrc/gbcam/blob/master/public/assets/screenshot.png?raw=true "Virtual GB Cam")
+![GBCam](https://github.com/oscarrc/gbcam/blob/master/public/assets/snapshot.png?raw=true "Virtual GB Cam")
 
 <table>
   <tr>
