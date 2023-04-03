@@ -1,0 +1,11 @@
+[
+    {
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "me.oscarrc.gbcam.twa",
+        "sha256_cert_fingerprints":
+          ["30:2C:62:AA:30:7F:32:57:10:F1:28:15:11:96:BB:B9:3A:85:7A:B9:3C:D7:C5:84:B2:4C:44:FC:FE:B1:B3:EF"]
+      }
+    }
+]
