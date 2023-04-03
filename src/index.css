@@ -72,52 +72,7 @@
     .navbar:after{
         right: 3rem;
     }
-    /* TODO: Range colors and responsiveness */
-    .range-custom{
-        @apply flex gap-1;
-    }
-
-    .range-custom input{
-        @apply range range-xs range-primary flex-1 relative rounded-none;
-        position: relative;
-        --range-shdw: none;
-    }
-
-    .range-custom.range-vertical{
-        width: calc(100% - 3.25rem);
-    }
-
-    .range-custom input::-webkit-slider-thumb{
-        margin-top: -10px;
-        width: 5px;
-        border-radius: 0;
-        clip-path: polygon(100% 0, 100% 70%, 50% 100%, 0 70%, 0 0);
-    }
-
-    .range-custom input::-moz-range-thumb{
-        margin-top: -10px;
-        width: 0.375rem;
-        border-radius: 0;
-        clip-path: polygon(100% 0, 100% 30%, 50% 100%, 0 30%, 0 0);
-    }
     
-    .range-custom input::-ms-thumb{
-        margin-top: -10px;
-        width: 0.375rem;
-        border-radius: 0;
-        clip-path: polygon(100% 0, 100% 30%, 50% 100%, 0 30%, 0 0);
-    }
-
-    .range-custom input::-webkit-slider-runnable-track{        
-        height: 2px;
-        background-color: hsl(var(--b1) / 0.5);
-    }
-
-    .range-custom label{
-        @apply absolute text-xs left-0 text-center w-full overflow-hidden;
-        bottom: -1.5px
-    }
-
     #gbicon .dpad{ fill: #070C0B }
     #gbicon .body{ fill: #BABCC1 }
     #gbicon .start, #gbicon .select{ fill: #777F87 }

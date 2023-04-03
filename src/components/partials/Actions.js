@@ -3,7 +3,7 @@ import { useGbCam } from "../../hooks/useGbCam";
 
 const Actions = () => {
     const { setOption, capture } = useGbCam();
-    //TODO: Implement share modal when navigator share is not working
+    
     const share = async () => {
         if(!capture){
             navigator.share({
