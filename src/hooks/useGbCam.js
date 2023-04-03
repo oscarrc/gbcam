@@ -37,6 +37,7 @@ const GbCamProvider = ({ children }) => {
     const [ capture, setCapture ] = useState(null);
     const [ media, setMedia ] = useState({ source: null, output: null });
     const [ palette, setPalette ] = useState(localStorage.getItem("palette") || 0);
+    const [ animation, setAnimation ] = useState(Date.now());
           
     const { brightness, contrast, frame, flip, fps, ratio, variation } = settings 
     const { width, height, sx, sy, sw, sh } = DIMENSIONS;
@@ -107,7 +108,8 @@ const GbCamProvider = ({ children }) => {
         switch(option){
             case 0: // Options menu
                 drawImage(`assets/ui/ui-options.svg`, ctx, 0, 0, width, height);                   
-                drawImage(`assets/ui/ui-arrows.svg`, ctx, 0, 0, width, height);
+                if(Date.now() - animation >= 500) drawImage(`assets/ui/ui-arrows.svg`, ctx, 0, 0, width, height);
+                if(Date.now() - animation >= 1000) setAnimation(Date.now());
                 break;
             case 1: // Flip
                 drawImage(`assets/ui/ui-options.svg`, ctx, 0, Math.abs(offsets.y), width, height)
@@ -134,7 +136,11 @@ const GbCamProvider = ({ children }) => {
                 break;
             default: // Brightness / Contrast or Save 
                 if(capture){
-                    drawImage(`assets/ui/ui-save.svg`, ctx, 0, 0, width, height)
+                    let vx = Math.floor(Math.random() * 2) * Math.random() > 0.5 ? -1 : 1;;
+                    let vy = Math.floor(Math.random() * 2) * Math.random() > 0.5 ? -1 : 1;
+                    
+                    if(Date.now() - animation >= 500) setAnimation(Date.now());
+                    drawImage(`assets/ui/ui-save.svg`, ctx, 0 + vx, 0 + vy, width, height);
                 }else{  
                     drawImage(`assets/ui/ui-default.svg`, ctx, 0, 0, width, height)
                     ctx.fillStyle = "#ffffff";
@@ -144,7 +150,7 @@ const GbCamProvider = ({ children }) => {
         }
 
         return canvas;
-    }, [width, offsets.x, offsets.y, height, option, flip, frame, variation, ratio, capture, contrast, brightness])
+    }, [width, offsets.x, offsets.y, height, option, flip, frame, variation, ratio, capture, contrast, brightness, animation])
 
     const drawVideo = useCallback(() => {
         const { canvas, ctx } = getCanvas(sw, sh, { willReadFrequently: true });
@@ -189,8 +195,8 @@ const GbCamProvider = ({ children }) => {
         ctx.drawImage(fr, 0, 0, width, height);
 
         let interval = setInterval(async () => {
-            const img = drawVideo();
-            swapPalette(img, palette, variation);
+            let img = drawVideo();
+            img = swapPalette(img, palette, variation);
             ctx.drawImage(img, sx, sy, sw, sh)
         }, timeout);
 
