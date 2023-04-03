@@ -8,7 +8,7 @@ const Actions = () => {
         if(!capture){
             navigator.share({
                 title: "Virtual GB Cam",
-                text: "A Lo-Fi camera for 90s kids",
+                text: "Virtual GB Cam | A Lo-Fi camera for 90s kids",
                 url: window.location.href
             })
         }else{

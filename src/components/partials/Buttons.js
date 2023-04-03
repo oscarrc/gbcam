@@ -25,7 +25,7 @@ const Buttons = ({ className }) => {
     }
 
     const handleStart = (e) => {
-        if(capture) return saveFile(capture);
+        if (capture && e.type !== "touchstart") return saveFile(capture);
         if (e.type === "touchstart" && !checkTouches(e.touches)) return;
         
         start.current = Date.now();
