@@ -13,7 +13,7 @@
   "start_url": "/",
   "screenshots": [
     {
-      "src": "img/feature.png",
+      "src": "assets/feature.png",
       "type": "image/png",
       "sizes": "1024x500"
     }
