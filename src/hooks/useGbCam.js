@@ -36,7 +36,7 @@ const GbCamProvider = ({ children }) => {
     const [ portrait, setPortrait ] = useState(false);
     const [ capture, setCapture ] = useState(null);
     const [ media, setMedia ] = useState({ source: null, output: null });
-    const [ palette, setPalette ] = useState(localStorage.getItem("palette") || 0);    
+    const [ palette, setPalette ] = useState(localStorage.getItem("palette") || 0);
           
     const { brightness, contrast, frame, flip, fps, ratio, variation } = settings 
     const { width, height, sx, sy, sw, sh } = DIMENSIONS;
@@ -106,10 +106,10 @@ const GbCamProvider = ({ children }) => {
 
         switch(option){
             case 0: // Options menu
-                drawImage(`assets/ui/ui-options.svg`, ctx, 0, 0, width, height);
+                drawImage(`assets/ui/ui-options.svg`, ctx, 0, 0, width, height);                   
                 drawImage(`assets/ui/ui-arrows.svg`, ctx, 0, 0, width, height);
                 break;
-            case 1: // Flip *
+            case 1: // Flip
                 drawImage(`assets/ui/ui-options.svg`, ctx, 0, Math.abs(offsets.y), width, height)
                 drawImage(`assets/ui/ui-flip.svg`, ctx, 0, 0, width, Math.abs(offsets.y));                
                 drawImage(`assets/ui/ui-UP.svg`, ctx, uPos[flip], 9, 16, 16);
@@ -126,15 +126,17 @@ const GbCamProvider = ({ children }) => {
                 drawImage(`assets/ui/ui-palette.svg`, ctx, 0, height, width, Math.abs(offsets.y));                
                 drawImage(`assets/ui/ui-down.svg`, ctx, dPos[variation], height - 8, 16, 16);
                 break;
-            case 4: // Dither *
+            case 4: // Dither
                 drawImage(`assets/ui/ui-options.svg`, ctx, offsets.x, 0, width, height);
                 drawImage(`assets/ui/ui-dither.svg`, ctx, 0, 0, Math.abs(offsets.x), height);
                 ctx.fillStyle = "#000000";                
                 ctx.fillRect(9, 113 - 82 * ratio / 2, 5, 1);
                 break;
             default: // Brightness / Contrast or Save 
-                drawImage(`assets/ui/ui-${capture ? 'save' : 'default' }.svg`, ctx, 0, 0, width, height)
-                if(!capture){
+                if(capture){
+                    drawImage(`assets/ui/ui-save.svg`, ctx, 0, 0, width, height)
+                }else{  
+                    drawImage(`assets/ui/ui-default.svg`, ctx, 0, 0, width, height)
                     ctx.fillStyle = "#ffffff";
                     ctx.fillRect(30 + 101 * contrast / 255, height - 13, 1, 5);
                     ctx.fillRect(width - 13, 113 - 82 * brightness / 255, 5, 1);

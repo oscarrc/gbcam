@@ -6,7 +6,13 @@ const drawImage = (src, ctx, x, y, w, h) => {
 
 const getCanvas = (w, h, opt = {}) => {
     const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d", opt);
+    const ctx = canvas.getContext("2d", {
+        msImageSmoothingEnabled: false,
+        mozImageSmoothingEnabled: false,
+        webkitImageSmoothingEnabled: false,
+        imageSmoothingEnabled: false,
+        ...opt
+    });
 
     canvas.width = w;
     canvas.height = h;
