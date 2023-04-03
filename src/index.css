@@ -301,9 +301,9 @@
     }
     
     .shadow-gb{
-        box-shadow: 0px -10px 20px 0px hsl(var(--b1) / 0.75);
-        -moz-box-shadow: 0px -10px 20px 0px hsl(var(--b1) / 0.75);
-        -webkit-box-shadow: 0px -10px 20px 0px hsl(var(--b1) / 0.75);
+        box-shadow: 0px 0px 20px 0px hsl(var(--b1) / 0.75);
+        -moz-box-shadow: 0px 0px 20px 0px hsl(var(--b1) / 0.75);
+        -webkit-box-shadow: 0px 0px 20px 0px hsl(var(--b1) / 0.75);
     }
 
     .bg-gradient-gb{
