@@ -17,6 +17,7 @@ import { registerRoute } from 'workbox-routing';
 clientsClaim();
 
 const assets = [
+  { url: '/assets/ui/ui-arrows.svg', revision: null },
   { url: '/assets/ui/ui-default.svg', revision: null },
   { url: '/assets/ui/ui-dither.svg', revision: null },
   { url: '/assets/ui/ui-down.svg', revision: null },

@@ -106,7 +106,8 @@ const GbCamProvider = ({ children }) => {
 
         switch(option){
             case 0: // Options menu
-                drawImage(`assets/ui/ui-options.svg`, ctx, 0, 0, width, height)
+                drawImage(`assets/ui/ui-options.svg`, ctx, 0, 0, width, height);
+                drawImage(`assets/ui/ui-arrows.svg`, ctx, 0, 0, width, height);
                 break;
             case 1: // Flip *
                 drawImage(`assets/ui/ui-options.svg`, ctx, 0, Math.abs(offsets.y), width, height)
@@ -118,7 +119,7 @@ const GbCamProvider = ({ children }) => {
                 drawImage(`assets/frames/frame-${frame}.svg`, ctx, 0, 0, width, height);
                 ctx.font = `24px Rounded_5x5`;                
                 ctx.fillStyle = "#000000";
-                ctx.fillText(`${frame < 10 ? '0' : ''}${frame}`, 81, 88);
+                ctx.fillText(`${frame < 10 ? '0' : ''}${frame + 1}`, 81, 88);
                 break;
             case 3: // Palette
                 drawImage(`assets/ui/ui-options.svg`, ctx, 0, 0, width, height)
