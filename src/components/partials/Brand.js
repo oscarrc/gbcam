@@ -1,10 +1,10 @@
 const Brand = () => {
     return (
-        <div className="flex gap-2 items-end text-neutral-content my-2">
-            <span className="font-brand text-xl leading-8">
+        <div className="flex gap-2 items-end text-neutral-content my-4">
+            <span className="font-brand text-xl leading-6">
                 Virtual
             </span>
-            <span className="font-title italic text-3xl leading-10">
+            <span className="font-title italic text-3xl leading-6">
                 GBCam
                 <span className="font-text not-italic text-xs">
                     TM
