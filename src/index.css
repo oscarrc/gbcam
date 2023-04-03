@@ -43,10 +43,10 @@
     font-display: swap;
 }
 
+:root, [data-theme]{ background-color: black }
+
 @base{ 
-    html{
-        background: none;
-    }
+    html{ background: none; }
 }
 
 @layer components {
@@ -298,6 +298,12 @@
         -webkit-box-shadow: 0px 0px 10px 0px rgba(255,0,0,1);
         -moz-box-shadow: 0px 0px 10px 0px rgba(255,0,0,1);
         box-shadow: 0px 0px 10px 0px rgba(255,0,0,1);
+    }
+    
+    .shadow-gb{
+        box-shadow: 0px -10px 20px 0px hsl(var(--b1) / 0.75);
+        -moz-box-shadow: 0px -10px 20px 0px hsl(var(--b1) / 0.75);
+        -webkit-box-shadow: 0px -10px 20px 0px hsl(var(--b1) / 0.75);
     }
 
     .bg-gradient-gb{
