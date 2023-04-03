@@ -292,7 +292,7 @@
         height: 6rem;
         left: 0.325rem;
         top: -2.5rem;
-        background: rgba(66, 67, 70, 0.8);
+        background: rgba(66, 67, 70, 1);
         border-radius: 6rem 1rem 6rem 1rem;
         transform: rotate(40deg);
     }
