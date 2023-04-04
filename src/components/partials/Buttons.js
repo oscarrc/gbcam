@@ -1,12 +1,19 @@
 import { saveFile } from "../../helpers/file";
 import { useGbCam } from "../../hooks/useGbCam";
 import { useRef } from "react"
+import { useToast } from "../../hooks/useToast";
 
 const Buttons = ({ className }) => {
     const { clear, option, capture, setOption, snapshot, record } = useGbCam();
+    const { addToast } = useToast();
+    
     const start = useRef(0);
     const timer = useRef(null);
     const btn = useRef(null);
+
+    const save = () => {
+        saveFile(capture).then(() => addToast("File saved") )
+    }
 
     const cancel = () => {
         clear();
@@ -25,7 +32,7 @@ const Buttons = ({ className }) => {
     }
 
     const handleStart = (e) => {
-        if (capture && e.type !== "touchstart") return saveFile(capture);
+        if (capture && e.type !== "touchstart") return save();
         if (e.type === "touchstart" && !checkTouches(e.touches)) return;
         
         start.current = Date.now();
