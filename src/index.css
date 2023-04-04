@@ -310,4 +310,36 @@
             background-image: linear-gradient(145deg, rgba(0,0,0,0) calc(100% - 8rem), rgba(0,0,0,.75) 100%), linear-gradient(90deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 1rem, rgba(0,0,0,0) 50%, rgba(0,0,0,0) calc(100vw - 1rem), rgba(0,0,0,0.2) 100%);
         }    
     }
+
+    .toast{
+        position: fixed;
+        height: 1rem;
+        top: 3.6rem;
+        right: 1rem;
+        padding: 0.5rem;
+        animation: fadeInDown 500ms linear, fadeOutDown 500ms linear 4750ms
+    }
 }
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translate3d(0, -100%, 0);
+    }
+    
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+  }
+  
+  @keyframes fadeOutDown {
+    from {
+      opacity: 1;
+    }
+  
+    to {
+      opacity: 0;
+      transform: translate3d(0, 100%, 0);
+    }
+  }

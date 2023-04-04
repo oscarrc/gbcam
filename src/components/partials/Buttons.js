@@ -5,14 +5,14 @@ import { useToast } from "../../hooks/useToast";
 
 const Buttons = ({ className }) => {
     const { clear, option, capture, setOption, snapshot, record } = useGbCam();
-    const { addToast } = useToast();
+    const { showToast } = useToast();
     
     const start = useRef(0);
     const timer = useRef(null);
     const btn = useRef(null);
 
     const save = () => {
-        saveFile(capture).then(() => addToast("File saved") )
+        saveFile(capture).then(() => showToast("File saved") )
     }
 
     const cancel = () => {
