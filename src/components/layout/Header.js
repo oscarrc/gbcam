@@ -6,7 +6,7 @@ import { useDynamicFavicon } from "../../hooks/useDynamicFavicon";
 import { useGbCam } from "../../hooks/useGbCam";
 
 const MODELS = ["classic", "yellow", "red", "black", "white", "blue", "green", "transparent"];
-const PALETTES = ["DMG", "GBC", "Gray"];
+const PALETTES = ["DMG", "GBC 1", "GBC 2", "GBC 3", "GBC 4", "GBC 5", "GBC 6", "GBC 7", "GBC 8", "GBC 9", "GBC 10", "GBC 11", "GBC 12", "Gray"];
 
 const Header = () => {
     const [ theme, setTheme ] = useState(localStorage.getItem("theme") || "classic");
