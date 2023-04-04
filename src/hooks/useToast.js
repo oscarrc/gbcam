@@ -17,7 +17,7 @@ const useToast = () => {
         setTimeout(() => {
             toasts.current[idx].remove();
             toasts.current.splice(idx, 1)
-        }, 5000)
+        }, 3000)
     }
 
 
