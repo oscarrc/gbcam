@@ -39,7 +39,7 @@ const GbCamProvider = ({ children }) => {
     const [ media, setMedia ] = useState({ source: null, output: null });
     const [ palette, setPalette ] = useState(localStorage.getItem("palette") || 0);
     const [ multiplier, setMultiplier] = useState(localStorage.getItem("multiplier") || 1);
-    const [ animation, setAnimation ] = useState(Date.now());
+    const [ animation, setAnimation ] = useState({time: Date.now()});
           
     const { brightness, contrast, frame, flip, fps, ratio, variation } = settings 
     const { width, height, sx, sy, sw, sh } = DIMENSIONS;
@@ -107,8 +107,8 @@ const GbCamProvider = ({ children }) => {
         switch(option){
             case 0: // Options menu
                 drawImage(`assets/ui/ui-options.svg`, ctx, 0, 0, width, height);                   
-                if(Date.now() - animation >= 500) drawImage(`assets/ui/ui-arrows.svg`, ctx, 0, 0, width, height);
-                if(Date.now() - animation >= 1000) setAnimation(Date.now());
+                if(Date.now() - animation.time >= 500) drawImage(`assets/ui/ui-arrows.svg`, ctx, 0, 0, width, height);
+                if(Date.now() - animation.time >= 1000) setAnimation({time: Date.now()});
                 break;
             case 1: // Flip
                 drawImage(`assets/ui/ui-options.svg`, ctx, 0, Math.abs(offsets.y), width, height)
@@ -135,15 +135,15 @@ const GbCamProvider = ({ children }) => {
                 break;
             default: // Brightness / Contrast or Save 
                 if(capture){
-                    let vx = 0;
-                    let vy = 0;
-                    
-                    if(Date.now() - animation >= 64){
-                        setAnimation(Date.now());
-                        vx = Math.floor(Math.random() * 8) * Math.random() > 0.5 ? -1 : 1;
-                        vy = Math.floor(Math.random() * 8) * Math.random() > 0.5 ? -1 : 1;
-                    }
-                    drawImage(`assets/ui/ui-save.svg`, ctx, vx, vy, width, height);
+                    if(Date.now() - animation.time > 75 ){
+                        setAnimation({
+                            vx: Math.random() > 0.5 ? 1 : -1,
+                            vy: Math.random() > 0.5 ? 1 : -1,
+                            time: Date.now()
+                        })
+                    }                    
+                                        
+                    drawImage(`assets/ui/ui-save.svg`, ctx, animation.vx, animation.vy, width, height);
                 }else{  
                     drawImage(`assets/ui/ui-default.svg`, ctx, 0, 0, width, height)
                     ctx.fillStyle = "#ffffff";
@@ -284,7 +284,6 @@ const GbCamProvider = ({ children }) => {
 
         if(!capture){ player.current = null }
 
-        cancelAnimationFrame(frameRequest)
         draw();
         
         return () => cancelAnimationFrame(frameRequest)
