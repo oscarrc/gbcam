@@ -6,7 +6,6 @@ import { useGbCam } from "../../hooks/useGbCam";
 const Display = ({ className }) => {
     const { output, ready, timeout } = useGbCam();
     const display = useRef(null);
-    const interval = useRef(null);
 
     useEffect(() => {
         const canvas = display.current;
@@ -33,11 +32,12 @@ const Display = ({ className }) => {
             imageSmoothingEnabled: false
         });
 
-        interval.current = setInterval(async () => {            
+        const draw = () => {
             ctx.drawImage(output, 0, 0, display.current?.width, display.current?.height);
-        }, timeout);
+            requestAnimationFrame(draw)
+        }
 
-        return () => clearInterval(interval.current);
+        draw()
     }, [ready, output, display, timeout])
    
     return (
