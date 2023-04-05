@@ -140,10 +140,10 @@ const GbCamProvider = ({ children }) => {
                     
                     if(Date.now() - animation >= 100){
                         setAnimation(Date.now());
-                        vx = Math.floor((Math.random() * 4) + 1) * Math.random() > 0.5 ? -1 : 1;
-                        vy = Math.floor((Math.random() * 4) + 1) * Math.random() > 0.5 ? -1 : 1;
+                        vx = Math.floor(Math.random() * 8) * Math.random() > 0.5 ? -1 : 1;
+                        vy = Math.floor(Math.random() * 8) * Math.random() > 0.5 ? -1 : 1;
                     }
-                    drawImage(`assets/ui/ui-save.svg`, ctx, 0 + vx, 0 + vy, width, height);
+                    drawImage(`assets/ui/ui-save.svg`, ctx, vx, vy, width, height);
                 }else{  
                     drawImage(`assets/ui/ui-default.svg`, ctx, 0, 0, width, height)
                     ctx.fillStyle = "#ffffff";
