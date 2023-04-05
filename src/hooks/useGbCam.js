@@ -138,7 +138,7 @@ const GbCamProvider = ({ children }) => {
                     let vx = 0;
                     let vy = 0;
                     
-                    if(Date.now() - animation >= 100){
+                    if(Date.now() - animation >= 64){
                         setAnimation(Date.now());
                         vx = Math.floor(Math.random() * 8) * Math.random() > 0.5 ? -1 : 1;
                         vy = Math.floor(Math.random() * 8) * Math.random() > 0.5 ? -1 : 1;
