@@ -1,5 +1,5 @@
 import {CamIcon, GBIcon, PaletteIcon} from "../partials/";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { BsChevronDown } from "react-icons/bs";
 import { useDynamicFavicon } from "../../hooks/useDynamicFavicon";
@@ -11,11 +11,13 @@ const PALETTES = ["DMG", "GBC 1", "GBC 2", "GBC 3", "GBC 4", "GBC 5", "GBC 6", "
 const Header = () => {
     const [ theme, setTheme ] = useState(localStorage.getItem("theme") || "classic");
     const { setFavicon } = useDynamicFavicon(theme);
-    const { facingUser, setFacingUser, multiplier, setMultiplier, palette, setPalette } = useGbCam();
+    const { facingUser, setFacingUser, multiplier, setMultiplier, palette, setPalette, capture } = useGbCam();
     
     const themeRef = useRef(null);
     const paletteRef = useRef(null);
     const multiplierRef = useRef(null);
+
+    const disabled = useMemo(() => capture ? { "aria-disabled": true } :  { tabIndex: 1 }, [capture])
 
     const flipCamera = () => setFacingUser(u => !u);
     
@@ -50,7 +52,7 @@ const Header = () => {
                 </div>
                 <div className="flex-none font-text mx-4 gap-2">
                     <div className="dropdown dropdown-end font-text self-end">
-                        <label tabIndex="0" role="button" ref={multiplierRef} aria-label="Model" className="block font-bold leading-3">
+                        <label {...disabled} role="button" ref={multiplierRef} aria-label="Model" className={`block font-bold leading-3 ${capture && 'opacity-25 cursor-not-allowed'}`}>
                             x{multiplier}
                         </label>
                         <ul className="dropdown-content menu nav-menu shadow bg-neutral top-8">
@@ -67,7 +69,7 @@ const Header = () => {
                         <CamIcon className={`h-6 w-6 ${theme}`} selfie={ facingUser }/>
                     </button>
                     <div className="dropdown dropdown-end">
-                        <label tabIndex="0" role="button" ref={paletteRef} aria-label="Palete" className="flex items-center gap-2">                            
+                        <label {...disabled} role="button" ref={paletteRef} aria-label="Palete" className={`flex items-center gap-2 ${capture && 'opacity-25 cursor-not-allowed'}`}>                            
                             <PaletteIcon className="h-6 w-6" palette={palette}/>
                         </label>
                         <ul className="dropdown-content menu nav-menu shadow w-40 bg-neutral top-8">

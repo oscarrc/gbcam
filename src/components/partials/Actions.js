@@ -17,7 +17,7 @@ const Actions = () => {
         }
     }
 
-    const toggleOptions = () => setOption(o => o === null ? 0 : null);
+    const toggleOptions = () => !capture && setOption(o => o === null ? 0 : null);
 
     return (
         <div className="actions relative grid grid-cols-2 gap-4 font-bold text-neutral-content text-xs">
