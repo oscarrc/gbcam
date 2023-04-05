@@ -50,7 +50,7 @@ const Header = () => {
                 </div>
                 <div className="flex-none font-text mx-4 gap-2">
                     <div className="dropdown dropdown-end font-text self-end">
-                        <label tabIndex="0" role="button" ref={multiplierRef} aria-label="Model" className="flex items-center font-bold gap-2 leading-4">
+                        <label tabIndex="0" role="button" ref={multiplierRef} aria-label="Model" className="block font-bold leading-3">
                             x{multiplier}
                         </label>
                         <ul className="dropdown-content menu nav-menu shadow bg-neutral top-8">
