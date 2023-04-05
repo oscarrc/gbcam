@@ -44,11 +44,9 @@ const GbCamProvider = ({ children }) => {
     const { brightness, contrast, frame, flip, fps, ratio, variation } = settings 
     const { width, height, sx, sy, sw, sh } = DIMENSIONS;
 
-    const interval = useRef(null);     
     const player = useRef(null);     
-    const recorder = useRef(null);
+    const recorder = useRef(null);     
 
-    const timeout = useMemo(() => 1000 / fps, [fps]);
     const ready = useMemo(() => media.output !== null, [media]);    
     const context = useMemo(() => {
        return media.output ? media.output.getContext("2d", {   
@@ -201,13 +199,13 @@ const GbCamProvider = ({ children }) => {
             let img = drawVideo();
             img = swapPalette(img, palette, variation);
             ctx.drawImage(img, sx * multiplier, sy * multiplier, sw * multiplier, sh * multiplier);
-            requestAnimationFrame(requestFrame);
+            return requestAnimationFrame(requestFrame);
         }
         
         swapPalette(fr, palette);
         ctx.drawImage(fr, 0, 0, width * multiplier, height * multiplier);
 
-        requestFrame();
+        const frameRequest = requestFrame();
 
         let chunks = [];
         const stream = canvas.captureStream(60);
@@ -218,7 +216,7 @@ const GbCamProvider = ({ children }) => {
             let blob = new Blob(chunks, { 'type' : 'video/mp4' });
             
             setCapture(blob);
-            clearInterval(interval);
+            cancelAnimationFrame(frameRequest);
             recorder.current = null;
         }
 
@@ -240,7 +238,7 @@ const GbCamProvider = ({ children }) => {
     }
 
     const playback = useCallback(async () => {
-        if(!player.current){
+        if(!player.current && capture){
             setOption(null);
             player.current = capture instanceof Blob ? await loadVideo(capture) : await loadImage(capture);
         }
@@ -278,9 +276,17 @@ const GbCamProvider = ({ children }) => {
     }, [])
 
     useEffect(() => { 
-        interval.current = setInterval(() => capture ? playback() : stream(), timeout)
-        return () => clearInterval(interval.current)
-    }, [capture, timeout, playback, stream])
+        let frameRequest;
+
+        const draw = () => {
+            capture ? playback() : stream();
+            frameRequest = requestAnimationFrame(draw);
+        }
+        
+        draw();
+        
+        return () => cancelAnimationFrame(frameRequest)
+    }, [capture, playback, stream])
 
     return (
         <GbCamContext.Provider value={{ 
@@ -291,7 +297,6 @@ const GbCamProvider = ({ children }) => {
             output: media.output,
             palette,
             ready,
-            timeout,
             clear,
             setFacingUser,
             setMultiplier,

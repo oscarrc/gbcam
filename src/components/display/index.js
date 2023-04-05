@@ -24,6 +24,8 @@ const Display = ({ className }) => {
     useEffect(() => {
         if(!ready || !display.current) return;
         
+        let frameRequest;
+
         const ctx = display.current.getContext("2d", { 
             desynchronized: true,    
             msImageSmoothingEnabled: false,
@@ -34,10 +36,12 @@ const Display = ({ className }) => {
 
         const draw = () => {
             ctx.drawImage(output, 0, 0, display.current?.width, display.current?.height);
-            requestAnimationFrame(draw)
+            frameRequest = requestAnimationFrame(draw)
         }
 
         draw()
+
+        return () => cancelAnimationFrame(frameRequest);
     }, [ready, output, display, timeout])
    
     return (
