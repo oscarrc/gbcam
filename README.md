@@ -34,6 +34,7 @@ A Lo-fi camera for 90s kids
 * Multiple pictures frame to choose. Must be choosed before taking a picture or video.
 * Multiple palettes and palette variations to choose.
 * Ability to modify the dithering factor
+* Export pictures and videos at 1x, 2x, 3x or 4x its original size
 
 ### Found a bug?
 
