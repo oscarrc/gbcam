@@ -137,8 +137,8 @@ const GbCamProvider = ({ children }) => {
                 if(capture){
                     if(Date.now() - animation.time > 75 ){
                         setAnimation({
-                            vx: Math.random() > 0.5 ? 1 : -1,
-                            vy: Math.random() > 0.5 ? 1 : -1,
+                            vx: Math.random() > 0.5 ? 2 : 0,
+                            vy: Math.random() > 0.5 ? 2 : 0,
                             time: Date.now()
                         })
                     }                    
