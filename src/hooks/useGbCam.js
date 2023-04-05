@@ -38,8 +38,8 @@ const GbCamProvider = ({ children }) => {
     const [ capture, setCapture ] = useState(null);
     const [ media, setMedia ] = useState({ source: null, output: null });
     const [ palette, setPalette ] = useState(localStorage.getItem("palette") || 0);
-    const [ animation, setAnimation ] = useState(Date.now());
     const [ multiplier, setMultiplier] = useState(localStorage.getItem("multiplier") || 1);
+    const [ animation, setAnimation ] = useState(Date.now());
           
     const { brightness, contrast, frame, flip, fps, ratio, variation } = settings 
     const { width, height, sx, sy, sw, sh } = DIMENSIONS;
@@ -83,7 +83,6 @@ const GbCamProvider = ({ children }) => {
     }, [option, sx, sy])
 
     const clear = () => {
-        player.current = null;
         setCapture(null);
     }
 
@@ -190,7 +189,7 @@ const GbCamProvider = ({ children }) => {
     }
 
     const record = async (save = false) => {
-        if(save) return recorder.current && recorder.current.stop(); 
+        if(save && recorder.current) recorder.current.stop(); 
 
         const { canvas, ctx } = getCanvas(width * multiplier, height * multiplier, { willReadFrequently: true } ); 
         const fr = await getCanvasImage(`assets/frames/frame-${frame}.svg`, width * multiplier, height * multiplier);
@@ -238,7 +237,7 @@ const GbCamProvider = ({ children }) => {
     }
 
     const playback = useCallback(async () => {
-        if(!player.current && capture){
+        if(!player.current){
             setOption(null);
             player.current = capture instanceof Blob ? await loadVideo(capture) : await loadImage(capture);
         }
@@ -277,12 +276,15 @@ const GbCamProvider = ({ children }) => {
 
     useEffect(() => { 
         let frameRequest;
-
+        
         const draw = () => {
             capture ? playback() : stream();
             frameRequest = requestAnimationFrame(draw);
         }
-        
+
+        if(!capture){ player.current = null }
+
+        cancelAnimationFrame(frameRequest)
         draw();
         
         return () => cancelAnimationFrame(frameRequest)
