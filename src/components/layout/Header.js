@@ -11,10 +11,11 @@ const PALETTES = ["DMG", "GBC 1", "GBC 2", "GBC 3", "GBC 4", "GBC 5", "GBC 6", "
 const Header = () => {
     const [ theme, setTheme ] = useState(localStorage.getItem("theme") || "classic");
     const { setFavicon } = useDynamicFavicon(theme);
-    const { facingUser, setFacingUser, palette, setPalette } = useGbCam();
+    const { facingUser, setFacingUser, multiplier, setMultiplier, palette, setPalette } = useGbCam();
     
     const themeRef = useRef(null);
     const paletteRef = useRef(null);
+    const multiplierRef = useRef(null);
 
     const flipCamera = () => setFacingUser(u => !u);
     
@@ -31,6 +32,12 @@ const Header = () => {
         setPalette(p);
     }
 
+    const switchMultiplier = (v) => {
+        localStorage.setItem("multiplier", v);
+        multiplierRef.current.blur();
+        setMultiplier(v);
+    }
+
     useEffect(() => {
         document.body.dataset.theme = theme;
     }, [ theme ])
@@ -42,6 +49,20 @@ const Header = () => {
                     <a href="/" className="btn btn-ghost normal-case text-2xl sm:text-4xl font-title italic">GBCam</a>
                 </div>
                 <div className="flex-none font-text mx-4 gap-2">
+                    <div className="dropdown dropdown-end font-text self-end">
+                        <label tabIndex="0" role="button" ref={multiplierRef} aria-label="Model" className="flex items-center font-bold gap-2 leading-4">
+                            x{multiplier}
+                        </label>
+                        <ul className="dropdown-content menu nav-menu shadow bg-neutral top-8">
+                            {
+                                Array.from({length: 4}, (_, i) => i + 1).map(m => (
+                                    <li key={m}>
+                                        <button onClick={() => switchMultiplier(m)}> x{m} </button>
+                                    </li>
+                                ))
+                            }
+                        </ul>
+                    </div>
                     <button onClick={flipCamera} aria-label="flip camera">
                         <CamIcon className={`h-6 w-6 ${theme}`} selfie={ facingUser }/>
                     </button>

@@ -39,6 +39,7 @@ const GbCamProvider = ({ children }) => {
     const [ media, setMedia ] = useState({ source: null, output: null });
     const [ palette, setPalette ] = useState(localStorage.getItem("palette") || 0);
     const [ animation, setAnimation ] = useState(Date.now());
+    const [ multiplier, setMultiplier] = useState(localStorage.getItem("multiplier") || 1);
           
     const { brightness, contrast, frame, flip, fps, ratio, variation } = settings 
     const { width, height, sx, sy, sw, sh } = DIMENSIONS;
@@ -193,16 +194,16 @@ const GbCamProvider = ({ children }) => {
     const record = async (save = false) => {
         if(save) return recorder.current && recorder.current.stop(); 
 
-        const { canvas, ctx } = getCanvas(width, height, { willReadFrequently: true } ); 
-        const fr = await getCanvasImage(`assets/frames/frame-${frame}.svg`, width, height);
+        const { canvas, ctx } = getCanvas(width * multiplier, height * multiplier, { willReadFrequently: true } ); 
+        const fr = await getCanvasImage(`assets/frames/frame-${frame}.svg`, width * multiplier, height * multiplier);
         
         swapPalette(fr, palette);
-        ctx.drawImage(fr, 0, 0, width, height);
+        ctx.drawImage(fr, 0, 0, width * multiplier, height * multiplier);
 
         let interval = setInterval(async () => {
             let img = drawVideo();
             img = swapPalette(img, palette, variation);
-            ctx.drawImage(img, sx, sy, sw, sh)
+            ctx.drawImage(img, sx * multiplier, sy * multiplier, sw * multiplier, sh * multiplier)
         }, timeout);
 
         let chunks = [];
@@ -222,15 +223,15 @@ const GbCamProvider = ({ children }) => {
     }
 
     const snapshot = async () => {
-        const { canvas, ctx } = getCanvas(width, height); 
+        const { canvas, ctx } = getCanvas(width * multiplier, height * multiplier); 
         let img = drawVideo();        
-        let fr = await getCanvasImage(`assets/frames/frame-${frame}.svg`, width, height);
+        let fr = await getCanvasImage(`assets/frames/frame-${frame}.svg`, width * multiplier, height * multiplier);
         
         img = swapPalette(img, palette, variation);
         fr = swapPalette(fr, palette);
 
-        ctx.drawImage(img, sx, sy, sw, sh)
-        ctx.drawImage(fr, 0, 0, width, height);
+        ctx.drawImage(img, sx * multiplier, sy * multiplier, sw * multiplier, sh * multiplier)
+        ctx.drawImage(fr, 0, 0, width * multiplier, height * multiplier);
 
         setCapture(canvas.toDataURL('image/png'));
     }
@@ -245,9 +246,9 @@ const GbCamProvider = ({ children }) => {
         
         ui = swapPalette(ui, palette);
 
-        context.drawImage(player.current, 0, 0, width, height, 0, 0, width, height);
+        context.drawImage(player.current, 0, 0, width * multiplier, height * multiplier, 0, 0, width, height);
         context.drawImage(ui, 0, 0, width, height);
-    }, [capture, context, drawUI, height, palette, width])
+    }, [capture, context, drawUI, height, multiplier, palette, width])
 
     const stream = useCallback(() => {
         if(!context) return;
@@ -282,6 +283,7 @@ const GbCamProvider = ({ children }) => {
         <GbCamContext.Provider value={{ 
             capture,
             facingUser,
+            multiplier,
             option,
             output: media.output,
             palette,
@@ -289,6 +291,7 @@ const GbCamProvider = ({ children }) => {
             timeout,
             clear,
             setFacingUser,
+            setMultiplier,
             setOption,
             setPalette,
             setting,
