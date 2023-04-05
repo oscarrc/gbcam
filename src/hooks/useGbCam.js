@@ -197,14 +197,17 @@ const GbCamProvider = ({ children }) => {
         const { canvas, ctx } = getCanvas(width * multiplier, height * multiplier, { willReadFrequently: true } ); 
         const fr = await getCanvasImage(`assets/frames/frame-${frame}.svg`, width * multiplier, height * multiplier);
         
+        const requestFrame = () => {
+            let img = drawVideo();
+            img = swapPalette(img, palette, variation);
+            ctx.drawImage(img, sx * multiplier, sy * multiplier, sw * multiplier, sh * multiplier);
+            requestAnimationFrame(requestFrame);
+        }
+        
         swapPalette(fr, palette);
         ctx.drawImage(fr, 0, 0, width * multiplier, height * multiplier);
 
-        let interval = setInterval(async () => {
-            let img = drawVideo();
-            img = swapPalette(img, palette, variation);
-            ctx.drawImage(img, sx * multiplier, sy * multiplier, sw * multiplier, sh * multiplier)
-        }, timeout);
+        requestFrame();
 
         let chunks = [];
         const stream = canvas.captureStream(60);
