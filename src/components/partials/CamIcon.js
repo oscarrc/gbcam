@@ -26,21 +26,21 @@ const camIcon = ({ className, selfie }) => {
             </defs>
             <g id="cam" className={`cam swap ${selfie && 'swap-active'}`}>
                 <g id="front" className="swap-on">
-                    <circle class="outer" cx="411.04" cy="412.55" r="397.92"/>
-                    <circle class="outer-shadow" cx="406.89" cy="411.17" r="397.92"/>
-                    <ellipse class="inner" cx="408.28" cy="412.55" rx="292.73" ry="298.27"/>
-                    <ellipse class="inner-shadow" cx="406.89" cy="411.17" rx="292.73" ry="298.27"/>
-                    <polygon class="arrow" points="250.49 446.99 188.21 419.17 250.49 391.63 250.49 446.99"/>
+                    <circle className="outer" cx="411.04" cy="412.55" r="397.92"/>
+                    <circle className="outer-shadow" cx="406.89" cy="411.17" r="397.92"/>
+                    <ellipse className="inner" cx="408.28" cy="412.55" rx="292.73" ry="298.27"/>
+                    <ellipse className="inner-shadow" cx="406.89" cy="411.17" rx="292.73" ry="298.27"/>
+                    <polygon className="arrow" points="250.49 446.99 188.21 419.17 250.49 391.63 250.49 446.99"/>
                     <g id="lens">
-                        <circle class="frame" cx="407.58" cy="419.71" r="115.57"/>
-                        <circle class="outer" cx="407.58" cy="419.71" r="99.65"/>
-                        <circle class="inner " cx="407.58" cy="419.71" r="38.06"/>
-                        <circle class="flare" cx="420.73" cy="411.17" r="9"/>
+                        <circle className="frame" cx="407.58" cy="419.71" r="115.57"/>
+                        <circle className="outer" cx="407.58" cy="419.71" r="99.65"/>
+                        <circle className="inner " cx="407.58" cy="419.71" r="38.06"/>
+                        <circle className="flare" cx="420.73" cy="411.17" r="9"/>
                     </g>
                 </g>
                 <g id="back" className="swap-off">
-                    <circle class="case" cx="411.74" cy="411.86" r="397.92"/>
-                    <circle class="shadow" cx="407.58" cy="410.48" r="397.92"/>
+                    <circle className="case" cx="411.74" cy="411.86" r="397.92"/>
+                    <circle className="shadow" cx="407.58" cy="410.48" r="397.92"/>
                 </g>
             </g>
         </svg>

@@ -162,10 +162,6 @@
         stroke: #fff;
     }
 
-    #camicon #cam #front > .arrow {
-        isolation: isolate;
-    }
-
     #camicon #cam #back > .case {
         fill: #f0b32f;
     }
@@ -203,7 +199,7 @@
     }
 
     #camicon #cam #front  > .arrow {
-        fill: #808181;
+        fill: #010101;
     }
 
     #camicon #cam #front #lens  > .outer {
