@@ -65,9 +65,6 @@ const Header = () => {
                             }
                         </ul>
                     </div>
-                    <button onClick={flipCamera} aria-label="flip camera">
-                        <CamIcon className={`h-6 w-6 ${theme}`} selfie={ facingUser }/>
-                    </button>
                     <div className="dropdown dropdown-end">
                         <label {...disabled} role="button" ref={paletteRef} aria-label="Palete" className={`flex items-center gap-2 ${capture && 'opacity-25 cursor-not-allowed'}`}>                            
                             <PaletteIcon className="h-6 w-6" palette={palette}/>
@@ -85,6 +82,9 @@ const Header = () => {
                             }
                         </ul>
                     </div>
+                    <button onClick={flipCamera} aria-label="flip camera">
+                        <CamIcon className={`h-6 w-6 ${theme}`} selfie={ facingUser }/>
+                    </button>
                     <div className="dropdown dropdown-end">
                         <label tabIndex="0" role="button" ref={themeRef} aria-label="Model" className="flex items-center gap-2">
                             <GBIcon className={`inline h-6 w-6 ${theme} selected`} /><BsChevronDown className="inline h-3 w-3" />
