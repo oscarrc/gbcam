@@ -1,7 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-import { COLORS } from "../constants/colors";
-
 const ThemeContext = createContext();
 
 const ThemeProvider = ({ children }) => {    
@@ -12,7 +10,6 @@ const ThemeProvider = ({ children }) => {
     const setFavicon = (theme) => {
         if (typeof window === 'undefined') return;
         const link = window.document.querySelector("link[rel*='icon']") || window.document.createElement("link");
-        const meta = window.document.querySelector("meta[name='theme-color']");
         
         link.type = "image/svg+xml";
         link.rel = "icon";
@@ -27,7 +24,6 @@ const ThemeProvider = ({ children }) => {
                     .replace(/>/g, '%3E')
                     .replace(/\s+/g,' ');
 
-        meta.content = COLORS[theme];    
         window.document.getElementsByTagName("head")[0].appendChild(link);
     }
 
