@@ -1,8 +1,7 @@
+import { PALETTES, PALETTE_NAMES } from "../../constants/colors";
 import { useMemo, useRef } from "react";
 
 import { PaletteIcon } from "../icons";
-
-const PALETTES = ["DMG", "GBC 1", "GBC 2", "GBC 3", "GBC 4", "GBC 5", "GBC 6", "GBC 7", "GBC 8", "GBC 9", "GBC 10", "GBC 11", "GBC 12", "Gray"];
 
 const Palette = ({ disabled, palette, setPalette }) => {
     const paletteRef = useRef(null);
@@ -18,14 +17,14 @@ const Palette = ({ disabled, palette, setPalette }) => {
     return (
         <div className="dropdown dropdown-end">
             <label {...disabledProps} role="button" ref={paletteRef} aria-label="Palete" className={`flex items-center gap-2 ${disabled && 'opacity-25 cursor-not-allowed'}`}>                            
-                <PaletteIcon className="h-6 w-6" palette={palette}/>
+                <PaletteIcon className="h-6 w-6" palette={PALETTES[palette]} />
             </label>
             <ul className="dropdown-content menu nav-menu shadow w-40 bg-neutral top-8">
                 {
-                    PALETTES.map( (p, i) => (
+                    PALETTE_NAMES.map( (p, i) => (
                         <li key={p}>
                             <button onClick={() => switchPalette(i) } className={`capitalize`}>
-                                <PaletteIcon className="h-6 w-6" palette={i}/>
+                                <PaletteIcon className="h-6 w-6" palette={PALETTES[i]}/>
                                 {p}
                             </button>
                         </li>

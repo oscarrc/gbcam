@@ -1,4 +1,4 @@
-const colors = {
+const COLORS = {
     "classic": "#BABCC1",
     "yellow": "#F1B32F",
     "red": "#E22E32",
@@ -12,7 +12,9 @@ const colors = {
     "line-2": "#3D3E73"
 }
 
-const palettes = [
+const MODELS = ["classic", "yellow", "red", "black", "white", "blue", "green", "transparent"];
+
+const PALETTES = [
     [[34, 73, 57],[54, 119, 74],[77, 163, 80],[132, 205, 110]], // DMG,
     [[0,0,0],[131,49,0],[254,173,99],[255,255,255]],   //UP  -  GBC1
     [[0,0,0],[148,58,58],[253,133,13],[255,255,255]],   //UP + A  -  GBC2
@@ -29,28 +31,9 @@ const palettes = [
     [[40, 40, 40],[104, 104, 104], [168, 168, 168],[252, 252, 252]] // Gray
 ]
 
-// const palettes = [
-//     [ // DMG
-//         [34, 73, 57], 
-//         [54, 119, 74], 
-//         [77, 163, 80], 
-//         [132, 205, 110]
-//     ],
-//     [ // GBC
-// 		[4,2,4],
-// 		[156,146,244],
-// 		[236,138,140],
-// 		[252,250,172]
-// 	],    
-//     [ // Grayscale
-//         [40, 40, 40],
-// 		[104, 104, 104],
-// 		[168, 168, 168],
-// 		[252, 252, 252]
-// 	]
-// ]
+const PALETTE_NAMES = ["DMG", "GBC 1", "GBC 2", "GBC 3", "GBC 4", "GBC 5", "GBC 6", "GBC 7", "GBC 8", "GBC 9", "GBC 10", "GBC 11", "GBC 12", "Gray"];
 
-const variations = [
+const VARIATIONS = [
 	[0,1,2,3],
 	[3,2,1,0],
 	[0,2,1,3],
@@ -59,4 +42,4 @@ const variations = [
 	[3,0,1,2]
 ]
 
-export { colors, palettes, variations };
+export { COLORS, MODELS, PALETTES, PALETTE_NAMES, VARIATIONS };

@@ -1,6 +1,6 @@
 // Based on https://bisqwit.iki.fi/story/howto/dither/jy/
 
-import { palettes, variations } from "../constants/colors";
+import { PALETTES, VARIATIONS } from "../constants/colors";
 
 const thresholds = [
 	[0,48,12,60,3,51,15,63],
@@ -45,7 +45,7 @@ const convertPalette = (imgData, palette, variation = 0) => {
     for (let i = 0; i < data.length; i += 4) {
 		let c = clamp(Math.floor(data[i] / 64), 0, 3);
 		for(let j = 0; j < 3; j ++){
-		    data[i + j] = palettes[palette][variations[variation][c]][j];
+		    data[i + j] = PALETTES[palette][VARIATIONS[variation][c]][j];
         }
 	}
 

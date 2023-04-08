@@ -1,8 +1,7 @@
 import { BsChevronDown } from "react-icons/bs";
 import { GBIcon } from "../icons";
+import { MODELS } from "../../constants/colors";
 import { useRef } from "react";
-
-const MODELS = ["classic", "yellow", "red", "black", "white", "blue", "green", "transparent"];
 
 const Model = ({ theme, setTheme }) => {
 

@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-import { colors } from "../constants/colors";
+import { COLORS } from "../constants/colors";
 
 const ThemeContext = createContext();
 
@@ -27,7 +27,7 @@ const ThemeProvider = ({ children }) => {
                     .replace(/>/g, '%3E')
                     .replace(/\s+/g,' ');
 
-        meta.content = colors[theme];    
+        meta.content = COLORS[theme];    
         window.document.getElementsByTagName("head")[0].appendChild(link);
     }
 
