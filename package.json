@@ -49,7 +49,7 @@
     "deploy": "surge build gbcam.oscarrc.me",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "bubblewrap:init": "bubblewrap init --manifest https://gbcam.oscarrc.me/manifest.json --directory dist/android/",
+    "bubblewrap:init": "bubblewrap init --manifest https://gbcam.oscarrc.me/manifest.webmanifest --directory dist/android/",
     "bubblewrap:build": "cd dist/android && bubblewrap build",
     "bubblewrap:update": "cd dist/android && bubblewrap update --skipVersionUpgrade --manifest twa-manifest.json",    
     "bubblewrap:upgrade": "cd dist/android && bubblewrap update --manifest twa-manifest.json"
