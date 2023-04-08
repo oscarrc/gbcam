@@ -9,7 +9,6 @@ const Model = ({ theme, setTheme }) => {
     const themeRef = useRef(null);
 
     const toggleTheme = (theme) => {
-        localStorage.setItem("theme", theme);
         themeRef.current.blur();
         setTheme(theme);
     }

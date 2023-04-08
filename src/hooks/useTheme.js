@@ -33,7 +33,8 @@ const ThemeProvider = ({ children }) => {
     }
 
     useEffect(() => {
-        document.body.dataset.theme = theme;
+        document.body.dataset.theme = theme;        
+        localStorage.setItem("theme", theme);
         setFavicon(theme)
     }, [theme])
 
