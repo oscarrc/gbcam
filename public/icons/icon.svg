@@ -1,4 +1,4 @@
-<svg id="Capa_1" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1024 1024">
+<svg id="Icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1024 1024">
   <defs>
     <style>
       .cls-1 {
@@ -9,88 +9,104 @@
         fill: #1d1d1b;
       }
 
-      .cls-2, .cls-4, .cls-6, .cls-8 {
+      .cls-2, .cls-3, .cls-5, .cls-7, .cls-9 {
         opacity: 0.5;
       }
 
-      .cls-3, .cls-4 {
-        stroke: #010101;
+      .cls-3 {
+        stroke: #1d1d1b;
+        fill: url(#Degradado_sin_nombre_23);
       }
 
-      .cls-3, .cls-4, .cls-5 {
+      .cls-3, .cls-4, .cls-5, .cls-6 {
         stroke-miterlimit: 10;
       }
 
       .cls-3, .cls-5 {
+        stroke-width: 10px;
+      }
+
+      .cls-4, .cls-5 {
+        stroke: #010101;
+      }
+
+      .cls-4, .cls-6 {
         stroke-width: 12px;
       }
 
-      .cls-3 {
+      .cls-4 {
         fill: url(#Degradado_sin_nombre_210);
       }
 
-      .cls-4 {
-        stroke-width: 10px;
+      .cls-5 {
         fill: url(#Degradado_sin_nombre_163);
       }
 
-      .cls-11, .cls-5 {
+      .cls-12, .cls-6 {
         fill: #fff;
       }
 
-      .cls-5 {
+      .cls-6 {
         stroke: #fff;
       }
 
-      .cls-6 {
+      .cls-7 {
         fill: url(#Degradado_sin_nombre_186);
       }
 
-      .cls-7 {
+      .cls-8 {
         fill: url(#Degradado_sin_nombre_222);
       }
 
-      .cls-8 {
+      .cls-9 {
         fill: #808181;
         isolation: isolate;
       }
 
-      .cls-9 {
+      .cls-10 {
         fill: #1b1b1b;
       }
 
-      .cls-10 {
+      .cls-11 {
         fill: #010101;
       }
     </style>
-    <radialGradient id="Degradado_sin_nombre_210" data-name="Degradado sin nombre 210" cx="454.25" cy="457.53" fx="437.6138624307665" r="397.92" gradientUnits="userSpaceOnUse">
+    <radialGradient id="Degradado_sin_nombre_23" data-name="Degradado sin nombre 23" cx="458.44" cy="462.53" fx="443.8844479660224" r="348.18" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset="1" stop-opacity="0.3"/>
+    </radialGradient>
+    <radialGradient id="Degradado_sin_nombre_210" data-name="Degradado sin nombre 210" cx="461.38" cy="464.43" fx="446.82562443660976" r="348.18" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#343434"/>
       <stop offset="0.54" stop-color="#1a1a1a"/>
       <stop offset="0.97" stop-color="#010101"/>
     </radialGradient>
-    <radialGradient id="Degradado_sin_nombre_163" data-name="Degradado sin nombre 163" cx="450.1" cy="456.15" fx="433.4616132958196" r="397.92" gradientUnits="userSpaceOnUse">
+    <radialGradient id="Degradado_sin_nombre_163" data-name="Degradado sin nombre 163" cx="457.75" cy="463.22" fx="443.19240644353016" r="348.18" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#fff"/>
       <stop offset="1"/>
     </radialGradient>
-    <radialGradient id="Degradado_sin_nombre_186" data-name="Degradado sin nombre 186" cx="473.09" cy="475.86" fx="473.0935777025725" r="295.51" xlink:href="#Degradado_sin_nombre_163"/>
-    <radialGradient id="Degradado_sin_nombre_222" data-name="Degradado sin nombre 222" cx="509.92" cy="520.54" r="115.57" gradientUnits="userSpaceOnUse">
+    <radialGradient id="Degradado_sin_nombre_186" data-name="Degradado sin nombre 186" cx="477.87" cy="480.47" fx="477.87037529943973" r="258.58" xlink:href="#Degradado_sin_nombre_163"/>
+    <radialGradient id="Degradado_sin_nombre_222" data-name="Degradado sin nombre 222" cx="510.1" cy="519.55" r="101.12" gradientUnits="userSpaceOnUse">
       <stop offset="0.91" stop-color="gray"/>
       <stop offset="1" stop-color="#fff"/>
     </radialGradient>
   </defs>
   <g id="Fondo">
     <rect id="Relleno" class="cls-1" width="1024" height="1024"/>
-    <rect id="Sombra" class="cls-2" x="372.48" y="391.57" width="807.37" height="767.15" transform="translate(-320.78 775.87) rotate(-45)"/>
+    <rect id="Sombra" class="cls-2" x="420.49" y="392.28" width="709.93" height="767.15" transform="translate(-321.49 775.57) rotate(-45)"/>
+  </g>
+  <g id="Back">
+    <circle class="cls-1" cx="513.82" cy="512.61" r="348.18"/>
+    <circle class="cls-3" cx="510.18" cy="511.39" r="348.18"/>
   </g>
   <g id="Cam">
-    <circle class="cls-3" cx="513.38" cy="513.38" r="397.92"/>
-    <circle class="cls-4" cx="509.23" cy="512" r="397.92"/>
-    <ellipse class="cls-5" cx="510.62" cy="513.38" rx="292.73" ry="298.27"/>
-    <ellipse class="cls-6" cx="509.23" cy="512" rx="292.73" ry="298.27"/>
-    <circle class="cls-7" cx="509.92" cy="520.54" r="115.57"/>
-    <polygon class="cls-8" points="352.83 547.82 290.55 520 352.83 492.46 352.83 547.82"/>
-    <circle class="cls-9" cx="509.92" cy="520.54" r="99.65"/>
-    <circle class="cls-10" cx="509.92" cy="520.54" r="38.06"/>
-    <circle class="cls-11" cx="523.07" cy="512" r="9"/>
+    <circle class="cls-4" cx="513.12" cy="513.3" r="348.18"/>
+    <circle class="cls-5" cx="509.49" cy="512.09" r="348.18"/>
+    <ellipse class="cls-6" cx="510.7" cy="513.3" rx="256.14" ry="260.99"/>
+    <ellipse class="cls-7" cx="509.49" cy="512.09" rx="256.14" ry="260.99"/>
+    <circle class="cls-8" cx="510.1" cy="519.55" r="101.12"/>
+    <polygon class="cls-9" points="372.64 543.43 318.14 519.09 372.64 494.99 372.64 543.43"/>
+    <circle class="cls-10" cx="510.1" cy="519.55" r="87.2"/>
+    <circle class="cls-11" cx="510.1" cy="519.55" r="33.3"/>
+    <circle class="cls-12" cx="521.6" cy="512.09" r="7.87"/>
   </g>
 </svg>

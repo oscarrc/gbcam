@@ -1,4 +1,4 @@
-<svg id="Capa_1" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+<svg id="Icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
   <defs>
     <style>
       .cls-1, .cls-3, .cls-4, .cls-5 {
@@ -31,11 +31,11 @@
     </style>
   </defs>
   <g id="Monochrome">
-    <circle class="cls-1" cx="514.08" cy="512.69" r="397.92"/>
-    <ellipse class="cls-2" cx="511.31" cy="512.69" rx="292.73" ry="298.27"/>
-    <polygon class="cls-3" points="353.52 547.13 291.24 519.31 353.52 491.76 353.52 547.13"/>
-    <circle class="cls-4" cx="510.62" cy="519.84" r="99.65"/>
-    <circle class="cls-5" cx="510.62" cy="519.84" r="38.06"/>
-    <circle class="cls-6" cx="523.76" cy="511.31" r="9"/>
+    <circle class="cls-1" cx="513.82" cy="512.61" r="348.18"/>
+    <ellipse class="cls-2" cx="511.39" cy="512.61" rx="256.14" ry="260.99"/>
+    <polygon class="cls-3" points="373.33 542.74 318.83 518.39 373.33 494.29 373.33 542.74"/>
+    <circle class="cls-4" cx="510.79" cy="518.86" r="87.2"/>
+    <circle class="cls-5" cx="510.79" cy="518.86" r="33.3"/>
+    <circle class="cls-6" cx="522.29" cy="511.39" r="7.87"/>
   </g>
 </svg>
