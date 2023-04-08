@@ -38,7 +38,7 @@ const GbCamProvider = ({ children }) => {
     const [ capture, setCapture ] = useState(null);
     const [ media, setMedia ] = useState({ source: null, output: null });
     const [ palette, setPalette ] = useState(localStorage.getItem("palette") || 0);
-    const [ multiplier, setMultiplier] = useState(localStorage.getItem("multiplier") || 1);
+    const [ multiplier, setMultiplier] = useState(localStorage.getItem("multiplier") || 4);
     const [ animation, setAnimation ] = useState({time: Date.now()});
           
     const { brightness, contrast, frame, flip, fps, ratio, variation } = settings 
