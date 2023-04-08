@@ -1,4 +1,4 @@
-import { dataToFile } from "../../helpers/file";
+import { dataToFile } from "../../lib/file";
 import { useGbCam } from "../../hooks/useGbCam";
 
 const Actions = () => {

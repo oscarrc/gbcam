@@ -1,4 +1,4 @@
-import { saveFile } from "../../helpers/file";
+import { saveFile } from "../../lib/file";
 import { useGbCam } from "../../hooks/useGbCam";
 import { useRef } from "react"
 import { useToast } from "../../hooks/useToast";

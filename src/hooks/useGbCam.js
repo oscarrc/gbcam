@@ -1,6 +1,6 @@
-import { convertPalette, gbDither } from "../helpers/dither";
+import { convertPalette, gbDither } from "../lib/dither";
 import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState } from "react";
-import { drawImage, getCanvas, getCanvasImage, loadImage, loadVideo } from "../helpers/canvas";
+import { drawImage, getCanvas, getCanvasImage, loadImage, loadVideo } from "../lib/canvas";
 
 import { VARIATIONS } from "../constants/colors";
 import fontface from "../assets/fonts/Rounded_5x5.ttf";
