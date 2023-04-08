@@ -1,18 +1,16 @@
 import { BsChevronDown } from "react-icons/bs";
 import { GBIcon } from "../icons";
-import { useDynamicFavicon } from "../../hooks/useDynamicFavicon";
 import { useRef } from "react";
 
 const MODELS = ["classic", "yellow", "red", "black", "white", "blue", "green", "transparent"];
 
 const Model = ({ theme, setTheme }) => {
-    const { setFavicon } = useDynamicFavicon(theme);
 
     const themeRef = useRef(null);
+
     const toggleTheme = (theme) => {
         localStorage.setItem("theme", theme);
         themeRef.current.blur();
-        setFavicon(theme);
         setTheme(theme);
     }
 
