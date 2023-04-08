@@ -51,7 +51,7 @@
     "eject": "react-scripts eject",
     "bubblewrap:init": "bubblewrap init --manifest https://gbcam.oscarrc.me/manifest.json --directory dist/android/",
     "bubblewrap:build": "cd dist/android && bubblewrap build",
-    "bubblewrap:update": "bubblewrap update --appVersionName 1 --manifest https://gbcam.oscarrc.me/manifest.json"
+    "bubblewrap:update": "cd dist/android && bubblewrap update --manifest twa-manifest.json"
   },
   "eslintConfig": {
     "extends": [
