@@ -47,7 +47,7 @@ const GbCamProvider = ({ children }) => {
     const player = useRef(null);     
     const recorder = useRef(null);     
 
-    const ready = useMemo(() => media.output !== null, [media]);    
+    const ready = useMemo(() => media.output !== null && media.source !== null, [media]);    
     const context = useMemo(() => {
        return media.output ? media.output.getContext("2d", {   
             desynchronized: true,
@@ -86,15 +86,20 @@ const GbCamProvider = ({ children }) => {
         setCapture(null);
     }
 
-    const init = useCallback(async () => {
-        const media = await navigator.mediaDevices.getUserMedia(sourceOptions);
-        const font = await (new FontFace("Rounded_5x5", `url(${fontface})`)).load();
-        const video = await loadVideo(media);
+    const init = useCallback(async () => {        
+        const font = await (new FontFace("Rounded_5x5", `url(${fontface})`)).load();       
         const { canvas } = getCanvas(width, height);
         
         document.fonts.add(font);
 
-        setMedia({source: video, output: canvas})
+        try{
+            const media = await navigator.mediaDevices.getUserMedia(sourceOptions);
+            const video = await loadVideo(media);
+
+            setMedia({source: video, output: canvas});
+        }catch{
+            setMedia({source: null, output: canvas});
+        }
     }, [height, sourceOptions, width]);
 
     const drawUI = useCallback(() => {   
@@ -283,11 +288,12 @@ const GbCamProvider = ({ children }) => {
         }
 
         if(!capture){ player.current = null }
-
+        if(!media.source){ return }
+        
         draw();
         
         return () => cancelAnimationFrame(frameRequest)
-    }, [capture, playback, stream])
+    }, [capture, media.source, playback, stream])
 
     return (
         <GbCamContext.Provider value={{ 
