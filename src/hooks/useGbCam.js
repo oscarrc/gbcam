@@ -34,7 +34,6 @@ const GbCamProvider = ({ children }) => {
     const [ settings, setting ] = useReducer(GbCamReducer, {...DEFAULT_SETTINGS, ...JSON.parse(localStorage.getItem("settings"))} || DEFAULT_SETTINGS );
     const [ option, setOption ] = useState(null);
     const [ facingUser, setFacingUser ] = useState(true);
-    const [ portrait, setPortrait ] = useState(false);
     const [ capture, setCapture ] = useState(null);
     const [ media, setMedia ] = useState({ source: null, output: null });
     const [ palette, setPalette ] = useState(localStorage.getItem("palette") || 0);
@@ -64,12 +63,12 @@ const GbCamProvider = ({ children }) => {
                 facingMode: facingUser ? 'user' : 'environment',
                 frameRate: { ideal: fps },
                 resizeMode: "crop-and-scale",
-                width: portrait ? sh : sw,
-                height: portrait ? sw : sh
+                width: sw,
+                height: sh
             },
             audio: false
         }
-    }, [facingUser, portrait, fps, sw, sh])
+    }, [facingUser, fps, sw, sh])
 
     const offsets = useMemo(() => {
         let x = 0;
@@ -271,13 +270,6 @@ const GbCamProvider = ({ children }) => {
     }, [context, drawUI, drawVideo, height, offsets, palette, sh, sw, sx, sy, variation, width])
 
     useEffect(() => { init() }, [init])
-
-    useEffect(() => {        
-        const checkPortrait = (e) => setPortrait(e.matches);
-        setPortrait(window.matchMedia("(orientation: portrait)").matches);
-        window.matchMedia("(orientation: portrait)").addEventListener("change", checkPortrait);
-        return () => window.matchMedia("(orientation: portrait)").removeEventListener("change", checkPortrait);
-    }, [])
 
     useEffect(() => { 
         let frameRequest;
