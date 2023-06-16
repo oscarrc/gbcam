@@ -45,7 +45,40 @@
 
 :root, [data-theme]{ background-color: black }
 
-@base{ 
+:root {
+    --scrollbarTrack: transparent;
+    --scrollbarThumb: black;
+    --scrollbarThumbHover: black;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    border-radius: var(--rounded);
+}
+  
+      
+/* Track */
+::-webkit-scrollbar-track {
+    background: var(--scrollbarTrack);
+}
+    
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbarThumb);
+    border-radius: var(--rounded-btn);
+}
+    
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbarThumbHover);
+}
+
+::-webkit-scrollbar:hover ::-webkit-scrollbar-thumb{      
+    background: var(--scrollbarThumbHover);
+}
+
+@layer base{ 
     html{ background: none; }
 }
 

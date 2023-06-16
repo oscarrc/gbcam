@@ -19,7 +19,7 @@ const Palette = ({ disabled, palette, setPalette }) => {
             <label {...disabledProps} role="button" ref={paletteRef} aria-label="Palete" className={`flex items-center gap-2 ${disabled && 'opacity-25 cursor-not-allowed'}`}>                            
                 <PaletteIcon className="h-6 w-6" palette={PALETTES[palette]} />
             </label>
-            <ul className="dropdown-content menu nav-menu shadow w-40 bg-neutral top-8">
+            <ul className="dropdown-content menu nav-menu shadow w-40 h-[75vh] flex-row overflow-x-hidden bg-neutral top-8">
                 {
                     PALETTE_NAMES.map( (p, i) => (
                         <li key={p}>
