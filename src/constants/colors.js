@@ -28,11 +28,10 @@ const PALETTES = [
     [[0,0,0],[255,66,0],[81,255,0],[255,255,255]],    //RIGHT  -  GBC10
     [[0,0,0],[1,99,198],[81,255,0],[255,255,255]],  //RIGHT + A  -  GBC11
     [[0,0,0], [0,132,134], [255,222,0], [255,255,255]],    //RIGHT + B  -  GBC12 
-    [[0,79,59],[0,105,74],[0,154,113],[71,123,108]], // GB Light
     [[40,40,40],[104,104,104], [168,168,168],[252,252,252]] // Gray
 ]
 
-const PALETTE_NAMES = ["DMG", "GBC 1", "GBC 2", "GBC 3", "GBC 4", "GBC 5", "GBC 6", "GBC 7", "GBC 8", "GBC 9", "GBC 10", "GBC 11", "GBC 12", "GB Light", "Gray"];
+const PALETTE_NAMES = ["DMG", "GBC 1", "GBC 2", "GBC 3", "GBC 4", "GBC 5", "GBC 6", "GBC 7", "GBC 8", "GBC 9", "GBC 10", "GBC 11", "GBC 12", "Gray"];
 
 const VARIATIONS = [
 	[0,1,2,3],
