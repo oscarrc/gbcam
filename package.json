@@ -1,7 +1,8 @@
 {
   "name": "gbcam",
-  "version": "3.0.4",
+  "version": "3.0.5",
   "description": "Lo-fi camera for those nostalgic 90s kids.",
+  "type": "module",
   "author": {
     "name": "Oscar R.C.",
     "email": "oscarrc.web@gmail.com",
@@ -14,50 +15,31 @@
   "homepage": "./",
   "private": true,
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-icons": "^4.7.1",
-    "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4",
-    "workbox-background-sync": "^6.5.4",
-    "workbox-broadcast-update": "^6.5.4",
-    "workbox-cacheable-response": "^6.5.4",
-    "workbox-core": "^6.5.4",
-    "workbox-expiration": "^6.5.4",
-    "workbox-google-analytics": "^6.5.4",
-    "workbox-navigation-preload": "^6.5.4",
-    "workbox-precaching": "^6.5.4",
-    "workbox-range-requests": "^6.5.4",
-    "workbox-routing": "^6.5.4",
-    "workbox-strategies": "^6.5.4",
-    "workbox-streams": "^6.5.4"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-icons": "^5.2.1",
+    "vite": "^5.3.5"
   },
   "devDependencies": {
     "@bubblewrap/cli": "^1.21.0",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "compress-create-react-app": "^1.3.1",
-    "daisyui": "^2.51.0",
-    "tailwindcss": "^3.2.7"
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.19",
+    "daisyui": "^4.12.10",
+    "postcss": "^8.4.40",
+    "tailwindcss": "^3.4.7",
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-pwa": "^0.20.1",
+    "vite-plugin-svgr": "^4.2.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "postbuild": "compress-cra",
-    "predeploy": "npm run build && cp build/index.html build/200.html",
+    "start": "vite --host",
+    "dev": "vite preview",
+    "build": "vite build",
+    "predeploy": "npm run build && cp build/index.html build/200.html && cp build/index.html.gz build/200.html.gz",
     "deploy": "surge build gbcam.oscarrc.me",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
     "bubblewrap:init": "bubblewrap init --manifest https://gbcam.oscarrc.me/manifest.webmanifest --directory dist/android/",
     "bubblewrap:build": "cd dist/android && bubblewrap build",
     "bubblewrap:update": "cd dist/android && bubblewrap update --manifest twa-manifest.json"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [
