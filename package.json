@@ -1,6 +1,6 @@
 {
   "name": "gbcam",
-  "version": "3.0.5",
+  "version": "4.0.0",
   "description": "Lo-fi camera for those nostalgic 90s kids.",
   "type": "module",
   "author": {
@@ -35,7 +35,7 @@
     "start": "vite --host",
     "dev": "vite preview",
     "build": "vite build",
-    "predeploy": "npm run build && cp build/index.html build/200.html && cp build/index.html.gz build/200.html.gz",
+    "predeploy": "npm run build && cp build/index.html build/200.html",
     "deploy": "surge build gbcam.oscarrc.me",
     "bubblewrap:init": "bubblewrap init --manifest https://gbcam.oscarrc.me/manifest.webmanifest --directory dist/android/",
     "bubblewrap:build": "cd dist/android && bubblewrap build",
