@@ -32,13 +32,11 @@
     "vite-plugin-svgr": "^4.2.0"
   },
   "scripts": {
-    "start": "vite",
+    "start": "vite --host",
     "dev": "vite preview",
-    "build": "tsc && build",
-    "predeploy": "npm run build && cp build/index.html build/200.html",
+    "build": "vite build",
+    "predeploy": "npm run build && cp build/index.html build/200.html && cp build/index.html.gz build/200.html.gz",
     "deploy": "surge build gbcam.oscarrc.me",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
     "bubblewrap:init": "bubblewrap init --manifest https://gbcam.oscarrc.me/manifest.webmanifest --directory dist/android/",
     "bubblewrap:build": "cd dist/android && bubblewrap build",
     "bubblewrap:update": "cd dist/android && bubblewrap update --manifest twa-manifest.json"

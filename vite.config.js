@@ -42,7 +42,8 @@ export default ({ mode }) => {
                       {
                         "src": "assets/feature/graphic.png",
                         "type": "image/png",
-                        "sizes": "1024x500"
+                        "sizes": "1024x500",
+                        "form_factor": "wide",
                       }
                     ],
                     "icons": [
