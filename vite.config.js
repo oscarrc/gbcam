@@ -44,6 +44,60 @@ export default ({ mode }) => {
                         "type": "image/png",
                         "sizes": "1024x500",
                         "form_factor": "wide",
+                      },
+                      {
+                        "src": "assets/feature/screenshot_1.png",
+                        "type": "image/png",
+                        "sizes": "1600x3200",
+                        "form_factor": "narrow",
+                      },
+                      {
+                        "src": "assets/feature/screenshot_1.png",
+                        "type": "image/png",
+                        "sizes": "1600x3200",
+                        "form_factor": "narrow",
+                      },
+                      {
+                        "src": "assets/feature/screenshot_2.png",
+                        "type": "image/png",
+                        "sizes": "1600x3200",
+                        "form_factor": "narrow",
+                      },
+                      {
+                        "src": "assets/feature/screenshot_3.png",
+                        "type": "image/png",
+                        "sizes": "1600x3200",
+                        "form_factor": "narrow",
+                      },
+                      {
+                        "src": "assets/feature/screenshot_4.png",
+                        "type": "image/png",
+                        "sizes": "1600x3200",
+                        "form_factor": "narrow",
+                      },
+                      {
+                        "src": "assets/feature/screenshot_5.png",
+                        "type": "image/png",
+                        "sizes": "1600x3200",
+                        "form_factor": "narrow",
+                      },
+                      {
+                        "src": "assets/feature/screenshot_6.png",
+                        "type": "image/png",
+                        "sizes": "1600x3200",
+                        "form_factor": "narrow",
+                      },
+                      {
+                        "src": "assets/feature/screenshot_7.png",
+                        "type": "image/png",
+                        "sizes": "1600x3200",
+                        "form_factor": "narrow",
+                      },
+                      {
+                        "src": "assets/feature/screenshot_8.png",
+                        "type": "image/png",
+                        "sizes": "1600x3200",
+                        "form_factor": "narrow",
                       }
                     ],
                     "icons": [
