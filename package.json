@@ -33,7 +33,7 @@
   },
   "scripts": {
     "start": "vite --host",
-    "dev": "vite preview",
+    "preview": "vite preview",
     "build": "vite build",
     "predeploy": "npm run build && cp build/index.html build/200.html",
     "deploy": "surge build gbcam.oscarrc.me",
