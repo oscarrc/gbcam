@@ -21,7 +21,7 @@
     "vite": "^5.3.5"
   },
   "devDependencies": {
-    "@bubblewrap/cli": "^1.21.0",
+    "@bubblewrap/cli": "^1.22.0",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.19",
     "daisyui": "^4.12.10",
